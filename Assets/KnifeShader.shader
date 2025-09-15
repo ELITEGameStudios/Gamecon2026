@@ -2,17 +2,19 @@ Shader "Knife/WeaponShaders"
 {
     Properties
     {
-        _MainCol("Can a clanka borrow a french fry?", Color) = (0, 1, 1, 1)
+        _offset("Offset", Vector) = (0, 0, 0, 0) 
+        _mainCol("Main Color", Color) = (0, 1, 1, 1)
+        _scaleFactor("Border scale", float) = 1.2
     }
 
     SubShader
     {
-        // Tags{"RenderType"="Transparent" "RenderPipeline"="UniversalPipeline"}
+        Tags{"RenderType"="Opaque" "RenderPipeline"="UniversalPipeline"}
         LOD 100
 
         Pass
         {
-            Name "KnifeShader"
+            Name "Unlit"
             Tags{"LightMode"="UniversalForward"}
 
             /* --------------- Beginning of HLSL script ------------------- */
@@ -21,37 +23,42 @@ Shader "Knife/WeaponShaders"
             #pragma fragment fragmentShader
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
-            float4 color;
+            float4 _mainCol;
+            float4 _offset;
+            float _scaleFactor = 1.5;
             
-
-            // Supporting Structs 
-            struct Attributes
-            {
-                float4 positionOS : POSITION;
+            // Essential Universal Structs
+            struct Attributes{
+                float4 objectPosition : POSITION;
                 float2 uv : TEXCOORD0;
             };
-            
-            struct Varyings
-            {
-                float4 positionHCS : SV_POSITION;
-                // float2 uv : TEXCOORD0;
+            struct Varyings{ 
+                float4 clipSpacePosition : SV_POSITION;
+                // float2 uv;
             };
             
-            // Variables
-            float4 myColor;
 
-            Varyings vertexShader(Varyings IN) : SV_TARGET{
-                Varyings output;
-                output.positionHCS = TransformWorldToHClip(attributes.positionOS.xyz);
-                return output;
+
+
+
+            Varyings vertexShader(Attributes data){
+                Varyings varyings;
+                // varyings.objectPosition = data.objectPosition;
+                _offset.x*= _SinTime.w;
+                _offset.y*= _SinTime.w;
+                varyings.clipSpacePosition = TransformObjectToHClip(data.objectPosition.xyz) + TransformWViewToHClip(_offset);
+                varyings.clipSpacePosition *= _scaleFactor;
+                // varyings.uv = data.uv;
+                return varyings;
             }
 
-            float4 fragmentShader() : SV_TARGET{
-                return color;
+            float4 fragmentShader(Varyings data) : SV_TARGET{
+                return _mainCol;
             }
 
             ENDHLSL
             /* --------------- End of of HLSL script ------------------- */
         }
     }
+    FallBack Off
 }
