@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class KnifeShooting : MonoBehaviour
 {
@@ -9,15 +10,28 @@ public class KnifeShooting : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float fireRate = 2f; // temporary
 
+    private bool coolingDown {get {return nextFire > 0;}}
     private float nextFire = 0f;
+    public InputSystem_Actions inputActions;
+    public InputActionReference fire;
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire1") && Time.time >= nextFire)
-        {
+        if(coolingDown) nextFire -= Time.deltaTime;
+    }
+
+    void OnEnable()
+    {
+        fire.action.started += ProcessFireInput;
+    }
+
+    void ProcessFireInput(InputAction.CallbackContext ctx)
+    {
+        if (!coolingDown){
             Fire();
             nextFire = Time.time + 1f / fireRate;
         }
+        
     }
 
     void Fire()

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
@@ -17,6 +18,8 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 wallRunContactNormal;
     public Transform headTf;
     public bool jumpInput, grounded;
+    public InputSystem_Actions inputActions;
+    public InputActionReference move, jump, look;
 
     public enum MoveState
     {
@@ -31,17 +34,20 @@ public class PlayerMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    void Awake()
+    {
+        
+    }
+
+    void OnEnable()
+    {
+        jump.action.started += Jump;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        lookInput = Input.mousePositionDelta;
-        jumpInput = Input.GetKeyDown(KeyCode.Space);
-        movementInput = new Vector2(
-            Input.GetAxis("Horizontal"),
-            Input.GetAxis("Vertical")
-        );
-
-        if(jumpInput){ Jump(); }
+        
     }
 
     void FixedUpdate()
@@ -91,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
         moveState = MoveState.AirborneBuffer;
     }
 
-    void Jump(){
+    void Jump(InputAction.CallbackContext ctx){
         if (moveState == MoveState.Normal){
             if(!grounded){ return; }
             rb.AddForce(transform.up * jumpPower, ForceMode.Impulse);
@@ -104,6 +110,7 @@ public class PlayerMovement : MonoBehaviour
 
     void CalculateLookRotation()
     {
+        lookInput = look.action.ReadValue<Vector2>();
         transform.Rotate(new Vector3(0, lookInput.x * rotSensitivity.x, 0));
         headTf.Rotate(new Vector3(-lookInput.y * rotSensitivity.y, 0, 0));
     }
@@ -111,6 +118,10 @@ public class PlayerMovement : MonoBehaviour
     void CalculateVelocityNormalState()
     {
         // if(!grounded) { return; }
+        movementInput = move.action.ReadValue<Vector2>();
+        if(movementInput.magnitude > 1){movementInput.Normalize();}
+
+
         rb.linearVelocity =
             (
                 (transform.right * movementInput.x) +
