@@ -11,6 +11,7 @@ public class KnifeShooting : MonoBehaviour
     [SerializeField] private float fireRate = 2f; // temporary
 
     private bool coolingDown {get {return nextFire > 0;}}
+    public bool fireInput, autoFire;
     private float nextFire = 0f;
     public InputSystem_Actions inputActions;
     public InputActionReference fire;
@@ -18,20 +19,33 @@ public class KnifeShooting : MonoBehaviour
     void Update()
     {
         if(coolingDown) nextFire -= Time.deltaTime;
+        else{ProcessFireInput();}
     }
 
     void OnEnable()
     {
-        fire.action.started += ProcessFireInput;
+        if (autoFire)
+        {
+            fire.action.started += ctx => fireInput = true;
+            fire.action.canceled += ctx => fireInput = false;
+        }
+        else
+        {
+            fire.action.performed += ProcessFireInput;
+        }
     }
 
-    void ProcessFireInput(InputAction.CallbackContext ctx)
-    {
+    void ProcessFireInput(){
+        if (fireInput){
+            Fire();
+            nextFire = 1/fireRate;
+        }
+    }
+    void ProcessFireInput(InputAction.CallbackContext ctx){
         if (!coolingDown){
             Fire();
-            nextFire = Time.time + 1f / fireRate;
+            nextFire = 1/fireRate;
         }
-        
     }
 
     void Fire()
