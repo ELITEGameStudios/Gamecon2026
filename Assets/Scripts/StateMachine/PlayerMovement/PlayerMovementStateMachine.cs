@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovementStateMachine : StateMachine
 {
     public float baseSpeed = 5f;
+    public float clampedRotationY = 85;
     [SerializeField] private float speedMultiplier = 1f;
     public float liveMaxSpeed {get { return baseSpeed * speedMultiplier; }}
     public string stateName;
@@ -64,9 +65,17 @@ public class PlayerMovementStateMachine : StateMachine
 
     public void CalculateLookRotation()
     {
+        Quaternion rotation = headTf.rotation;
+        
         lookInput = look.action.ReadValue<Vector2>();
-        transform.Rotate(new Vector3(0, lookInput.x * rotSensitivity.x, 0));
         headTf.Rotate(new Vector3(-lookInput.y * rotSensitivity.y, 0, 0));
+        Debug.Log(Vector3.SignedAngle(headTf.forward, transform.forward, transform.right));
+        if(Mathf.Abs(Vector3.SignedAngle(headTf.forward, transform.forward, transform.right)) > 85){
+            headTf.rotation = rotation;
+        }
+
+
+        transform.Rotate(new Vector3(0, lookInput.x * rotSensitivity.x, 0));
     }
 
     public void NormalWalking()
@@ -74,6 +83,14 @@ public class PlayerMovementStateMachine : StateMachine
         if(movementInput.magnitude > 1){movementInput.Normalize();}
         Debug.Log("Moving");
 
+        // rigidbody.AddForce(
+        //     (
+        //         (transform.right * movementInput.x) +
+        //         (transform.forward * movementInput.y)
+        //     ) * Time.fixedDeltaTime * liveMaxSpeed
+        //     + (transform.up * rigidbody.linearVelocity.y)
+        // , ForceMode.Force);
+        
         rigidbody.linearVelocity =
             (
                 (transform.right * movementInput.x) +
