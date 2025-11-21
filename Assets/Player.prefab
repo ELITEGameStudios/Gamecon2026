@@ -28,13 +28,12 @@ Transform:
   m_GameObject: {fileID: 1070657142760835333}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.75, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7461417046362414145}
-  - {fileID: 3826909606081259412}
-  m_Father: {fileID: 8193150024748864371}
+  m_Father: {fileID: 8315510085039383135}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &1352036741572191164
 Camera:
@@ -75,7 +74,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 247
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -229,7 +228,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1773330650454820558}
+  - {fileID: 8315510085039383135}
   - {fileID: 3606396561666052882}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -385,13 +384,13 @@ MonoBehaviour:
     started: 0
     movement: {fileID: 7998759388286820172}
     jumpPower: 9
-    canAirstrafe: 1
+    airStrafeForce: 0
     extraJumps: 5
     jumpsLeft: 0
   movementInput: {x: 0, y: 0}
   lookInput: {x: 0, y: 0}
   rotSensitivity: {x: 1.5, y: 1}
-  headTf: {fileID: 1773330650454820558}
+  headTf: {fileID: 8315510085039383135}
   move: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   jump: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   look: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
@@ -409,8 +408,67 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   featherKnife: {fileID: 7197772859351080808}
   projectileFirePoint: {fileID: 3826909606081259412}
+  playerMovement: {fileID: 7998759388286820172}
+  camShaker: {fileID: 3441569736540311023}
   fireRate: 2
+  parryTiming: 0.2
+  recallCooldown: 1
+  currentRecallCooldown: 0
+  parryForce: 500
+  hitStopTime: 0.1
+  parryCamShakeProfile:
+    amplitudeCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: -2.5977895
+        outSlope: -2.5977895
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.02340234
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0.027345108
+        outSlope: 0.027345108
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.16350543
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    lerpCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    time: 1
+    frequency: 7
   fireAction: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  recallAction: {fileID: 4056342282253358456, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!114 &614682475978548823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,6 +499,69 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!1 &8133196264356024137
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8315510085039383135}
+  - component: {fileID: 3441569736540311023}
+  m_Layer: 0
+  m_Name: CameraParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8315510085039383135
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8133196264356024137}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.75, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1773330650454820558}
+  - {fileID: 3826909606081259412}
+  m_Father: {fileID: 8193150024748864371}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3441569736540311023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8133196264356024137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f22fe0b447ad464eb0d30a4bd848e83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camTf: {fileID: 1773330650454820558}
+  isShaking: 0
+  profile:
+    amplitudeCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    lerpCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    time: 0
+    frequency: 0
 --- !u!1 &8254388001202766222
 GameObject:
   m_ObjectHideFlags: 0
@@ -459,7 +580,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7461417046362414145
 Transform:
   m_ObjectHideFlags: 0
@@ -514,7 +635,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -608,7 +729,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7219056043121003072}
-  m_Father: {fileID: 1773330650454820558}
+  m_Father: {fileID: 8315510085039383135}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &5317568816312288642
 PrefabInstance:

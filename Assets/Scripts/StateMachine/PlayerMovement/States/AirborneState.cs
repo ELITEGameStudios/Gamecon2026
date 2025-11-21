@@ -4,7 +4,7 @@ using UnityEngine;
 public class AirborneState : PlayerMovementState
 {
     public float jumpPower;
-    public bool canAirstrafe;
+    public float airStrafeForce = 0.5f;
     public int extraJumps, jumpsLeft;
 
     public AirborneState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
@@ -26,8 +26,12 @@ public class AirborneState : PlayerMovementState
     {
         movement.CalculateLookRotation();
 
-        if (canAirstrafe){
-            movement.NormalWalking();
+        if (airStrafeForce > 0){
+            rigidbody.AddForce(
+            (
+                (transform.right * movement.movementInput.x) +
+                (transform.forward * movement.movementInput.y)
+            ) * Time.fixedDeltaTime * airStrafeForce, ForceMode.Force);
         }
     }
 

@@ -5,7 +5,7 @@ using UnityEngine.ProBuilder.MeshOperations;
 [RequireComponent(typeof(Collider))]
 public class Projectile : MonoBehaviour
 {
-    public enum ProjectileState {Idle, Flying, Embedded, PickedUp}
+    public enum ProjectileState {Idle, Flying, Embedded, Recalling}//, PickedUp}
     public ProjectileState currentState { get; private set; } = ProjectileState.Idle;
     
     [Header("Flying Settings")]
@@ -22,6 +22,11 @@ public class Projectile : MonoBehaviour
     
     [Header("Player Reference")]
     [SerializeField] private Transform playerTransform;
+    
+    [Header("RecallData")]
+    [SerializeField] private Vector3 embeddedPos;
+    [SerializeField] private AnimationCurve recallAnimationCurve;
+    public float recallTime = 0.65f, recallCurrentTime;
 
     private Rigidbody rb;
     private Collider col;
@@ -40,6 +45,11 @@ public class Projectile : MonoBehaviour
         if (playerTransform != null)
         {
             TryPickUp();
+        }
+
+        if(currentState == ProjectileState.Recalling)
+        {
+            RecallUpdate();
         }
     }
 
@@ -63,18 +73,42 @@ public class Projectile : MonoBehaviour
                 col.isTrigger = true;
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
+                recallCurrentTime = 0;
+
+                SetEmbeddedPos();
                 break;
-            case ProjectileState.PickedUp:
-                rb.isKinematic = true;
-                col.enabled = false;
-                gameObject.SetActive(false);
+            case ProjectileState.Recalling:
+                rb.isKinematic = false;
+                col.isTrigger = true;
+                
+                recallCurrentTime = recallTime;
                 break;
+
+            // case ProjectileState.PickedUp:
+            //     rb.isKinematic = true;
+            //     col.enabled = false;
+            //     gameObject.SetActive(false);
+            //     break;
         }
     }
     
+    void RecallUpdate()
+    {
+        transform.position = Vector3.Lerp(embeddedPos, initProjectilePosition.position, recallAnimationCurve.Evaluate( 1 - recallCurrentTime/recallTime ));
+        recallCurrentTime -= Time.deltaTime;
+        if(recallCurrentTime <= 0)
+        {
+            ReturnToIdle();
+        }
+    }
+
+    public void SetEmbeddedPos(){
+        embeddedPos = transform.position;
+    }
+
     void OnCollisionEnter(Collision collision)
     {
-        if (currentState != ProjectileState.Flying)
+        if (currentState != ProjectileState.Flying || currentState == ProjectileState.Recalling)
             return;
         
         if (hitEffect)
@@ -103,11 +137,12 @@ public class Projectile : MonoBehaviour
 
     private void ReturnToIdle()
     {
-        if (currentState != ProjectileState.Flying)
+        if (currentState != ProjectileState.Flying && currentState != ProjectileState.Recalling)
             return;
         
         SetState(ProjectileState.Idle);
         
+        recallCurrentTime = 0;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         
@@ -126,7 +161,11 @@ public class Projectile : MonoBehaviour
         float distance = Vector3.Distance(playerTransform.position, transform.position);
         if (distance <= pickUpRadius)
         {
-            SetState(ProjectileState.PickedUp);
+            // SetState(ProjectileState.PickedUp);
+            
+            rb.isKinematic = true;
+            col.enabled = false;
+            gameObject.SetActive(false);
             
             // Instantly return to hand + idle state
             transform.SetParent(initProjectilePosition);

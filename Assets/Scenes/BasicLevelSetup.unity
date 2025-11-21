@@ -4972,17 +4972,117 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1352036741572191164, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 247
+    - target: {fileID: 3441569736540311023, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: profile.frequency
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 6531807272675625180, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 6970671771087887587, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 256
+      propertyPath: field of view
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 7197772859351080808, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7197772859351080808, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7197772859351080808, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.data[1].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7197772859351080808, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.data[1].inSlope
+      value: 2.9547877
+      objectReference: {fileID: 0}
+    - target: {fileID: 7197772859351080808, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.data[1].inWeight
+      value: 0.021602154
+      objectReference: {fileID: 0}
+    - target: {fileID: 7197772859351080808, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.data[1].outSlope
+      value: 2.9547877
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryForce
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryRange
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryCamShakeProfile.time
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryCamShakeProfile.frequency
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryCamShakeProfile.amplitudeCurve.m_Curve.Array.data[0].time
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryCamShakeProfile.amplitudeCurve.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryCamShakeProfile.amplitudeCurve.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryCamShakeProfile.amplitudeCurve.m_Curve.Array.data[1].value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryCamShakeProfile.amplitudeCurve.m_Curve.Array.data[0].inSlope
+      value: -2.6733792
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryCamShakeProfile.amplitudeCurve.m_Curve.Array.data[1].inSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryCamShakeProfile.amplitudeCurve.m_Curve.Array.data[0].outSlope
+      value: -2.6733792
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryCamShakeProfile.amplitudeCurve.m_Curve.Array.data[1].inWeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryCamShakeProfile.amplitudeCurve.m_Curve.Array.data[1].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryCamShakeProfile.amplitudeCurve.m_Curve.Array.data[0].outWeight
+      value: 0.04320432
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998759388286820172, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: baseSpeed
+      value: 650
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998759388286820172, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: wallRunState.jumpPower
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998759388286820172, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: airborneState.jumpPower
+      value: 27
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998759388286820172, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: groundedState.jumpPower
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998759388286820172, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: airborneState.airStrafeForce
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 8193150024748864371, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5023,10 +5123,6 @@ PrefabInstance:
     - target: {fileID: 8193150024748864371, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8254388001202766222, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -19929,7 +20025,6 @@ SceneRoots:
   - {fileID: 1725563629}
   - {fileID: 481527638}
   - {fileID: 2091836417}
-  - {fileID: 765079153}
   - {fileID: 2070029844}
   - {fileID: 917442123}
   - {fileID: 1978994865}
@@ -19958,3 +20053,4 @@ SceneRoots:
   - {fileID: 642642161}
   - {fileID: 1579432753}
   - {fileID: 355885128}
+  - {fileID: 765079153}

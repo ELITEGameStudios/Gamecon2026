@@ -69,7 +69,7 @@ public class PlayerMovementStateMachine : StateMachine
         
         lookInput = look.action.ReadValue<Vector2>();
         headTf.Rotate(new Vector3(-lookInput.y * rotSensitivity.y, 0, 0));
-        Debug.Log(Vector3.SignedAngle(headTf.forward, transform.forward, transform.right));
+        // Debug.Log(Vector3.SignedAngle(headTf.forward, transform.forward, transform.right));
         if(Mathf.Abs(Vector3.SignedAngle(headTf.forward, transform.forward, transform.right)) > 85){
             headTf.rotation = rotation;
         }
