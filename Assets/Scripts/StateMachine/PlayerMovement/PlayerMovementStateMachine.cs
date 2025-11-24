@@ -9,6 +9,7 @@ public class PlayerMovementStateMachine : StateMachine
 {
     public float baseSpeed = 5f;
     public float clampedRotationY = 85;
+    public float movingConsiderationDeadzone = 0.1f;
     [SerializeField] private float speedMultiplier = 1f;
     public float liveMaxSpeed {get { return baseSpeed * speedMultiplier; }}
     public string stateName;
@@ -22,6 +23,13 @@ public class PlayerMovementStateMachine : StateMachine
     public Vector2 lookInput;
     public Vector2 rotSensitivity;
     // public Vector2 targetVelocity;
+
+    public bool hasMovementInput => movementInput.magnitude > movingConsiderationDeadzone;
+    public bool hadMovementInputLastFrame;
+
+    public bool isConsideredMoving => hasMovementInput && rigidbody.linearVelocity.magnitude > movingConsiderationDeadzone;
+    public bool wasMovingLastFrame;
+
     
 
     public Transform headTf;
@@ -52,6 +60,19 @@ public class PlayerMovementStateMachine : StateMachine
     protected override void OnFixedUpdate()
     {
         movementInput = move.action.ReadValue<Vector2>();
+        if(!wasMovingLastFrame && isConsideredMoving)
+        {
+            OnStartWalking();
+        }
+
+
+        wasMovingLastFrame = isConsideredMoving;
+        hadMovementInputLastFrame = hasMovementInput; 
+    }
+
+    public void OnStartWalking()
+    {
+        currentState.OnStartWalking();
     }
 
     protected override void OnSetState()
