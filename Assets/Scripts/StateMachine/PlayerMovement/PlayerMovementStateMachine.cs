@@ -9,6 +9,8 @@ public class PlayerMovementStateMachine : StateMachine
 {
     public float baseSpeed = 5f;
     public float clampedRotationY = 85;
+    public float maxGroundedSlope = 35;
+    public float maxWallSlope = 25;
     [SerializeField] private float speedMultiplier = 1f;
     public float liveMaxSpeed {get { return baseSpeed * speedMultiplier; }}
     public string stateName;
@@ -109,10 +111,7 @@ public class PlayerMovementStateMachine : StateMachine
     {
         if(currentState != null){currentState.OnCollisionEnter(collision);};
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall")){
-            wallRunState.storedCollision = collision;
-            SetState(wallRunState);
-        }
+        CheckWallCriteria(collision);
     }
 
     void OnCollisionExit(Collision collision){
@@ -120,8 +119,55 @@ public class PlayerMovementStateMachine : StateMachine
     }
     
     void OnCollisionStay(Collision collision){
+        currentState.OnCollisionStay(collision);
+
+
         if (collision.gameObject.layer ==LayerMask.NameToLayer("Ground") && currentState != groundedState){
-            SetState(groundedState);
+            // SetState(groundedState);
+            CheckGrounded(collision);
+        }
+    }
+
+    void CheckGrounded(Collision collision)
+    {
+        Vector3 closestPoint = collision.collider.ClosestPoint(transform.position);
+        Vector3 raycastDir = (closestPoint - transform.position).normalized;
+
+        if (Physics.Raycast(transform.position, raycastDir, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
+        {
+            if(Vector3.Angle(Vector3.up, hit.normal) <= maxGroundedSlope)
+            {
+                SetState(groundedState);
+            }
+
+            Debug.DrawRay(hit.point, hit.normal);
+        }
+    }
+
+    void CheckWallCriteria(Collision collision)
+    {
+        if (collision.gameObject.layer != LayerMask.NameToLayer("Wall"))
+        {   
+            return;
+        }
+        Vector3 closestPoint = collision.collider.ClosestPoint(transform.position);
+        Vector3 raycastDir = (closestPoint - transform.position).normalized;
+
+        if (Physics.Raycast(transform.position, raycastDir, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Wall")))
+        {
+            Vector3 comparisonVector = new Vector3(
+                hit.normal.x,
+                0,
+                hit.normal.z
+            );
+
+            if(Vector3.Angle(comparisonVector, hit.normal) <= maxWallSlope)
+            {
+                wallRunState.storedCollision = collision;
+                SetState(wallRunState);
+            }
+
+            Debug.DrawRay(hit.point, hit.normal);
         }
     }
     
