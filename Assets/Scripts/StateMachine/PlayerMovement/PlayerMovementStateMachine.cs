@@ -24,8 +24,10 @@ public class PlayerMovementStateMachine : StateMachine
     public Vector2 rotSensitivity;
     // public Vector2 targetVelocity;
 
+
     public bool hasMovementInput => movementInput.magnitude > movingConsiderationDeadzone;
     public bool hadMovementInputLastFrame;
+
 
     public bool isConsideredMoving => hasMovementInput && rigidbody.linearVelocity.magnitude > movingConsiderationDeadzone;
     public bool wasMovingLastFrame;
@@ -34,12 +36,23 @@ public class PlayerMovementStateMachine : StateMachine
 
     public Transform headTf;
     public InputActionReference move, jump, look;
+
+    [Header("FMOD events")]
+    public string FMODJumpEvent = "";
+    public string FMODLandEvent = "";
+    FMOD.Studio.EventInstance playerJump, playerLand;
+
+
+
     void Awake(){ 
         defaultState = airborneState; 
         
         airborneState.OnReset();
         groundedState.OnReset();
         wallRunState.OnReset();
+
+        playerJump = FMODUnity.RuntimeManager.CreateInstance(FMODJumpEvent);
+        playerLand = FMODUnity.RuntimeManager.CreateInstance(FMODLandEvent);
     }
 
     protected override void OnStart()
@@ -54,7 +67,8 @@ public class PlayerMovementStateMachine : StateMachine
 
     protected override void OnUpdate()
     {
-        
+        FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerJump, transform);
+        FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerLand, transform);
     }
 
     protected override void OnFixedUpdate()
@@ -82,6 +96,7 @@ public class PlayerMovementStateMachine : StateMachine
 
     public void Jump(InputAction.CallbackContext ctx){
         currentState.Jump();
+        playerJump.start();
     }
 
     public void CalculateLookRotation()
@@ -142,6 +157,7 @@ public class PlayerMovementStateMachine : StateMachine
     
     void OnCollisionStay(Collision collision){
         if (collision.gameObject.layer ==LayerMask.NameToLayer("Ground") && currentState != groundedState){
+            playerLand.start();
             SetState(groundedState);
         }
     }

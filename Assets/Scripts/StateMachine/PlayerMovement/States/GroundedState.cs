@@ -41,7 +41,7 @@ public class GroundedState : PlayerMovementState
     }
     public override void OnStopWalking()
     {
-        playerWalkState.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        playerWalkState.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
     public void UpdateFMODEvents()
