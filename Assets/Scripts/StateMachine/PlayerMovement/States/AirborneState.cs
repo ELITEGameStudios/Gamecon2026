@@ -43,6 +43,7 @@ public class AirborneState : PlayerMovementState
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")){
             movement.SetState(movement.groundedState);
+            movement.playerLand.start();
         }
     }
 
