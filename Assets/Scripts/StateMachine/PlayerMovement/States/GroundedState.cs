@@ -52,11 +52,16 @@ public class GroundedState : PlayerMovementState
     public override void Jump()
     {
         rigidbody.AddForce(transform.up * jumpPower, ForceMode.Impulse);
+        movement.playerJump.start();
     }
 
     public override void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")){
+            if(Physics.Raycast(movement.feetTf.position, Vector3.down, 0.2f, LayerMask.GetMask("Ground"))){
+                return;
+
+            }
             movement.SetState(movement.airborneState);
         }
     }

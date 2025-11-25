@@ -18,6 +18,8 @@ public class PlayerMovementStateMachine : StateMachine
     public WallRunState wallRunState;
     public AirborneState airborneState;
 
+    public Transform feetTf;
+
 
     public Vector2 movementInput;
     public Vector2 lookInput;
@@ -40,7 +42,7 @@ public class PlayerMovementStateMachine : StateMachine
     [Header("FMOD events")]
     public string FMODJumpEvent = "";
     public string FMODLandEvent = "";
-    FMOD.Studio.EventInstance playerJump, playerLand;
+    public FMOD.Studio.EventInstance playerJump, playerLand;
 
 
 
@@ -96,7 +98,7 @@ public class PlayerMovementStateMachine : StateMachine
 
     public void Jump(InputAction.CallbackContext ctx){
         currentState.Jump();
-        playerJump.start();
+        
     }
 
     public void CalculateLookRotation()
