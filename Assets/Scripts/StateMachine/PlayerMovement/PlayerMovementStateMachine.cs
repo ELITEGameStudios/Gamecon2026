@@ -189,14 +189,14 @@ public class PlayerMovementStateMachine : StateMachine
 
     void CheckWallCriteria(Collision collision)
     {
-        if (collision.gameObject.layer != LayerMask.NameToLayer("Wall"))
-        {   
-            return;
-        }
+        // if (collision.gameObject.layer != LayerMask.NameToLayer("Wall"))
+        // {   
+        //     return;
+        // }
         Vector3 closestPoint = collision.collider.ClosestPoint(transform.position);
         Vector3 raycastDir = (closestPoint - transform.position).normalized;
 
-        if (Physics.Raycast(transform.position, raycastDir, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Wall")))
+        if (Physics.Raycast(transform.position, raycastDir, out RaycastHit hit, Mathf.Infinity))//, LayerMask.GetMask("Wall")))
         {
             Vector3 comparisonVector = new Vector3(
                 hit.normal.x,
