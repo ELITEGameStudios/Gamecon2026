@@ -575,7 +575,7 @@ GameObject:
   - component: {fileID: 3187001491560254186}
   - component: {fileID: 2145006547066528009}
   m_Layer: 0
-  m_Name: Main Camera (1)
+  m_Name: KnifeCameraOverlay
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -683,7 +683,7 @@ MonoBehaviour:
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
-  m_ClearDepth: 1
+  m_ClearDepth: 0
   m_AllowXRRendering: 1
   m_AllowHDROutput: 1
   m_UseScreenCoordOverride: 0
@@ -739,10 +739,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3826909606081259412}
     m_Modifications:
-    - target: {fileID: 1271199806496388820, guid: 71b6d2616a1a56240a6c03a8442f2bd8, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 80b5b297ad85f1743aafc403dc2aeac4, type: 2}
     - target: {fileID: 3037797716432034538, guid: 71b6d2616a1a56240a6c03a8442f2bd8, type: 3}
       propertyPath: pickUpRadius
       value: 2
