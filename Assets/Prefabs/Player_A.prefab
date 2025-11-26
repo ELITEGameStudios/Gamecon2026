@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1773330650454820558}
   - component: {fileID: 1352036741572191164}
-  - component: {fileID: 3556984983021619308}
   - component: {fileID: 1810338499972972506}
+  - component: {fileID: 7446223571555729594}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -86,14 +86,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &3556984983021619308
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1070657142760835333}
-  m_Enabled: 1
 --- !u!114 &1810338499972972506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +131,20 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &7446223571555729594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1070657142760835333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
 --- !u!1 &4020180412028791333
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,8 +356,11 @@ MonoBehaviour:
   transform: {fileID: 8193150024748864371}
   rigidbody: {fileID: 3355421043909802066}
   animator: {fileID: 0}
-  baseSpeed: 500
+  baseSpeed: 650
   clampedRotationY: 85
+  movingConsiderationDeadzone: 0.1
+  maxGroundedSlope: 35
+  maxWallSlope: 25
   speedMultiplier: 1
   stateName: 
   groundedState:
@@ -362,7 +371,8 @@ MonoBehaviour:
     finished: 0
     started: 0
     movement: {fileID: 7998759388286820172}
-    jumpPower: 5
+    jumpPower: 15
+    FMODWalkEvent: 
   wallRunState:
     name: On Wall
     rigidbody: {fileID: 0}
@@ -371,8 +381,10 @@ MonoBehaviour:
     finished: 0
     started: 0
     movement: {fileID: 7998759388286820172}
-    jumpPower: 7
+    jumpPower: 21
     wallRunSpeed: 500
+    jumpWithOffset: 0
+    lookAngleDifference: 0
     wallRunDirection: {x: 0, y: 0, z: 0}
     wallRunContactNormal: {x: 0, y: 0, z: 0}
   airborneState:
@@ -383,17 +395,22 @@ MonoBehaviour:
     finished: 0
     started: 0
     movement: {fileID: 7998759388286820172}
-    jumpPower: 9
-    airStrafeForce: 0
+    jumpPower: 27
+    airStrafeForce: 1000
     extraJumps: 5
     jumpsLeft: 0
+  feetTf: {fileID: 0}
   movementInput: {x: 0, y: 0}
   lookInput: {x: 0, y: 0}
   rotSensitivity: {x: 1.5, y: 1}
+  hadMovementInputLastFrame: 0
+  wasMovingLastFrame: 0
   headTf: {fileID: 8315510085039383135}
   move: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   jump: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   look: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  FMODJumpEvent: 
+  FMODLandEvent: 
 --- !u!114 &7412303356397986176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -414,7 +431,7 @@ MonoBehaviour:
   parryTiming: 0.2
   recallCooldown: 1
   currentRecallCooldown: 0
-  parryForce: 500
+  parryForce: 50
   hitStopTime: 0.1
   parryCamShakeProfile:
     amplitudeCurve:
@@ -423,20 +440,20 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 0
         value: 1
-        inSlope: -2.5977895
-        outSlope: -2.5977895
+        inSlope: -2.6733792
+        outSlope: -2.6733792
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
-        outWeight: 0.02340234
+        outWeight: 0.04320432
       - serializedVersion: 3
         time: 1
         value: 0
-        inSlope: 0.027345108
-        outSlope: 0.027345108
+        inSlope: 0
+        outSlope: 0
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.16350543
+        inWeight: 0
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -465,8 +482,8 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    time: 1
-    frequency: 7
+    time: 0.6
+    frequency: 30
   fireAction: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   recallAction: {fileID: 4056342282253358456, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!114 &614682475978548823
@@ -561,7 +578,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     time: 0
-    frequency: 0
+    frequency: 16
 --- !u!1 &8254388001202766222
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,7 +589,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7461417046362414145}
   - component: {fileID: 6970671771087887587}
-  - component: {fileID: 3187001491560254186}
   - component: {fileID: 2145006547066528009}
   m_Layer: 0
   m_Name: KnifeCameraOverlay
@@ -647,14 +663,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &3187001491560254186
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8254388001202766222}
-  m_Enabled: 1
 --- !u!114 &2145006547066528009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -751,6 +759,30 @@ PrefabInstance:
       propertyPath: initProjectilePosition
       value: 
       objectReference: {fileID: 3826909606081259412}
+    - target: {fileID: 3037797716432034538, guid: 71b6d2616a1a56240a6c03a8442f2bd8, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037797716432034538, guid: 71b6d2616a1a56240a6c03a8442f2bd8, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037797716432034538, guid: 71b6d2616a1a56240a6c03a8442f2bd8, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.data[1].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037797716432034538, guid: 71b6d2616a1a56240a6c03a8442f2bd8, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.data[1].inSlope
+      value: 2.9547877
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037797716432034538, guid: 71b6d2616a1a56240a6c03a8442f2bd8, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.data[1].inWeight
+      value: 0.021602154
+      objectReference: {fileID: 0}
+    - target: {fileID: 3037797716432034538, guid: 71b6d2616a1a56240a6c03a8442f2bd8, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.data[1].outSlope
+      value: 2.9547877
+      objectReference: {fileID: 0}
     - target: {fileID: 3307033641051246530, guid: 71b6d2616a1a56240a6c03a8442f2bd8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

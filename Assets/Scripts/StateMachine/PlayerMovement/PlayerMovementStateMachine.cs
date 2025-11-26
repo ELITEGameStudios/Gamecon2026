@@ -9,6 +9,9 @@ public class PlayerMovementStateMachine : StateMachine
 {
     public float baseSpeed = 5f;
     public float clampedRotationY = 85;
+    public float movingConsiderationDeadzone = 0.1f;
+    public float maxGroundedSlope = 35;
+    public float maxWallSlope = 25;
     [SerializeField] private float speedMultiplier = 1f;
     public float liveMaxSpeed {get { return baseSpeed * speedMultiplier; }}
     public string stateName;
@@ -17,21 +20,43 @@ public class PlayerMovementStateMachine : StateMachine
     public WallRunState wallRunState;
     public AirborneState airborneState;
 
+    public Transform feetTf;
+
 
     public Vector2 movementInput;
     public Vector2 lookInput;
     public Vector2 rotSensitivity;
     // public Vector2 targetVelocity;
+
+
+    public bool hasMovementInput => movementInput.magnitude > movingConsiderationDeadzone;
+    public bool hadMovementInputLastFrame;
+
+
+    public bool isConsideredMoving => hasMovementInput && rigidbody.linearVelocity.magnitude > movingConsiderationDeadzone;
+    public bool wasMovingLastFrame;
+
     
 
     public Transform headTf;
     public InputActionReference move, jump, look;
+
+    [Header("FMOD events")]
+    public string FMODJumpEvent = "";
+    public string FMODLandEvent = "";
+    public FMOD.Studio.EventInstance playerJump, playerLand;
+
+
+
     void Awake(){ 
         defaultState = airborneState; 
         
         airborneState.OnReset();
         groundedState.OnReset();
         wallRunState.OnReset();
+
+        playerJump = FMODUnity.RuntimeManager.CreateInstance(FMODJumpEvent);
+        playerLand = FMODUnity.RuntimeManager.CreateInstance(FMODLandEvent);
     }
 
     protected override void OnStart()
@@ -46,12 +71,33 @@ public class PlayerMovementStateMachine : StateMachine
 
     protected override void OnUpdate()
     {
-        
+        FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerJump, transform);
+        FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerLand, transform);
     }
 
     protected override void OnFixedUpdate()
     {
         movementInput = move.action.ReadValue<Vector2>();
+        if(!wasMovingLastFrame && isConsideredMoving)
+        {
+            OnStartWalking();
+        }
+
+        if(currentState != groundedState){
+            if (CheckGrounded())
+            {
+                SetState(groundedState);
+                playerLand.start();
+            } 
+        }
+
+        wasMovingLastFrame = isConsideredMoving;
+        hadMovementInputLastFrame = hasMovementInput; 
+    }
+
+    public void OnStartWalking()
+    {
+        currentState.OnStartWalking();
     }
 
     protected override void OnSetState()
@@ -61,6 +107,7 @@ public class PlayerMovementStateMachine : StateMachine
 
     public void Jump(InputAction.CallbackContext ctx){
         currentState.Jump();
+        
     }
 
     public void CalculateLookRotation()
@@ -109,10 +156,7 @@ public class PlayerMovementStateMachine : StateMachine
     {
         if(currentState != null){currentState.OnCollisionEnter(collision);};
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall")){
-            wallRunState.storedCollision = collision;
-            SetState(wallRunState);
-        }
+        CheckWallCriteria(collision);
     }
 
     void OnCollisionExit(Collision collision){
@@ -120,8 +164,53 @@ public class PlayerMovementStateMachine : StateMachine
     }
     
     void OnCollisionStay(Collision collision){
-        if (collision.gameObject.layer ==LayerMask.NameToLayer("Ground") && currentState != groundedState){
-            SetState(groundedState);
+        currentState.OnCollisionStay(collision);
+
+
+        // if (collision.gameObject.layer ==LayerMask.NameToLayer("Ground") && currentState != groundedState){
+        //     // SetState(groundedState);
+        //     CheckGrounded(collision);
+        // }
+    }
+
+    public bool CheckGrounded()
+    {
+        if (Physics.Raycast(feetTf.position, Vector3.down, out RaycastHit hit, 0.2f))
+        {
+            // if(Vector3.Angle(Vector3.up, hit.normal) <= maxGroundedSlope)
+            // {
+            return true;
+            // }
+
+            Debug.DrawRay(hit.point, hit.normal);
+        }
+        return false;
+    }
+
+    void CheckWallCriteria(Collision collision)
+    {
+        // if (collision.gameObject.layer != LayerMask.NameToLayer("Wall"))
+        // {   
+        //     return;
+        // }
+        Vector3 closestPoint = collision.collider.ClosestPoint(transform.position);
+        Vector3 raycastDir = (closestPoint - transform.position).normalized;
+
+        if (Physics.Raycast(transform.position, raycastDir, out RaycastHit hit, Mathf.Infinity))//, LayerMask.GetMask("Wall")))
+        {
+            Vector3 comparisonVector = new Vector3(
+                hit.normal.x,
+                0,
+                hit.normal.z
+            );
+
+            if(Vector3.Angle(comparisonVector, hit.normal) <= maxWallSlope)
+            {
+                wallRunState.storedCollision = collision;
+                SetState(wallRunState);
+            }
+
+            Debug.DrawRay(hit.point, hit.normal);
         }
     }
     

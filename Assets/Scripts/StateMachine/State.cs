@@ -33,6 +33,7 @@ public abstract class State
     public virtual void LateUpdate(){} // Called every frame while the object is active
     public virtual void FixedUpdate() {} // Called every physics frame while the object is active
     public virtual void OnCollisionEnter(Collision collision) {} // Called every physics frame while the object is active
+    public virtual void OnCollisionStay(Collision collision) {} // Called every physics frame while the object is active
     public virtual void OnCollisionExit(Collision collision) {} // Called every physics frame while the object is active
 
     public virtual void End(bool interrupted = false) // Called once the state declares it is finished its task
