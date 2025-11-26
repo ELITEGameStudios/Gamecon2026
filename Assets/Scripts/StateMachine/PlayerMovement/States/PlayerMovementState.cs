@@ -26,4 +26,7 @@ public class PlayerMovementState : State
     }
 
     public virtual void Jump(){}
+    public virtual void OnStartWalking(){}
+    public virtual void OnStopWalking(){}
+    
 }
