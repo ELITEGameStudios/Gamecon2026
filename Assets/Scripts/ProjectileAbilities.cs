@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 // handles shooting, recalling, and parrying
 public class ProjectileAbilities : MonoBehaviour
@@ -22,10 +23,27 @@ public class ProjectileAbilities : MonoBehaviour
     private float fireCooldown;
     public ApplyShake.CamShakeProfile parryCamShakeProfile;
     
+    [Header("Impact Frame Post Processing Effects")]
+    [SerializeField] private Volume postProcessVolume;
+    [SerializeField] private VolumeProfile hitstopProfile;
+    [SerializeField] private float hitstopEffectFadeIn = 0.05f;
+    [SerializeField] private float hitstopEffectFadeOut = 0.1f;
+    
+    private VolumeProfile originalProfile;
+    private Coroutine hitstopEffectCoroutine;
+    
     [Header("Input")]
     public InputActionReference fireAction;
     public InputActionReference recallAction;
 
+    void Start()
+    {
+        if (postProcessVolume != null)
+        {
+            originalProfile = postProcessVolume.profile;
+        }
+    }
+    
     void OnEnable()
     {
         fireAction.action.started += OnFirePressed;
@@ -135,6 +153,15 @@ public class ProjectileAbilities : MonoBehaviour
     
     private IEnumerator ParryCoroutine()
     {
+        // Apply hitstop post processing immediately
+        if (postProcessVolume != null && hitstopProfile != null)
+        {
+            if (hitstopEffectCoroutine != null)
+                StopCoroutine(hitstopEffectCoroutine);
+            hitstopEffectCoroutine = StartCoroutine(HitstopPostProcessEffect());
+        }
+        
+        // Immediate hitstop
         if(hitStopTime > 0)
         {
             Time.timeScale = 0f;
@@ -146,5 +173,38 @@ public class ProjectileAbilities : MonoBehaviour
             ( transform.up - transform.forward  ).normalized * parryForce;
 
         camShaker.StartShake(parryCamShakeProfile);
+    }
+
+    private IEnumerator HitstopPostProcessEffect()
+    {
+        // Smooth transition to hitstop profile
+        float timer = 0f;
+        while (timer < hitstopEffectFadeIn)
+        {
+            timer += Time.unscaledDeltaTime;
+            float t = timer / hitstopEffectFadeIn;
+            postProcessVolume.weight = Mathf.SmoothStep(0f, 1f, t);
+            postProcessVolume.profile = hitstopProfile;
+            yield return null;
+        }
+
+        postProcessVolume.weight = 1f;
+
+        // Wait for the actual hitstop duration
+        yield return new WaitForSecondsRealtime(hitStopTime);
+
+        // Smooth transition back to original profile
+        timer = 0f;
+        while (timer < hitstopEffectFadeOut)
+        {
+            timer += Time.unscaledDeltaTime;
+            float t = timer / hitstopEffectFadeOut;
+            postProcessVolume.weight = Mathf.SmoothStep(1f, 0f, t);
+            yield return null;
+        }
+
+        postProcessVolume.weight = 0f;
+        postProcessVolume.profile = originalProfile;
+        hitstopEffectCoroutine = null;
     }
 }

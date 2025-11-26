@@ -26,8 +26,15 @@ public class Projectile : MonoBehaviour
     [Header("RecallData")]
     [SerializeField] private Vector3 embeddedPos;
     [SerializeField] private AnimationCurve recallAnimationCurve;
-    public float recallTime = 0.65f, recallCurrentTime;
+    public float baseRecallSpeed = 50f; // Overall speed multiplier
+    public float maxBoostDistance = 180f; // Distance threshold for speed boost
+    public float maxSpeedBoost = 3f;      // How much to speed up (3x = 300% speed)
+    public float recallCurrentTime { get; private set; }
+    public float totalRecallTime { get; private set; }
 
+    private float totalRecallDistance;
+    private float recallProgress;
+    
     private Rigidbody rb;
     private Collider col;
     
@@ -73,17 +80,22 @@ public class Projectile : MonoBehaviour
                 col.isTrigger = true;
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
-                recallCurrentTime = 0;
 
                 SetEmbeddedPos();
                 break;
             case ProjectileState.Recalling:
                 rb.isKinematic = false;
                 col.isTrigger = true;
-                
-                recallCurrentTime = recallTime;
+            
+                // Calculate total distance
+                totalRecallDistance = Vector3.Distance(transform.position, initProjectilePosition.position);
+                recallProgress = 0f;
+            
+                // Estimate total time by simulating the journey
+                // This ensures parry timing works correctly
+                totalRecallTime = CalculateEstimatedRecallTime(totalRecallDistance);
+                recallCurrentTime = totalRecallTime;
                 break;
-
             // case ProjectileState.PickedUp:
             //     rb.isKinematic = true;
             //     col.enabled = false;
@@ -92,35 +104,83 @@ public class Projectile : MonoBehaviour
         }
     }
     
+    private float CalculateEstimatedRecallTime(float distance)
+    {
+        // Sample the curve at several points to estimate total time
+        float estimatedTime = 0f;
+        int samples = 10;
+    
+        for (int i = 0; i < samples; i++)
+        {
+            float progress = (float)i / samples;
+            float speedMultiplier = recallAnimationCurve.Evaluate(progress);
+            float segmentTime = (distance / samples) / (baseRecallSpeed * speedMultiplier);
+            estimatedTime += segmentTime;
+        }
+    
+        return estimatedTime;
+    }
+    
     void RecallUpdate()
     {
-        transform.position = Vector3.Lerp(embeddedPos, initProjectilePosition.position, recallAnimationCurve.Evaluate( 1 - recallCurrentTime/recallTime ));
+        if (currentState != ProjectileState.Recalling)
+            return;
+
+        // Update timing for parry window
         recallCurrentTime -= Time.deltaTime;
-        if(recallCurrentTime <= 0)
+
+        // Calculate current distance and progress (0 to 1)
+        float currentDistance = Vector3.Distance(transform.position, initProjectilePosition.position);
+        recallProgress = 1f - (currentDistance / totalRecallDistance);
+    
+        // Get speed multiplier from curve (this is where the speed variations happen)
+        float speedMultiplier = recallAnimationCurve.Evaluate(recallProgress);
+    
+        // Calculate current speed and move
+        float currentSpeed = baseRecallSpeed * speedMultiplier;
+        transform.position = Vector3.MoveTowards(transform.position, initProjectilePosition.position, currentSpeed * Time.deltaTime);
+    
+        // Rotate towards hand
+        Vector3 directionToHand = (initProjectilePosition.position - transform.position).normalized;
+        if (directionToHand != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(directionToHand) * Quaternion.Euler(-90, 180, 0);
+        }
+    
+        // Check if we've reached the hand
+        if (currentDistance < 0.1f)
         {
             ReturnToIdle();
         }
     }
 
+
+
     public void SetEmbeddedPos(){
         embeddedPos = transform.position;
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision) //needs fixing. embedding doesn't work properly
     {
         if (currentState != ProjectileState.Flying || currentState == ProjectileState.Recalling)
             return;
-        
+
         if (hitEffect)
             Instantiate(hitEffect, transform.position, Quaternion.identity);
-
-        embedParent = collision.collider.transform;
-        transform.SetParent(embedParent);
-
-        transform.position += transform.forward * embedDepth; // set the knife deeper
         
+        Quaternion incomingRotation = transform.rotation;
+        Vector3 travelDirection = rb.linearVelocity.normalized; 
+
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        transform.position += travelDirection * (embedDepth * 0.1f);
+
+        // Restore the original rotation to maintain impact angle
+        transform.rotation = incomingRotation;
+
         SetState(ProjectileState.Embedded);
-        
+
         CancelInvoke(nameof(ReturnToIdle));
     }
     
@@ -143,7 +203,6 @@ public class Projectile : MonoBehaviour
         
         SetState(ProjectileState.Idle);
         
-        recallCurrentTime = 0;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         
