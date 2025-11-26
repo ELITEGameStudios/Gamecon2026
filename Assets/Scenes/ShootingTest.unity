@@ -13960,6 +13960,10 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
+      propertyPath: parryTiming
+      value: 0.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412303356397986176, guid: a00e1bb0552bc2e46b102e82803f1494, type: 3}
       propertyPath: featherKnife
       value: 
       objectReference: {fileID: 1797459529}
@@ -29432,8 +29436,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.003333331
-      value: 0.2
+      time: 0
+      value: 0.1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -29506,9 +29510,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  minRecallTime: 0.5
-  maxRecallTime: 2
   baseRecallSpeed: 50
+  maxBoostDistance: 180
+  maxSpeedBoost: 5
+  totalRecallDistance: 0
 --- !u!65 &1797459530
 BoxCollider:
   m_ObjectHideFlags: 0

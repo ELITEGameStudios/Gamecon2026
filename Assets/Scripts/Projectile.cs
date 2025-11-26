@@ -32,7 +32,7 @@ public class Projectile : MonoBehaviour
     public float recallCurrentTime { get; private set; }
     public float totalRecallTime { get; private set; }
 
-    private float totalRecallDistance;
+    public float totalRecallDistance;
     private float recallProgress;
     
     private Rigidbody rb;
@@ -84,18 +84,24 @@ public class Projectile : MonoBehaviour
                 SetEmbeddedPos();
                 break;
             case ProjectileState.Recalling:
-                rb.isKinematic = false;
+                // Stop physics immediately
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.isKinematic = true;
                 col.isTrigger = true;
             
-                // Calculate total distance
+                CancelInvoke(nameof(ReturnToIdle));
+                Invoke(nameof(ReturnToIdle), lifetime);
+            
+                // Calculate recall parameters
                 totalRecallDistance = Vector3.Distance(transform.position, initProjectilePosition.position);
                 recallProgress = 0f;
             
-                // Estimate total time by simulating the journey
-                // This ensures parry timing works correctly
+                // Estimate total time
                 totalRecallTime = CalculateEstimatedRecallTime(totalRecallDistance);
                 recallCurrentTime = totalRecallTime;
                 break;
+            
             // case ProjectileState.PickedUp:
             //     rb.isKinematic = true;
             //     col.enabled = false;
@@ -104,40 +110,36 @@ public class Projectile : MonoBehaviour
         }
     }
     
-    private float CalculateEstimatedRecallTime(float distance)
-    {
-        // Sample the curve at several points to estimate total time
-        float estimatedTime = 0f;
-        int samples = 10;
-    
-        for (int i = 0; i < samples; i++)
-        {
-            float progress = (float)i / samples;
-            float speedMultiplier = recallAnimationCurve.Evaluate(progress);
-            float segmentTime = (distance / samples) / (baseRecallSpeed * speedMultiplier);
-            estimatedTime += segmentTime;
-        }
-    
-        return estimatedTime;
-    }
-    
     void RecallUpdate()
     {
         if (currentState != ProjectileState.Recalling)
             return;
 
-        // Update timing for parry window
         recallCurrentTime -= Time.deltaTime;
 
-        // Calculate current distance and progress (0 to 1)
         float currentDistance = Vector3.Distance(transform.position, initProjectilePosition.position);
         recallProgress = 1f - (currentDistance / totalRecallDistance);
     
-        // Get speed multiplier from curve (this is where the speed variations happen)
+        // Calculate distance-based speed boost
+        float distanceBoost = 1f;
+        if (currentDistance > maxBoostDistance)
+        {
+            // Apply maximum boost when way beyond threshold
+            distanceBoost = maxSpeedBoost;
+        }
+        else if (currentDistance > maxBoostDistance * 0.7f) // Start slowing down at 70% of threshold
+        {
+            // Gradually reduce boost as it approaches normal range
+            float boostProgress = (currentDistance - (maxBoostDistance * 0.7f)) / (maxBoostDistance * 0.3f);
+            distanceBoost = Mathf.Lerp(1f, maxSpeedBoost, boostProgress);
+        }
+    
+        // Get curve-based speed multiplier
         float speedMultiplier = recallAnimationCurve.Evaluate(recallProgress);
     
-        // Calculate current speed and move
-        float currentSpeed = baseRecallSpeed * speedMultiplier;
+        // Combine both multipliers
+        float currentSpeed = baseRecallSpeed * speedMultiplier * distanceBoost;
+    
         transform.position = Vector3.MoveTowards(transform.position, initProjectilePosition.position, currentSpeed * Time.deltaTime);
     
         // Rotate towards hand
@@ -147,14 +149,47 @@ public class Projectile : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(directionToHand) * Quaternion.Euler(-90, 180, 0);
         }
     
-        // Check if we've reached the hand
         if (currentDistance < 0.1f)
         {
             ReturnToIdle();
         }
     }
 
+    private float CalculateEstimatedRecallTime(float distance)
+    {
+        // Sample the curve at several points to estimate total time
+        float estimatedTime = 0f;
+        int samples = 10;
 
+        for (int i = 0; i < samples; i++)
+        {
+            float progress = (float)i / samples;
+            float speedMultiplier = recallAnimationCurve.Evaluate(progress);
+        
+            // Calculate distance boost for this segment too!
+            float segmentDistance = distance * (1f - progress);
+            float distanceBoost = CalculateDistanceBoost(segmentDistance);
+        
+            float segmentTime = (distance / samples) / (baseRecallSpeed * speedMultiplier * distanceBoost);
+            estimatedTime += segmentTime;
+        }
+
+        return estimatedTime;
+    }
+    
+    private float CalculateDistanceBoost(float currentDistance)
+    {
+        if (currentDistance > maxBoostDistance)
+        {
+            return maxSpeedBoost;
+        }
+        else if (currentDistance > maxBoostDistance * 0.7f)
+        {
+            float boostProgress = (currentDistance - (maxBoostDistance * 0.7f)) / (maxBoostDistance * 0.3f);
+            return Mathf.Lerp(1f, maxSpeedBoost, boostProgress);
+        }
+        return 1f;
+    }
 
     public void SetEmbeddedPos(){
         embeddedPos = transform.position;

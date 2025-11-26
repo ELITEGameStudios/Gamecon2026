@@ -15,8 +15,7 @@ public class ProjectileAbilities : MonoBehaviour
     public ApplyShake camShaker;
 
     [Header("Settings")]
-    [SerializeField] private float fireRate = 2f; // temporary
-    [SerializeField] private float parryTiming = 0.2f;
+    [SerializeField] private float parryTiming = 0.8f; // 0.8 = last 20% of distance is parryable
     [SerializeField] private float recallCooldown, currentRecallCooldown;
     [SerializeField] private float parryForce = 500f;
     [SerializeField] private float hitStopTime = 0.1f;
@@ -58,9 +57,6 @@ public class ProjectileAbilities : MonoBehaviour
 
     void Update()
     {
-        if (fireCooldown > 0) 
-            fireCooldown -= Time.deltaTime;
-        
         if (currentRecallCooldown > 0) 
             currentRecallCooldown -= Time.deltaTime;
     }
@@ -68,13 +64,22 @@ public class ProjectileAbilities : MonoBehaviour
     private void OnFirePressed(InputAction.CallbackContext ctx)
     {
         if(featherKnife.currentState == Projectile.ProjectileState.Recalling){
-            if(featherKnife.recallCurrentTime < parryTiming)
+            // use distance parry timing instead of time-based
+            float currentDistance = Vector3.Distance(featherKnife.transform.position, transform.position);
+            float totalDistance = featherKnife.totalRecallDistance;
+            float progress = 1f - (currentDistance / totalDistance);
+        
+            // Parry when close to the player (last 20% of journey)
+            if(progress > parryTiming)
             {
                 Debug.Log("Parried!");
                 TryShoot(true);
             }
         }
-        TryShoot();
+        else
+        {
+            TryShoot();
+        }
     }
 
     private void OnRecallPressed(InputAction.CallbackContext ctx)
@@ -89,9 +94,6 @@ public class ProjectileAbilities : MonoBehaviour
 
     private void TryShoot(bool parry = false)
     {
-        if (fireCooldown > 0)
-            return;
-        
         if (featherKnife.currentState != Projectile.ProjectileState.Idle && !parry)
             return;
         
@@ -141,10 +143,7 @@ public class ProjectileAbilities : MonoBehaviour
         featherKnife.transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(-90, 180, 0);
 
         featherKnife.CastProjectile(direction);
-
-        fireCooldown = 1f / fireRate;
     
-        // Start hitstop immediately after spawning projectile
         if (parry)
         {
             StartCoroutine(ParryCoroutine());
