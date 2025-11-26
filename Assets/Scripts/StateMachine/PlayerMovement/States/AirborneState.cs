@@ -25,7 +25,6 @@ public class AirborneState : PlayerMovementState
     public override void FixedUpdate()
     {
         movement.CalculateLookRotation();
-
         if (airStrafeForce > 0){
             rigidbody.AddForce(
             (
@@ -45,10 +44,10 @@ public class AirborneState : PlayerMovementState
 
     public override void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")){
-            movement.SetState(movement.groundedState);
-            movement.playerLand.start();
-        }
+        // if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")){
+        //     movement.SetState(movement.groundedState);
+        //     movement.playerLand.start();
+        // }
     }
 
     public override void End(bool interrupted = false)

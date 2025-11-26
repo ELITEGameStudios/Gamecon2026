@@ -31,6 +31,11 @@ public class GroundedState : PlayerMovementState
 
     public override void FixedUpdate()
     {
+        if (!movement.CheckGrounded())
+        {
+            movement.SetState(movement.airborneState);
+        }
+        
         movement.CalculateLookRotation();
         movement.NormalWalking();
     }
@@ -44,10 +49,10 @@ public class GroundedState : PlayerMovementState
         playerWalkState.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
-    public void UpdateFMODEvents()
-    {
+    // public void UpdateFMODEvents()
+    // {
         
-    }
+    // }
 
     public override void Jump()
     {
@@ -57,13 +62,13 @@ public class GroundedState : PlayerMovementState
 
     public override void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")){
-            if(Physics.Raycast(movement.feetTf.position, Vector3.down, 0.2f, LayerMask.GetMask("Ground"))){
-                return;
+        // if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")){
+        //     if(Physics.Raycast(movement.feetTf.position, Vector3.down, 0.2f, LayerMask.GetMask("Ground"))){
+        //         return;
 
-            }
-            movement.SetState(movement.airborneState);
-        }
+        //     }
+        //     movement.SetState(movement.airborneState);
+        // }
     }
 
     public override void End(bool interrupted = false)

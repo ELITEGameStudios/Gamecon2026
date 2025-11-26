@@ -83,6 +83,13 @@ public class PlayerMovementStateMachine : StateMachine
             OnStartWalking();
         }
 
+        if(currentState != groundedState){
+            if (CheckGrounded())
+            {
+                SetState(groundedState);
+                playerLand.start();
+            } 
+        }
 
         wasMovingLastFrame = isConsideredMoving;
         hadMovementInputLastFrame = hasMovementInput; 
@@ -160,27 +167,24 @@ public class PlayerMovementStateMachine : StateMachine
         currentState.OnCollisionStay(collision);
 
 
-        if (collision.gameObject.layer ==LayerMask.NameToLayer("Ground") && currentState != groundedState){
-            // SetState(groundedState);
-            CheckGrounded(collision);
-        }
+        // if (collision.gameObject.layer ==LayerMask.NameToLayer("Ground") && currentState != groundedState){
+        //     // SetState(groundedState);
+        //     CheckGrounded(collision);
+        // }
     }
 
-    void CheckGrounded(Collision collision)
+    public bool CheckGrounded()
     {
-        Vector3 closestPoint = collision.collider.ClosestPoint(transform.position);
-        Vector3 raycastDir = (closestPoint - transform.position).normalized;
-
-        if (Physics.Raycast(transform.position, raycastDir, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
+        if (Physics.Raycast(feetTf.position, Vector3.down, out RaycastHit hit, 0.2f))
         {
-            if(Vector3.Angle(Vector3.up, hit.normal) <= maxGroundedSlope)
-            {
-                playerLand.start();
-            SetState(groundedState);
-            }
+            // if(Vector3.Angle(Vector3.up, hit.normal) <= maxGroundedSlope)
+            // {
+            return true;
+            // }
 
             Debug.DrawRay(hit.point, hit.normal);
         }
+        return false;
     }
 
     void CheckWallCriteria(Collision collision)
