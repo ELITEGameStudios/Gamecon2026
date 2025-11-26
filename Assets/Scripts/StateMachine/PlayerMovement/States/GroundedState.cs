@@ -21,7 +21,6 @@ public class GroundedState : PlayerMovementState
 
     public override void Start()
     {
-        playerWalkState = RuntimeManager.CreateInstance(FMODWalkEvent);
     }
 
     public override void Update()
@@ -42,6 +41,7 @@ public class GroundedState : PlayerMovementState
 
     public override void OnStartWalking()
     {
+        playerWalkState = RuntimeManager.CreateInstance(FMODWalkEvent);
         playerWalkState.start();
     }
     public override void OnStopWalking()

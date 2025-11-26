@@ -82,6 +82,10 @@ public class PlayerMovementStateMachine : StateMachine
         {
             OnStartWalking();
         }
+        if(wasMovingLastFrame && !isConsideredMoving)
+        {
+            currentState.OnStopWalking();
+        }
 
         if(currentState != groundedState){
             if (CheckGrounded())
