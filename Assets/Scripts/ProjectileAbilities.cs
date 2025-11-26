@@ -16,10 +16,11 @@ public class ProjectileAbilities : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private float parryTiming = 0.8f; // 0.8 = last 20% of distance is parryable
-    [SerializeField] private float recallCooldown, currentRecallCooldown;
+    [SerializeField] private float recallCooldown = 8f;
+    private float currentRecallCooldown;
     [SerializeField] private float parryForce = 500f;
     [SerializeField] private float hitStopTime = 0.1f;
-    private float fireCooldown;
+    [SerializeField] private HUDManager hudManager;
     public ApplyShake.CamShakeProfile parryCamShakeProfile;
     
     [Header("Impact Frame Post Processing Effects")]
@@ -57,8 +58,15 @@ public class ProjectileAbilities : MonoBehaviour
 
     void Update()
     {
-        if (currentRecallCooldown > 0) 
+        if (currentRecallCooldown > 0)
+        {
             currentRecallCooldown -= Time.deltaTime;
+            
+            if (hudManager != null)
+            {
+                hudManager.UpdateRecallCooldown(currentRecallCooldown, recallCooldown);
+            }
+        }
     }
 
     private void OnFirePressed(InputAction.CallbackContext ctx)
@@ -85,11 +93,29 @@ public class ProjectileAbilities : MonoBehaviour
     private void OnRecallPressed(InputAction.CallbackContext ctx)
     {
         if(currentRecallCooldown > 0 || featherKnife.currentState == Projectile.ProjectileState.Idle){return;}
-        else{
+        else
+        {
             if(featherKnife.currentState == Projectile.ProjectileState.Flying) { featherKnife.SetEmbeddedPos(); }
             featherKnife.SetState(Projectile.ProjectileState.Recalling);
             currentRecallCooldown = recallCooldown;
+            
+            if (hudManager != null)
+            {
+                hudManager.UpdateRecallCooldown(currentRecallCooldown, recallCooldown);
+            }
         }
+    }
+    
+    public void ResetRecallCooldown()
+    {
+        currentRecallCooldown = 0f;
+    
+        if (hudManager != null)
+        {
+            hudManager.UpdateRecallCooldown(currentRecallCooldown, recallCooldown);
+        }
+    
+        Debug.Log("spooky triad");
     }
 
     private void TryShoot(bool parry = false)

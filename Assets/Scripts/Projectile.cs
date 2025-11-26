@@ -22,6 +22,7 @@ public class Projectile : MonoBehaviour
     
     [Header("Player Reference")]
     [SerializeField] private Transform playerTransform;
+    [SerializeField] private ProjectileAbilities projectileAbilities;
     
     [Header("RecallData")]
     [SerializeField] private Vector3 embeddedPos;
@@ -200,6 +201,14 @@ public class Projectile : MonoBehaviour
         if (currentState != ProjectileState.Flying || currentState == ProjectileState.Recalling)
             return;
 
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            if (projectileAbilities != null)
+            {
+                projectileAbilities.ResetRecallCooldown();
+            }
+        }
+        
         if (hitEffect)
             Instantiate(hitEffect, transform.position, Quaternion.identity);
         
