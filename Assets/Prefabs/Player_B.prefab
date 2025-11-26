@@ -73,9 +73,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6889705924443533816}
   - component: {fileID: 555948549067830876}
-  - component: {fileID: 3640919098336886968}
   - component: {fileID: 1604900789019533889}
   - component: {fileID: 4533289073681933953}
+  - component: {fileID: 6388370802827006766}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -150,14 +150,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &3640919098336886968
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2759312159569905310}
-  m_Enabled: 1
 --- !u!114 &1604900789019533889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,6 +212,20 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &6388370802827006766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2759312159569905310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
 --- !u!1 &5635011081583198763
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,6 +417,9 @@ MonoBehaviour:
   animator: {fileID: 0}
   baseSpeed: 650
   clampedRotationY: 85
+  movingConsiderationDeadzone: 0.1
+  maxGroundedSlope: 35
+  maxWallSlope: 25
   speedMultiplier: 1
   stateName: 
   groundedState:
@@ -422,6 +431,7 @@ MonoBehaviour:
     started: 0
     movement: {fileID: 5661755393794695009}
     jumpPower: 15
+    FMODWalkEvent: event:/WalkEvent
   wallRunState:
     name: On Wall
     rigidbody: {fileID: 0}
@@ -432,6 +442,8 @@ MonoBehaviour:
     movement: {fileID: 5661755393794695009}
     jumpPower: 21
     wallRunSpeed: 500
+    jumpWithOffset: 0
+    lookAngleDifference: 0
     wallRunDirection: {x: 0, y: 0, z: 0}
     wallRunContactNormal: {x: 0, y: 0, z: 0}
   airborneState:
@@ -446,13 +458,18 @@ MonoBehaviour:
     airStrafeForce: 1000
     extraJumps: 5
     jumpsLeft: 0
+  feetTf: {fileID: 0}
   movementInput: {x: 0, y: 0}
   lookInput: {x: 0, y: 0}
   rotSensitivity: {x: 0.5, y: 0.5}
+  hadMovementInputLastFrame: 0
+  wasMovingLastFrame: 0
   headTf: {fileID: 3423599093843498842}
   move: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   jump: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   look: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  FMODJumpEvent: event:/JumpEvent
+  FMODLandEvent: event:/LandEvent
 --- !u!114 &9210448123481811803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,8 +588,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1958203598437453446}
   - component: {fileID: 9191719100912440559}
-  - component: {fileID: 8152034354212818193}
   - component: {fileID: 4931475866634797857}
+  - component: {fileID: 8131374396052813390}
   m_Layer: 0
   m_Name: KnifeCameraOverlay
   m_TagString: MainCamera
@@ -646,14 +663,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &8152034354212818193
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6630179385785946670}
-  m_Enabled: 1
 --- !u!114 &4931475866634797857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -698,6 +707,20 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &8131374396052813390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6630179385785946670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
 --- !u!1001 &3232181975520740532
 PrefabInstance:
   m_ObjectHideFlags: 0
