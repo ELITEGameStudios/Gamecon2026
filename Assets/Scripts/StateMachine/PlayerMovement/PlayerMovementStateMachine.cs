@@ -175,7 +175,7 @@ public class PlayerMovementStateMachine : StateMachine
 
     public bool CheckGrounded()
     {
-        if (Physics.Raycast(feetTf.position, Vector3.down, out RaycastHit hit, 0.2f))
+        if (Physics.Raycast(feetTf.position, Vector3.down, out RaycastHit hit, 0.4f))
         {
             // if(Vector3.Angle(Vector3.up, hit.normal) <= maxGroundedSlope)
             // {

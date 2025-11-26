@@ -101,6 +101,8 @@ public class WallRunState : PlayerMovementState
 
     public override void Jump()
     {
+        movement.SetState(movement.airborneState);
+        return;
         // RaycastHit left, right;
 
         // Physics.Raycast(transform.position, transform.right * -1, out left, LayerMask.GetMask("Wall"));
@@ -116,7 +118,6 @@ public class WallRunState : PlayerMovementState
             ( transform.up + (transform.right * xJumpDirection)  ).normalized
             * jumpPower, ForceMode.Impulse);
         
-        movement.SetState(movement.airborneState);
 
     }
 
