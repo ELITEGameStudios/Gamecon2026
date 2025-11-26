@@ -86,12 +86,53 @@ public class ProjectileAbilities : MonoBehaviour
 
     private void Shoot(bool parry)
     {
-        Vector3 direction = cam.transform.forward;
-        featherKnife.CastProjectile(direction * (parry ? 2 : 1));
+        Vector3 spawnPos;
+
+        if (parry)
+        {
+            // For parry, spawn the projectile further away from camera
+            spawnPos = cam.transform.position + cam.transform.forward * 2f; // Increased distance
+        }
+        else
+        {
+            // Normal shooting spawn position
+            spawnPos = cam.transform.position + cam.transform.forward * 0.5f;
+        }
+
+        // Ray from crosshair
+        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+
+        Vector3 targetPoint;
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 200f))
+        {
+            targetPoint = hit.point;
+        }
+        else
+        {
+            targetPoint = ray.GetPoint(200f); // far point
+        }
+
+        Vector3 direction = (targetPoint - spawnPos).normalized;
+
+        // parry multiplier
+        if (parry)
+            direction *= 2f;
+
+        featherKnife.transform.position = spawnPos;
+        featherKnife.transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(-90, 180, 0);
+
+        featherKnife.CastProjectile(direction);
+
         fireCooldown = 1f / fireRate;
+    
+        // Start hitstop immediately after spawning projectile
+        if (parry)
+        {
+            StartCoroutine(ParryCoroutine());
+        }
     }
-
-
+    
     private IEnumerator ParryCoroutine()
     {
         if(hitStopTime > 0)

@@ -127,6 +127,7 @@ public class Projectile : MonoBehaviour
     public void CastProjectile(Vector3 direction)
     {
         transform.SetParent(null);
+        transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(-90, 180, 0);
         SetState(ProjectileState.Flying);
         
         rb.linearVelocity = direction * speed;
