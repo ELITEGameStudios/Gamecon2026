@@ -17,6 +17,7 @@ public class WallRunState : PlayerMovementState
 
     public override void Start()
     {
+        movement.OnStopWalking();
         Vector3 closestPoint = storedCollision.collider.ClosestPoint(transform.position);
         Vector3 raycastDir = (closestPoint - transform.position).normalized;
         

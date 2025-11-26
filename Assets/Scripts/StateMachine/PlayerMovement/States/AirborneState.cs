@@ -19,6 +19,7 @@ public class AirborneState : PlayerMovementState
 
     public override void Start()
     {
+        movement.OnStopWalking();
         jumpsLeft = extraJumps;
     }
 

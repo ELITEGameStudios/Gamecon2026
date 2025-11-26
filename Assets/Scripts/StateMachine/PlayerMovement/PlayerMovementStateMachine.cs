@@ -84,7 +84,7 @@ public class PlayerMovementStateMachine : StateMachine
         }
         if(wasMovingLastFrame && !isConsideredMoving)
         {
-            currentState.OnStopWalking();
+            OnStopWalking();
         }
 
         if(currentState != groundedState){
@@ -102,6 +102,18 @@ public class PlayerMovementStateMachine : StateMachine
     public void OnStartWalking()
     {
         currentState.OnStartWalking();
+    }
+
+    public void OnStopWalking()
+    {
+        try
+        {
+            currentState.OnStopWalking();
+        }
+        catch
+        {
+            Debug.Log("Caught an error");
+        }
     }
 
     protected override void OnSetState()
