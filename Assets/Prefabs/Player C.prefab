@@ -644,7 +644,7 @@ MonoBehaviour:
     finished: 0
     started: 0
     movement: {fileID: 5837548833278922391}
-    jumpPower: 15
+    jumpPower: 30
     FMODWalkEvent: event:/FootstepsEvent
   wallRunState:
     name: On Wall
@@ -659,6 +659,7 @@ MonoBehaviour:
     jumpWithOffset: 0
     lookAngleDifference: 0
     wallRunDirection: {x: 0, y: 0, z: 0}
+    targetCollider: {fileID: 0}
     wallRunContactNormal: {x: 0, y: 0, z: 0}
   airborneState:
     name: Airborne
@@ -670,7 +671,7 @@ MonoBehaviour:
     movement: {fileID: 5837548833278922391}
     jumpPower: 27
     airStrafeForce: 1000
-    extraJumps: 0
+    extraJumps: 1
     jumpsLeft: 0
   feetTf: {fileID: 7280931948175992934}
   movementInput: {x: 0, y: 0}
