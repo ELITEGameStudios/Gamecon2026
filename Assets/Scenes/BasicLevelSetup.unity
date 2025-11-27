@@ -7315,22 +7315,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &874502185 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8944397084400037447, guid: 2685f5f290e592245a47412772182963, type: 3}
-  m_PrefabInstance: {fileID: 5409564427630158709}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3641decfe5b1dd8418f05a98b42bb1b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &874502191 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 947569911892450442, guid: 2685f5f290e592245a47412772182963, type: 3}
-  m_PrefabInstance: {fileID: 5409564427630158709}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &885544840
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17419,11 +17403,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 3390558720134950976, guid: e5bfef56ca4c3ae42bafad0dcf9e4c95, type: 3}
---- !u!4 &1905930404 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9043813615459997854, guid: 2685f5f290e592245a47412772182963, type: 3}
-  m_PrefabInstance: {fileID: 5409564427630158709}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1907616530
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20527,26 +20506,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 877114891356634493, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: m_Size.y
-      value: 0.0043754205
-      objectReference: {fileID: 0}
-    - target: {fileID: 877114891356634493, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: m_Size.z
-      value: 0.00023574475
-      objectReference: {fileID: 0}
-    - target: {fileID: 877114891356634493, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: m_Center.x
-      value: -0.0000026848145
-      objectReference: {fileID: 0}
-    - target: {fileID: 877114891356634493, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: m_Center.y
-      value: 0.0021217444
-      objectReference: {fileID: 0}
-    - target: {fileID: 877114891356634493, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: m_Center.z
-      value: -0.0000057585867
-      objectReference: {fileID: 0}
     - target: {fileID: 947569911892450442, guid: 2685f5f290e592245a47412772182963, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5
@@ -20587,69 +20546,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2123446602129931692, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: m_Layer
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2682835860109148229, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: field of view
-      value: 70
-      objectReference: {fileID: 0}
-    - target: {fileID: 3736855633952113512, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: playerTransform
-      value: 
-      objectReference: {fileID: 874502191}
-    - target: {fileID: 3736855633952113512, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: projectileAbilities
-      value: 
-      objectReference: {fileID: 874502185}
-    - target: {fileID: 3736855633952113512, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: initProjectilePosition
-      value: 
-      objectReference: {fileID: 1905930404}
-    - target: {fileID: 5837548833278922391, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: FMODJumpEvent
-      value: event:/JumpEvent
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837548833278922391, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: FMODLandEvent
-      value: event:/LandEvent
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837548833278922391, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: airborneState.extraJumps
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837548833278922391, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: groundedState.FMODWalkEvent
-      value: event:/FootstepsEvent
-      objectReference: {fileID: 0}
-    - target: {fileID: 7280931948175992934, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.975
-      objectReference: {fileID: 0}
     - target: {fileID: 8944397084400037447, guid: 2685f5f290e592245a47412772182963, type: 3}
       propertyPath: hudManager
       value: 
       objectReference: {fileID: 887208896}
-    - target: {fileID: 9043813615459997854, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1.16
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043813615459997854, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043813615459997854, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.79
-      objectReference: {fileID: 0}
     - target: {fileID: 9105646310362161738, guid: 2685f5f290e592245a47412772182963, type: 3}
       propertyPath: m_Name
       value: Player C
-      objectReference: {fileID: 0}
-    - target: {fileID: 9105646310362161738, guid: 2685f5f290e592245a47412772182963, type: 3}
-      propertyPath: m_Layer
-      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

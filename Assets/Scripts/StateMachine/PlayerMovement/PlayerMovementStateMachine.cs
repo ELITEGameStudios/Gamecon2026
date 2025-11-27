@@ -223,6 +223,7 @@ public class PlayerMovementStateMachine : StateMachine
             if(Vector3.Angle(comparisonVector, hit.normal) <= maxWallSlope)
             {
                 wallRunState.storedCollision = collision;
+                wallRunState.targetCollider = collision.collider;
                 SetState(wallRunState);
             }
 

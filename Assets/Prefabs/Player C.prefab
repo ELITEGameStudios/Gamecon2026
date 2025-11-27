@@ -66,7 +66,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 1000
-  field of view: 60
+  field of view: 70
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -138,7 +138,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7204409649046523041}
   - component: {fileID: 1837064246957016365}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -206,7 +206,7 @@ Transform:
   m_GameObject: {fileID: 3968745391638832943}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.039, z: 0}
+  m_LocalPosition: {x: 0, y: -0.975, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -400,7 +400,7 @@ Transform:
   m_GameObject: {fileID: 8081566621423597103}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7372774, z: 0.67559016, w: 0}
-  m_LocalPosition: {x: 0.88, y: -0.8, z: 0.6}
+  m_LocalPosition: {x: 1.16, y: -1, z: 0.79}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -486,7 +486,7 @@ GameObject:
   - component: {fileID: 5837548833278922391}
   - component: {fileID: 8944397084400037447}
   - component: {fileID: 712407731034041875}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player C
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -645,7 +645,7 @@ MonoBehaviour:
     started: 0
     movement: {fileID: 5837548833278922391}
     jumpPower: 15
-    FMODWalkEvent: event:/WalkEvent
+    FMODWalkEvent: event:/FootstepsEvent
   wallRunState:
     name: On Wall
     rigidbody: {fileID: 0}
@@ -670,7 +670,7 @@ MonoBehaviour:
     movement: {fileID: 5837548833278922391}
     jumpPower: 27
     airStrafeForce: 1000
-    extraJumps: 5
+    extraJumps: 0
     jumpsLeft: 0
   feetTf: {fileID: 7280931948175992934}
   movementInput: {x: 0, y: 0}
@@ -852,6 +852,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4738793807033465844, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: m_Size.y
+      value: 0.0043754205
+      objectReference: {fileID: 0}
+    - target: {fileID: 4738793807033465844, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: m_Size.z
+      value: 0.00023574475
+      objectReference: {fileID: 0}
+    - target: {fileID: 4738793807033465844, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: m_Center.y
+      value: 0.0021217444
+      objectReference: {fileID: 0}
+    - target: {fileID: 4738793807033465844, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: m_Center.z
+      value: -0.0000057585867
+      objectReference: {fileID: 0}
+    - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: playerTransform
+      value: 
+      objectReference: {fileID: 947569911892450442}
+    - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: projectileAbilities
+      value: 
+      objectReference: {fileID: 8944397084400037447}
+    - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: initProjectilePosition
+      value: 
+      objectReference: {fileID: 9043813615459997854}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
