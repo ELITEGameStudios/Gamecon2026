@@ -207,6 +207,23 @@ public class Projectile : MonoBehaviour
             {
                 projectileAbilities.ResetRecallCooldown();
             }
+
+        }
+
+        if(collision.transform.GetComponent<EnemyBase>() == null)
+        {
+            if(collision.transform.parent.GetComponent<EnemyBase>() == null)
+            {
+                Debug.Log("Null");
+            }
+            else
+            {
+                collision.transform.parent.GetComponent<EnemyBase>().Damage();
+            }
+        }
+        else
+        {
+            collision.transform.GetComponent<EnemyBase>().Damage();
         }
         
         if (hitEffect)
