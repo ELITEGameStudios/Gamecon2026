@@ -5,7 +5,7 @@ public class Player : EntityBase
     public static Player instance {get; private set;}
 
     [Header("FMOD events")]
-    public string FMODDeathEvent = "";
+    public string FMODDeathEvent = "event:/DeathEvent";
     public FMOD.Studio.EventInstance playerDeath;
 
     protected override void Init()

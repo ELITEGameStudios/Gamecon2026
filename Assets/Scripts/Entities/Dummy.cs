@@ -3,7 +3,7 @@ using UnityEngine;
 public class Dummy : EnemyBase
 {
 
-
+    
     /* ---------------------------Template Inherited function documentation------------------------- */
     // Feel free to copy paste these into any new enemy you implement so you can have documentation comments at hand
 
@@ -13,6 +13,8 @@ public class Dummy : EnemyBase
     {
         base.Init();
         entityName = "Dummy";
+
+        
         Debug.Log("Dummy init called");
     }
 

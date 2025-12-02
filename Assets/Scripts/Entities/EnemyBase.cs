@@ -20,6 +20,10 @@ public class EnemyBase : EntityBase
         // Put your code here
 
     }
+    protected override void OnUpdate()
+    {
+        base.OnUpdate();
+    }
 
     protected override void OnDeath()
     {
