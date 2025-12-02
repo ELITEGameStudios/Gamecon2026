@@ -23,17 +23,19 @@ public abstract class EntityBase : MonoBehaviour
     }
     protected virtual void OnUpdate()
     {
-        FMODUnity.RuntimeManager.AttachInstanceToGameObject(entityDeath, transform);
+        FMODUnity.RuntimeManager.AttachInstanceToGameObject(entityDeath, transform.parent);
     }
 
 
     protected virtual void Init()
     {
         health = maxHealth;
+        entityDeath = FMODUnity.RuntimeManager.CreateInstance(FMODDeathEvent);
     }
 
     protected virtual void OnDeath()
     {
+        
         entityDeath.start();
 
         Debug.Log(entityName + " Has been slain.");
