@@ -285,6 +285,28 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a0ab5b9179d9ccd47b23507aa23e99bf, type: 3}
   m_PrefabInstance: {fileID: 83367943}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &89246468 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8382149780426833419, guid: 2685f5f290e592245a47412772182963, type: 3}
+  m_PrefabInstance: {fileID: 385193029}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &89246470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 89246468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5101bdc4752bc014e8833d842447de6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraTf: {fileID: 448240584}
+  Kp: 0.1
+  targetRoll: 0
+  testVar: 30.5
+  offset: -15
 --- !u!1 &91145553 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 812a6c63e2917054bbf268392b3e770f, type: 3}
@@ -2122,6 +2144,10 @@ PrefabInstance:
       value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 5837548833278922391, guid: 2685f5f290e592245a47412772182963, type: 3}
+      propertyPath: wallRunState.camAngle
+      value: 
+      objectReference: {fileID: 89246470}
+    - target: {fileID: 5837548833278922391, guid: 2685f5f290e592245a47412772182963, type: 3}
       propertyPath: groundedState.jumpPower
       value: 22
       objectReference: {fileID: 0}
@@ -2144,7 +2170,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8382149780426833419, guid: 2685f5f290e592245a47412772182963, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 89246470}
   m_SourcePrefab: {fileID: 100100000, guid: 2685f5f290e592245a47412772182963, type: 3}
 --- !u!1 &410087039
 GameObject:
@@ -2805,6 +2834,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.055886686, y: 0.0064958096, z: 0.029999997}
   m_Center: {x: -0.000000012004416, y: -0.002669545, z: 0.014999997}
+--- !u!4 &448240584 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6825676203687852522, guid: 2685f5f290e592245a47412772182963, type: 3}
+  m_PrefabInstance: {fileID: 385193029}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &458102198
 PrefabInstance:
   m_ObjectHideFlags: 0
