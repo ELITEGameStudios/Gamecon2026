@@ -5,12 +5,14 @@ public class WallRunState : PlayerMovementState
 {
     public float jumpPower;
     public float wallRunSpeed;
-    public bool jumpWithOffset;
+    public float wallRunMaxDist;
+    
+    public bool jumpWithOffset, isRight;
     [SerializeField] float lookAngleDifference;
     public Vector3 wallRunDirection;
-    public Collision storedCollision;
-    public Collider targetCollider;
+    public RaycastHit storedCollision;
     public Vector3 wallRunContactNormal;
+    public ApplyAngleProportional camAngle;
     public WallRunState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
     {
         name = "Wall Running";
@@ -22,6 +24,7 @@ public class WallRunState : PlayerMovementState
         Vector3 closestPoint = storedCollision.collider.ClosestPoint(transform.position);
         Vector3 raycastDir = (closestPoint - transform.position).normalized;
         
+        camAngle.SetAngle(15 * (isRight ? 1 : -1));
         if (Physics.Raycast(transform.position, raycastDir, out RaycastHit hit, Mathf.Infinity))
         {
             wallRunDirection = Vector3.Cross(Vector3.up, hit.normal);
@@ -49,76 +52,58 @@ public class WallRunState : PlayerMovementState
     public override void FixedUpdate()
     {
         Debug.Log(wallRunContactNormal);
+        Debug.Log("IS WALL RUNNING");
 
         movement.CalculateLookRotation();
         lookAngleDifference = Vector3.Angle(transform.forward, wallRunDirection);
-        
-        if(lookAngleDifference > 50)
+
+        if(Physics.Raycast(transform.position, transform.right * (isRight ? 1 : -1), out RaycastHit hitInfo, movement.maxWallCheckDist))
         {
-            jumpWithOffset = true;
-            Jump();
-        }
+            // Calculate movement direction
+            Vector3 hitPoint = hitInfo.point;
+            
+            wallRunDirection = Vector3.Cross(Vector3.up, hitInfo.normal);
+            wallRunContactNormal = hitInfo.normal;
+            if(Vector3.Angle(wallRunDirection, transform.forward) > 90)
+            {
+                wallRunDirection *= -1;
+            }
 
-        Collider[] col = Physics.OverlapSphere(transform.position, 1.5f);
+            Debug.DrawRay(hitInfo.point, hitInfo.normal);
+            Debug.DrawRay(hitInfo.point, Vector3.Cross(Vector3.up, hitInfo.normal));
 
-        if (col.Length == 0){
-            jumpWithOffset = false;
-            Jump();
-            movement.SetState(movement.groundedState);
+
+            // Apply velocities
+            if(Vector3.Distance(transform.position, hitPoint) > wallRunMaxDist) { transform.position = hitPoint + hitInfo.normal * movement.bodyRad; }
+
+            rigidbody.linearVelocity =
+            wallRunDirection * Time.fixedDeltaTime * wallRunSpeed ;
+                Debug.DrawRay(hitInfo.point, hitInfo.normal);
+            // }
+                
         }
         else
         {
-            bool testSuccess = false;
-            foreach (Collider item in col)
-            {
-                if(item == targetCollider)
-                {
-                    testSuccess = true;
-                    break;
-                }
-            }
-            if (!testSuccess)
-            {
-                jumpWithOffset = false;
-                Jump();
-                movement.SetState(movement.groundedState);
-            }
+            Jump();
         }
         
+        // if(lookAngleDifference > 50)
+        // {
+        //     jumpWithOffset = true;
+        //     Jump();
+        // }
+
+        
         movement.CalculateLookRotation();
-        rigidbody.linearVelocity =
-            wallRunDirection * Time.fixedDeltaTime * wallRunSpeed ;
+        // Update position
+        // rigidbody.linearVelocity =
+        //     wallRunDirection * Time.fixedDeltaTime * wallRunSpeed ;
             // + (transform.up * rb.linearVelocity.y);
     }
 
     public override void OnCollisionStay(Collision collision)
     {
-        // if(collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
-        // {
-            Vector3 closestPoint = collision.collider.ClosestPoint(transform.position);
-            Vector3 raycastDir = (closestPoint - transform.position).normalized;
-            
-            if (Physics.Raycast(transform.position, raycastDir, out RaycastHit hit, Mathf.Infinity))
-            {
-                wallRunDirection = Vector3.Cross(Vector3.up, hit.normal);
-                wallRunContactNormal = hit.normal;
-                if(Vector3.Angle(wallRunDirection, transform.forward) > 90)
-                {
-                    wallRunDirection *= -1;
-                }
-
-                Debug.DrawRay(hit.point, hit.normal);
-                Debug.DrawRay(hit.point, Vector3.Cross(Vector3.up, hit.normal));
-            }
-        // }
-
-
-        // ContactPoint[] contacts = new ContactPoint[]{};
-        // collision.GetContacts(contacts);
-
-        // foreach (ContactPoint contact in contacts){
-        //     if(contact.otherCollider)
-        // }
+        
     }
 
     public override void Jump()
@@ -145,6 +130,7 @@ public class WallRunState : PlayerMovementState
 
     public override void End(bool interrupted = false)
     {
+        camAngle.SetAngle(0);
         base.End(interrupted);
     }
 }

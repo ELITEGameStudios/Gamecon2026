@@ -34,6 +34,8 @@ public class StateMachine : MonoBehaviour
 
     public void SetState(State state)
     {
+        Debug.Log("state set to "+ state.name);
+        if(currentState != null) currentState.End();
         currentState = state;
         currentState.OnReset();
         StateCheck();

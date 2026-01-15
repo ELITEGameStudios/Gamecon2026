@@ -12,6 +12,8 @@ public class PlayerMovementStateMachine : StateMachine
     public float movingConsiderationDeadzone = 0.1f;
     public float maxGroundedSlope = 35;
     public float maxWallSlope = 25;
+    public float maxWallCheckDist = 5;
+    public float bodyRad = 0.5f;
     [SerializeField] private float speedMultiplier = 1f;
     public float liveMaxSpeed {get { return baseSpeed * speedMultiplier; }}
     public string stateName;
@@ -78,14 +80,10 @@ public class PlayerMovementStateMachine : StateMachine
     protected override void OnFixedUpdate()
     {
         movementInput = move.action.ReadValue<Vector2>();
-        if(!wasMovingLastFrame && isConsideredMoving)
-        {
-            OnStartWalking();
-        }
-        if(wasMovingLastFrame && !isConsideredMoving)
-        {
-            OnStopWalking();
-        }
+        // CheckWallViaRay();
+
+        if(!wasMovingLastFrame && isConsideredMoving) { OnStartWalking(); }
+        if(wasMovingLastFrame && !isConsideredMoving) { OnStopWalking(); }
 
         if(currentState != groundedState){
             if (CheckGrounded())
@@ -170,9 +168,14 @@ public class PlayerMovementStateMachine : StateMachine
 
     void OnCollisionEnter(Collision collision)
     {
-        if(currentState != null){currentState.OnCollisionEnter(collision);};
+        if(currentState != null){
+            currentState.OnCollisionEnter(collision);
 
-        CheckWallCriteria(collision);
+            if(currentState != wallRunState && currentState != groundedState){
+                CheckWallViaRay(collision);
+            }
+        };
+
     }
 
     void OnCollisionExit(Collision collision){
@@ -182,6 +185,9 @@ public class PlayerMovementStateMachine : StateMachine
     void OnCollisionStay(Collision collision){
         currentState.OnCollisionStay(collision);
 
+        if(currentState != wallRunState && currentState != groundedState){
+            CheckWallViaRay(collision);
+        }
 
         // if (collision.gameObject.layer ==LayerMask.NameToLayer("Ground") && currentState != groundedState){
         //     // SetState(groundedState);
@@ -191,18 +197,14 @@ public class PlayerMovementStateMachine : StateMachine
 
     public bool CheckGrounded()
     {
-        if (Physics.Raycast(feetTf.position, Vector3.down, out RaycastHit hit, 0.4f))
+        if (Physics.Raycast(feetTf.position, Vector3.down, out RaycastHit hit, 0.15f))
         {
-            // if(Vector3.Angle(Vector3.up, hit.normal) <= maxGroundedSlope)
-            // {
             return true;
-            // }
-
-            Debug.DrawRay(hit.point, hit.normal);
         }
         return false;
     }
 
+    // Old method
     void CheckWallCriteria(Collision collision)
     {
         // if (collision.gameObject.layer != LayerMask.NameToLayer("Wall"))
@@ -222,14 +224,54 @@ public class PlayerMovementStateMachine : StateMachine
 
             if(Vector3.Angle(comparisonVector, hit.normal) <= maxWallSlope)
             {
-                wallRunState.storedCollision = collision;
-                wallRunState.targetCollider = collision.collider;
+                // wallRunState.storedCollision = collision;
+                // wallRunState.targetCollider = collision.collider;
                 SetState(wallRunState);
             }
 
             Debug.DrawRay(hit.point, hit.normal);
         }
     }
-    
+
+    void CheckWallViaRay(Collision collision)
+    {
+        // Vector3 closestPoint = collision.collider.ClosestPoint(transform.position);
+        // Vector3 raycastDir = (closestPoint - transform.position).normalized;
+        // float angle = Vector3.SignedAngle(transform.forward, raycastDir, Vector3.up);
+        // Debug.Log(isRight);
+
+        RaycastHit leftHit;
+        RaycastHit rightHit;
+
+        if(Physics.Raycast(transform.position, transform.right * -1, out leftHit, maxWallCheckDist))
+        {
+            if(leftHit.collider == collision.collider){ 
+
+                wallRunState.storedCollision = leftHit; 
+                wallRunState.isRight = false; 
+                SetState(wallRunState);
+
+                Debug.DrawRay(leftHit.point, leftHit.normal);
+                return;
+            }
+        }
+        else if(Physics.Raycast(transform.position, transform.right, out rightHit, maxWallCheckDist))
+        {
+            if(rightHit.collider == collision.collider){ 
+                wallRunState.storedCollision = rightHit; 
+                wallRunState.isRight = true; 
+                SetState(wallRunState);
+
+                Debug.DrawRay(rightHit.point, rightHit.normal);
+                return;
+            }
+        }
+
+        
+        // if(Physics.Raycast(transform.position, (transform.right + transform.forward * 0.5f).normalized, out RaycastHit angledRightHitInfo, maxWallCheckDist))
+        // {
+            // }
+        // }
+    }
 }   
     
