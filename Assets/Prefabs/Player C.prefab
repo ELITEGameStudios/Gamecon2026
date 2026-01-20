@@ -635,6 +635,8 @@ MonoBehaviour:
   movingConsiderationDeadzone: 0.1
   maxGroundedSlope: 35
   maxWallSlope: 25
+  maxWallCheckDist: 5
+  bodyRadius: 0.5
   speedMultiplier: 1
   stateName: 
   groundedState:
@@ -657,11 +659,13 @@ MonoBehaviour:
     movement: {fileID: 5837548833278922391}
     jumpPower: 21
     wallRunSpeed: 500
+    wallRunMaxDist: 0
     jumpWithOffset: 0
+    isRight: 0
     lookAngleDifference: 0
     wallRunDirection: {x: 0, y: 0, z: 0}
-    targetCollider: {fileID: 0}
     wallRunContactNormal: {x: 0, y: 0, z: 0}
+    camAngle: {fileID: 0}
   airborneState:
     name: Airborne
     rigidbody: {fileID: 0}
@@ -674,6 +678,7 @@ MonoBehaviour:
     airStrafeForce: 1000
     extraJumps: 1
     jumpsLeft: 0
+  projectile: {fileID: 0}
   feetTf: {fileID: 7280931948175992934}
   movementInput: {x: 0, y: 0}
   lookInput: {x: 0, y: 0}
@@ -684,8 +689,10 @@ MonoBehaviour:
   move: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   jump: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   look: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  dash: {fileID: 0}
   FMODJumpEvent: event:/JumpEvent
   FMODLandEvent: event:/LandEvent
+  featherKnife: {fileID: 3736855633952113512}
 --- !u!114 &8944397084400037447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -764,6 +771,9 @@ MonoBehaviour:
   hitstopEffectFadeOut: 0.1
   fireAction: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   recallAction: {fileID: 4056342282253358456, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  blinkAction: {fileID: 1038071111951610058, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  blinkTime: 5
+  currentBlinkTimer: 0
 --- !u!114 &7815783333853658338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -779,7 +789,6 @@ MonoBehaviour:
   maxHealth: 1
   health: 1
   entityName: 
-  FMODDeathEvent: event:/DeathEvent
   FMODDeathEvent: event:/DeathEvent
 --- !u!114 &712407731034041875
 MonoBehaviour:

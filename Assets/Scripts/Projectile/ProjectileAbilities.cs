@@ -35,6 +35,14 @@ public class ProjectileAbilities : MonoBehaviour
     [Header("Input")]
     public InputActionReference fireAction;
     public InputActionReference recallAction;
+    public InputActionReference blinkAction;
+    
+    
+    [Header("BlinkProperties")]
+    public float blinkTime = 5f;
+    public float currentBlinkTimer;
+    public bool canBlink => currentBlinkTimer <= 0;
+
 
     void Start()
     {
@@ -48,13 +56,17 @@ public class ProjectileAbilities : MonoBehaviour
     {
         fireAction.action.started += OnFirePressed;
         recallAction.action.performed += OnRecallPressed;
+        blinkAction.action.performed += OnBlinkPressed;
+        
     }
 
     void OnDisable()
     {
         fireAction.action.started -= OnFirePressed;
         recallAction.action.performed -= OnRecallPressed;
+        // blinkAction.action.performed -= OnBlinkPressed;
     }
+
 
     void Update()
     {
@@ -67,6 +79,8 @@ public class ProjectileAbilities : MonoBehaviour
                 hudManager.UpdateRecallCooldown(currentRecallCooldown, recallCooldown);
             }
         }
+
+        if (currentBlinkTimer > 0) { currentBlinkTimer -= Time.deltaTime; }
     }
 
     private void OnFirePressed(InputAction.CallbackContext ctx)
@@ -105,6 +119,17 @@ public class ProjectileAbilities : MonoBehaviour
             }
         }
     }
+    
+    private void OnBlinkPressed(InputAction.CallbackContext context)
+    {
+        if (canBlink)
+        {
+            currentBlinkTimer = blinkTime;
+            playerMovement.Blink();
+            featherKnife.Pickup();
+        }
+    }
+    
     
     public void ResetRecallCooldown()
     {

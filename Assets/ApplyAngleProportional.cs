@@ -21,7 +21,7 @@ public class ApplyAngleProportional : MonoBehaviour
     void Update()
     {
         // Debug.Log(gain + " => Gain");
-        Debug.Log(currentRoll + " => current roll");
+        // Debug.Log(currentRoll + " => current roll");
         cameraTf.Rotate(Vector3.forward * gain);   
     }
 }

@@ -7,47 +7,51 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovementStateMachine : StateMachine
 {
+    [Header("Base Properties")]
     public float baseSpeed = 5f;
     public float clampedRotationY = 85;
     public float movingConsiderationDeadzone = 0.1f;
-    public float maxGroundedSlope = 35;
-    public float maxWallSlope = 25;
+    public float minWallTangentSlope = 80;
     public float maxWallCheckDist = 5;
+    public float groundedCheckDist = 0.15f;
+    public float speedMultiplier = 1f;
     public float bodyRadius = 0.5f;
     public float liveMaxSpeed {get { return baseSpeed * speedMultiplier; }}
-    [SerializeField] private float speedMultiplier = 1f;
-    public string stateName;
+    
     public PlayerMovementState currentState => base.currentState as PlayerMovementState;
+    
+    [Header("States")]
     public GroundedState groundedState;
     public WallRunState wallRunState;
     public AirborneState airborneState;
-
+    public string stateName;
+    
+    [Header("Other Transforms")]
     public Transform feetTf;
+    public Transform headTf;
 
 
+    [Header("Movement Input")]
     public Vector2 movementInput;
     public Vector2 lookInput;
     public Vector2 rotSensitivity;
-    // public Vector2 targetVelocity;
-
 
     public bool hasMovementInput => movementInput.magnitude > movingConsiderationDeadzone;
     public bool hadMovementInputLastFrame;
 
-
     public bool isConsideredMoving => hasMovementInput && rigidbody.linearVelocity.magnitude > movingConsiderationDeadzone;
     public bool wasMovingLastFrame;
 
+    public InputActionReference move, jump, look, dash;
     
-
-    public Transform headTf;
-    public InputActionReference move, jump, look;
 
     [Header("FMOD events")]
     public string FMODJumpEvent = "";
     public string FMODLandEvent = "";
     public FMOD.Studio.EventInstance playerJump, playerLand;
 
+    [Header("External References")]
+    public Projectile featherKnife;
 
 
     void Awake(){ 
@@ -71,6 +75,11 @@ public class PlayerMovementStateMachine : StateMachine
         jump.action.started += Jump;
     }
 
+    protected override void OnUnityDisable()
+    {
+        jump.action.started -= Jump;
+    }
+
     protected override void OnUpdate()
     {
         FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerJump, transform);
@@ -80,7 +89,6 @@ public class PlayerMovementStateMachine : StateMachine
     protected override void OnFixedUpdate()
     {
         movementInput = move.action.ReadValue<Vector2>();
-        // CheckWallViaRay();
 
         if(!wasMovingLastFrame && isConsideredMoving) { OnStartWalking(); }
         if(wasMovingLastFrame && !isConsideredMoving) { OnStopWalking(); }
@@ -121,7 +129,12 @@ public class PlayerMovementStateMachine : StateMachine
 
     public void Jump(InputAction.CallbackContext ctx){
         currentState.Jump();
-        
+    }
+
+    public void Blink(){
+        SetState(airborneState);
+        transform.position = featherKnife.transform.position;
+        CheckWallViaRay(ignoreWallRunTimer: true);
     }
 
     public void CalculateLookRotation()
@@ -144,6 +157,51 @@ public class PlayerMovementStateMachine : StateMachine
         Debug.Log(name + " Has Died");
     }
 
+    public bool CheckGrounded()
+    {
+        if (Physics.Raycast(feetTf.position, Vector3.down, out RaycastHit hit, groundedCheckDist))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public Collider GetGroundedCollider()
+    {
+        if (Physics.Raycast(feetTf.position, Vector3.down, out RaycastHit hit, groundedCheckDist))
+        {
+            return hit.collider;
+        }
+        return null;
+    }
+
+    void CheckWallViaRay(Collision collision = null, bool ignoreWallRunTimer = false)
+    {
+        if(!wallRunState.canWallRun && !ignoreWallRunTimer){return;}
+
+        RaycastHit hit;
+
+        if(Physics.Raycast(transform.position, transform.right * -1, out hit, maxWallCheckDist)){ wallRunState.isRight = false;  }
+        else if(Physics.Raycast(transform.position, transform.right, out hit, maxWallCheckDist)){ wallRunState.isRight = true;  }
+        else{return;}
+        
+        Collider groundedCol = GetGroundedCollider();
+        if(groundedCol == hit.collider){return;}
+        
+        float upDiff = Vector3.Angle(Vector3.up, hit.normal);
+        float downDiff = Vector3.Angle(Vector3.down, hit.normal);
+        float angleRoll = upDiff < downDiff ? upDiff : downDiff;
+
+        // if(collision == null || hit.collider == collision.collider){ 
+        if(angleRoll >= minWallTangentSlope && (collision == null || hit.collider == collision.collider)){ 
+
+            wallRunState.storedCollision = hit; 
+            SetState(wallRunState);
+
+            Debug.DrawRay(hit.point, hit.normal);
+        }
+    }
+    
     void OnCollisionEnter(Collision collision)
     {
         if(currentState != null){
@@ -168,43 +226,5 @@ public class PlayerMovementStateMachine : StateMachine
         }
     }
 
-    public bool CheckGrounded()
-    {
-        if (Physics.Raycast(feetTf.position, Vector3.down, out RaycastHit hit, 0.15f))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    void CheckWallViaRay(Collision collision)
-    {
-        RaycastHit leftHit;
-        RaycastHit rightHit;
-
-        if(Physics.Raycast(transform.position, transform.right * -1, out leftHit, maxWallCheckDist))
-        {
-            if(leftHit.collider == collision.collider){ 
-
-                wallRunState.storedCollision = leftHit; 
-                wallRunState.isRight = false; 
-                SetState(wallRunState);
-
-                Debug.DrawRay(leftHit.point, leftHit.normal);
-                return;
-            }
-        }
-        else if(Physics.Raycast(transform.position, transform.right, out rightHit, maxWallCheckDist))
-        {
-            if(rightHit.collider == collision.collider){ 
-                wallRunState.storedCollision = rightHit; 
-                wallRunState.isRight = true; 
-                SetState(wallRunState);
-
-                Debug.DrawRay(rightHit.point, rightHit.normal);
-                return;
-            }
-        }
-    }
 }   
     

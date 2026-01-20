@@ -18,11 +18,17 @@ public class StateMachine : MonoBehaviour
     [Header("State Machine")]
     public State currentState;
     public State defaultState;
+    public List<State> states;
 
 
     void OnEnable()
     {
         OnUnityEnable();
+    }
+    
+    void OnDisable()
+    {
+        OnUnityDisable();
     }
 
     // Start is called before the first frame update
@@ -34,6 +40,8 @@ public class StateMachine : MonoBehaviour
 
     public void SetState(State state)
     {
+        TryAddState(state);
+
         Debug.Log("state set to "+ state.name);
         if(currentState != null) currentState.End();
         currentState = state;
@@ -42,12 +50,13 @@ public class StateMachine : MonoBehaviour
         OnSetState();
     }
 
-    protected void SetState(State state, int nextIndex, bool ignoreStall = false)
+    public void TryAddState(State state)
     {
-        currentState = state;
-        currentState.OnReset();
-        currentState.Start();
+        if(states == null){states = new List<State>();}
+        else if(states.Contains(state)){return;}
+        states.Add(state);
     }
+
 
     void StateCheck()
     {
@@ -76,6 +85,10 @@ public class StateMachine : MonoBehaviour
     void Update()
     {
         OnUpdate();
+        
+        foreach (State state in states){
+            if(state != currentState){ state.InactiveUpdate(); };
+        }
 
         StateCheck();
     }
@@ -98,13 +111,15 @@ public class StateMachine : MonoBehaviour
 
         if (currentState != null && !currentState.finished)
         { currentState.FixedUpdate(); }
-
     }
+
     protected virtual void OnSetState(){}
     protected virtual void OnLateUpdate() { }
     protected virtual void OnUpdate(){}
     protected virtual void OnStart(){}
     protected virtual void OnUnityEnable(){}
+    protected virtual void OnUnityDisable(){}
     protected virtual void OnFixedUpdate(){}
+    protected virtual void OnInactiveUpdate(){}
 }   
     

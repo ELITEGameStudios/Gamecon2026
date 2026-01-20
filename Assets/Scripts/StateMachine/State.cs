@@ -14,6 +14,7 @@ public abstract class State
     public State(StateMachine stateMachine) // Always include super(StateMachine) in any child class constructors
     {
         host = stateMachine;
+        stateMachine.TryAddState(this);
         OnReset();
     }
 
@@ -23,6 +24,7 @@ public abstract class State
         rigidbody = host.rigidbody;
         animator = host.animator;
         transform = host.transform;
+        host.TryAddState(this);
 
         finished = false;
         started = false;
@@ -32,6 +34,7 @@ public abstract class State
     public abstract void Update(); // Called every frame while the object is active
     public virtual void LateUpdate(){} // Called every frame while the object is active
     public virtual void FixedUpdate() {} // Called every physics frame while the object is active
+    public virtual void InactiveUpdate() {} // Called every frame when the state is not active
     public virtual void OnCollisionEnter(Collision collision) {} // Called every physics frame while the object is active
     public virtual void OnCollisionStay(Collision collision) {} // Called every physics frame while the object is active
     public virtual void OnCollisionExit(Collision collision) {} // Called every physics frame while the object is active

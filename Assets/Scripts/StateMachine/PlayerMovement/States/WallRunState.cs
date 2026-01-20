@@ -6,13 +6,23 @@ public class WallRunState : PlayerMovementState
     public float jumpPower;
     public float wallRunSpeed;
     public float wallRunMaxDist;
+    public float raycastForwardCheckDist = 0.1f;
     
     public bool jumpWithOffset, isRight;
     [SerializeField] float lookAngleDifference;
     public Vector3 wallRunDirection;
     public RaycastHit storedCollision;
     public Vector3 wallRunContactNormal;
+    public Vector3 raycastCheckVector => (transform.forward * raycastForwardCheckDist) + transform.right * (isRight ? 1 : -1);
     public ApplyAngleProportional camAngle;
+    
+
+    // Determines if the player cannot wall run for a set time after finishing a wall run. should be a short interval
+    public float wallRunSleepInterval = 0.2f;
+    float currentWallRunSleepTimer;
+    public bool canWallRun => currentWallRunSleepTimer <= 0;
+
+
     public WallRunState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
     {
         name = "Wall Running";
@@ -57,21 +67,30 @@ public class WallRunState : PlayerMovementState
         movement.CalculateLookRotation();
         lookAngleDifference = Vector3.Angle(transform.forward, wallRunDirection);
 
-        if(Physics.Raycast(transform.position, transform.right * (isRight ? 1 : -1), out RaycastHit hitInfo, movement.maxWallCheckDist))
+        if(Physics.Raycast(transform.position, raycastCheckVector.normalized, out RaycastHit hitInfo, movement.maxWallCheckDist))
         {
+            // Check for valid wall angle 
+            float upDiff = Vector3.Angle(Vector3.up, hitInfo.normal);
+            float downDiff = Vector3.Angle(Vector3.down, hitInfo.normal);
+            float angleRoll = upDiff < downDiff ? upDiff : downDiff;
+
+            if(angleRoll < movement.minWallTangentSlope){ 
+                movement.SetState(movement.airborneState);
+            }
+            
             // Calculate movement direction
             Vector3 hitPoint = hitInfo.point;
-            
+
             wallRunDirection = Vector3.Cross(Vector3.up, hitInfo.normal);
             wallRunContactNormal = hitInfo.normal;
             if(Vector3.Angle(wallRunDirection, transform.forward) > 90)
             {
                 wallRunDirection *= -1;
             }
-
-            Debug.DrawRay(hitInfo.point, hitInfo.normal);
-            Debug.DrawRay(hitInfo.point, Vector3.Cross(Vector3.up, hitInfo.normal));
-
+    
+            // Debug info
+            // Debug.DrawRay(hitInfo.point, hitInfo.normal);
+            // Debug.DrawRay(hitInfo.point, Vector3.Cross(Vector3.up, hitInfo.normal));
 
             // Apply velocities
             if(Vector3.Distance(transform.position, hitPoint) > wallRunMaxDist) { transform.position = hitPoint + hitInfo.normal * movement.bodyRadius; }
@@ -79,58 +98,40 @@ public class WallRunState : PlayerMovementState
             rigidbody.linearVelocity =
             wallRunDirection * Time.fixedDeltaTime * wallRunSpeed ;
                 Debug.DrawRay(hitInfo.point, hitInfo.normal);
-            // }
-                
         }
         else
         {
-            Jump();
+            movement.SetState(movement.airborneState);
         }
         
-        // if(lookAngleDifference > 50)
-        // {
-        //     jumpWithOffset = true;
-        //     Jump();
-        // }
-
-        
         movement.CalculateLookRotation();
-        // Update position
-        // rigidbody.linearVelocity =
-        //     wallRunDirection * Time.fixedDeltaTime * wallRunSpeed ;
-            // + (transform.up * rb.linearVelocity.y);
     }
 
-    public override void OnCollisionStay(Collision collision)
+    public override void InactiveUpdate()
     {
-        
+        if (!canWallRun) { currentWallRunSleepTimer -= Time.deltaTime; }
     }
 
     public override void Jump()
-    {
-        movement.SetState(movement.airborneState);
-        return;
-        // RaycastHit left, right;
+    {   
+        // Debug.Log(Vector3.SignedAngle(wallRunDirection, wallRunContactNormal, Vector3.up));
 
-        // Physics.Raycast(transform.position, transform.right * -1, out left, LayerMask.GetMask("Wall"));
-        // Physics.Raycast(transform.position, transform.right, out right, LayerMask.GetMask("Wall"));
-        
         float xJumpDirection = 
             jumpWithOffset 
                 ? (1 * ( Vector3.SignedAngle(wallRunDirection, wallRunContactNormal, Vector3.up) < 0 ? 1 : -1 ))
                 : 0;
-        // Debug.Log(Vector3.SignedAngle(wallRunDirection, wallRunContactNormal, Vector3.up));
 
         rigidbody.AddForce(
             ( transform.up + (transform.right * xJumpDirection)  ).normalized
             * jumpPower, ForceMode.Impulse);
-        
 
+        movement.SetState(movement.airborneState);
     }
 
     public override void End(bool interrupted = false)
     {
         camAngle.SetAngle(0);
+        currentWallRunSleepTimer = wallRunSleepInterval;
         base.End(interrupted);
     }
 }

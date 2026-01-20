@@ -50,9 +50,12 @@ public class Projectile : MonoBehaviour
     
     void Update()
     {
-        if (playerTransform != null)
-        {
-            TryPickUp();
+        if (playerTransform != null && currentState == ProjectileState.Embedded)
+        {   
+            float distance = Vector3.Distance(playerTransform.position, transform.position);
+            if (distance <= pickUpRadius){ 
+                Pickup(); 
+            }
         }
 
         if(currentState == ProjectileState.Recalling)
@@ -212,13 +215,16 @@ public class Projectile : MonoBehaviour
 
         if(collision.transform.GetComponent<EnemyBase>() == null)
         {
-            if(collision.transform.parent.GetComponent<EnemyBase>() == null)
+            if(collision.transform.parent != null)
             {
-                Debug.Log("Null");
-            }
-            else
-            {
-                collision.transform.parent.GetComponent<EnemyBase>().Damage();
+                if(collision.transform.parent.GetComponent<EnemyBase>() == null)
+                {
+                    Debug.Log("Null");
+                }
+                else
+                {
+                    collision.transform.parent.GetComponent<EnemyBase>().Damage();
+                }
             }
         }
         else
@@ -274,27 +280,18 @@ public class Projectile : MonoBehaviour
         gameObject.SetActive(true);
     }
     
-    public void TryPickUp()
-    {
-        if (currentState != ProjectileState.Embedded)
-            return;
+    public void Pickup()
+    {   
+        rb.isKinematic = true;
+        col.enabled = false;
+        gameObject.SetActive(false);
         
-        float distance = Vector3.Distance(playerTransform.position, transform.position);
-        if (distance <= pickUpRadius)
-        {
-            // SetState(ProjectileState.PickedUp);
-            
-            rb.isKinematic = true;
-            col.enabled = false;
-            gameObject.SetActive(false);
-            
-            // Instantly return to hand + idle state
-            transform.SetParent(initProjectilePosition);
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
-        
-            gameObject.SetActive(true);
-            SetState(ProjectileState.Idle);
-        }
+        // Instantly return to hand + idle state
+        transform.SetParent(initProjectilePosition);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+    
+        gameObject.SetActive(true);
+        SetState(ProjectileState.Idle);
     }
 }
