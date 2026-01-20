@@ -74,7 +74,7 @@ public class WallRunState : PlayerMovementState
 
 
             // Apply velocities
-            if(Vector3.Distance(transform.position, hitPoint) > wallRunMaxDist) { transform.position = hitPoint + hitInfo.normal * movement.bodyRad; }
+            if(Vector3.Distance(transform.position, hitPoint) > wallRunMaxDist) { transform.position = hitPoint + hitInfo.normal * movement.bodyRadius; }
 
             rigidbody.linearVelocity =
             wallRunDirection * Time.fixedDeltaTime * wallRunSpeed ;

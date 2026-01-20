@@ -13,9 +13,9 @@ public class PlayerMovementStateMachine : StateMachine
     public float maxGroundedSlope = 35;
     public float maxWallSlope = 25;
     public float maxWallCheckDist = 5;
-    public float bodyRad = 0.5f;
-    [SerializeField] private float speedMultiplier = 1f;
+    public float bodyRadius = 0.5f;
     public float liveMaxSpeed {get { return baseSpeed * speedMultiplier; }}
+    [SerializeField] private float speedMultiplier = 1f;
     public string stateName;
     public PlayerMovementState currentState => base.currentState as PlayerMovementState;
     public GroundedState groundedState;
@@ -130,7 +130,7 @@ public class PlayerMovementStateMachine : StateMachine
         
         lookInput = look.action.ReadValue<Vector2>();
         headTf.Rotate(new Vector3(-lookInput.y * rotSensitivity.y, 0, 0));
-        // Debug.Log(Vector3.SignedAngle(headTf.forward, transform.forward, transform.right));
+
         if(Mathf.Abs(Vector3.SignedAngle(headTf.forward, transform.forward, transform.right)) > 85){
             headTf.rotation = rotation;
         }
@@ -138,28 +138,6 @@ public class PlayerMovementStateMachine : StateMachine
 
         transform.Rotate(new Vector3(0, lookInput.x * rotSensitivity.x, 0));
     }
-
-    public void NormalWalking()
-    {
-        if(movementInput.magnitude > 1){movementInput.Normalize();}
-        Debug.Log("Moving");
-
-        // rigidbody.AddForce(
-        //     (
-        //         (transform.right * movementInput.x) +
-        //         (transform.forward * movementInput.y)
-        //     ) * Time.fixedDeltaTime * liveMaxSpeed
-        //     + (transform.up * rigidbody.linearVelocity.y)
-        // , ForceMode.Force);
-        
-        rigidbody.linearVelocity =
-            (
-                (transform.right * movementInput.x) +
-                (transform.forward * movementInput.y)
-            ) * Time.fixedDeltaTime * liveMaxSpeed
-            + (transform.up * rigidbody.linearVelocity.y);
-    }
-
 
     public virtual void DeathEvent(bool to_player = false)
     {
@@ -188,11 +166,6 @@ public class PlayerMovementStateMachine : StateMachine
         if(currentState != wallRunState && currentState != groundedState){
             CheckWallViaRay(collision);
         }
-
-        // if (collision.gameObject.layer ==LayerMask.NameToLayer("Ground") && currentState != groundedState){
-        //     // SetState(groundedState);
-        //     CheckGrounded(collision);
-        // }
     }
 
     public bool CheckGrounded()
@@ -204,42 +177,8 @@ public class PlayerMovementStateMachine : StateMachine
         return false;
     }
 
-    // Old method
-    void CheckWallCriteria(Collision collision)
-    {
-        // if (collision.gameObject.layer != LayerMask.NameToLayer("Wall"))
-        // {   
-        //     return;
-        // }
-        Vector3 closestPoint = collision.collider.ClosestPoint(transform.position);
-        Vector3 raycastDir = (closestPoint - transform.position).normalized;
-
-        if (Physics.Raycast(transform.position, raycastDir, out RaycastHit hit, Mathf.Infinity))//, LayerMask.GetMask("Wall")))
-        {
-            Vector3 comparisonVector = new Vector3(
-                hit.normal.x,
-                0,
-                hit.normal.z
-            );
-
-            if(Vector3.Angle(comparisonVector, hit.normal) <= maxWallSlope)
-            {
-                // wallRunState.storedCollision = collision;
-                // wallRunState.targetCollider = collision.collider;
-                SetState(wallRunState);
-            }
-
-            Debug.DrawRay(hit.point, hit.normal);
-        }
-    }
-
     void CheckWallViaRay(Collision collision)
     {
-        // Vector3 closestPoint = collision.collider.ClosestPoint(transform.position);
-        // Vector3 raycastDir = (closestPoint - transform.position).normalized;
-        // float angle = Vector3.SignedAngle(transform.forward, raycastDir, Vector3.up);
-        // Debug.Log(isRight);
-
         RaycastHit leftHit;
         RaycastHit rightHit;
 
@@ -266,12 +205,6 @@ public class PlayerMovementStateMachine : StateMachine
                 return;
             }
         }
-
-        
-        // if(Physics.Raycast(transform.position, (transform.right + transform.forward * 0.5f).normalized, out RaycastHit angledRightHitInfo, maxWallCheckDist))
-        // {
-            // }
-        // }
     }
 }   
     

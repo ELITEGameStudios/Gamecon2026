@@ -30,13 +30,17 @@ public class GroundedState : PlayerMovementState
 
     public override void FixedUpdate()
     {
-        if (!movement.CheckGrounded())
-        {
-            movement.SetState(movement.airborneState);
-        }
+        if (!movement.CheckGrounded()){ movement.SetState(movement.airborneState); }
         
         movement.CalculateLookRotation();
-        movement.NormalWalking();
+        if(movement.movementInput.magnitude > 1){movement.movementInput.Normalize();}
+
+        rigidbody.linearVelocity =
+            (
+                (transform.right * movement.movementInput.x) +
+                (transform.forward * movement.movementInput.y)
+            ) * Time.fixedDeltaTime * movement.liveMaxSpeed
+            + (transform.up * rigidbody.linearVelocity.y);
     }
 
     public override void OnStartWalking()
