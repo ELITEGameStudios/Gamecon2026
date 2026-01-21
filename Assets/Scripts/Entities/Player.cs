@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Player : EntityBase
 {
     public static Player instance {get; private set;}
+
 
     protected override void Init()
     {
@@ -19,13 +21,15 @@ public class Player : EntityBase
     {
         // Put all your death event code here BEFORE base.Death()
         entityDeath.start();
-        
+
         // Will Handle the destruction of the object. 
         // If you dont want the object to dissappear or want to "delay" its true death for an animation or smth, consider Invoke() or coroutines to delay it
         // Or call it somewhere else and delete this reference.
-        
+
         // base.OnDeath(); ( Commented out for now, i dont think we intend to delete the player yet... )
+        entityKilled.Invoke(this);
         health = maxHealth;
+        Debug.Log("Player " + name + " died");
     }
 
     // You can choose to process your code before or after health is updated. Be advised that processing code AFTER may not run if the object dies through this damage event

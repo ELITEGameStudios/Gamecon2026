@@ -1,14 +1,17 @@
 using UnityEngine;
-
+using UnityEngine.Events;
 public abstract class EntityBase : MonoBehaviour
 {
     public int maxHealth = 1;
     public int health;
     public float normalizedHealth => health/maxHealth;
     public string entityName;
-    
 
-    [Header("FMOD events")]
+    public UnityEvent<EntityBase> entityKilled = new();
+
+
+
+[Header("FMOD events")]
     public string FMODDeathEvent = "";
     public FMOD.Studio.EventInstance entityDeath;
 
@@ -35,12 +38,17 @@ public abstract class EntityBase : MonoBehaviour
 
     protected virtual void OnDeath()
     {
-        
+
+        health = 0; //prevent negative numbers
         entityDeath.start();
 
         Debug.Log(entityName + " Has been slain.");
+
+        entityKilled.Invoke(this);
         
         Destroy(gameObject);
+
+        
     }
 
     public virtual void Damage(int damage = 1)
