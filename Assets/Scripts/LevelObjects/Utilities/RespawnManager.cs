@@ -25,9 +25,7 @@ public class RespawnManager : MonoBehaviour
 
     protected void OnPlayerKilled(EntityBase runner)
     {
-        runner.transform.position = respawnPoint.position;
-        if (!runner.TryGetComponent(out Rigidbody rb)) return;
-        rb.linearVelocity = Vector3.zero;
+        runner.SpawnAtPosition(respawnPoint.position);
     }
 
     protected void OnCheckpointReached(PlayerCheckpoint checkpoint)

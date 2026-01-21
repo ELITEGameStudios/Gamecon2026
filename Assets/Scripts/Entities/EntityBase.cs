@@ -1,17 +1,19 @@
 using UnityEngine;
 using UnityEngine.Events;
+using static Unity.Collections.Unicode;
 public abstract class EntityBase : MonoBehaviour
 {
     public int maxHealth = 1;
     public int health;
-    public float normalizedHealth => health/maxHealth;
+    public float normalizedHealth => health / maxHealth;
     public string entityName;
 
     public UnityEvent<EntityBase> entityKilled = new();
+    public UnityEvent<EntityBase> entitySpawned = new();
 
 
 
-[Header("FMOD events")]
+    [Header("FMOD events")]
     public string FMODDeathEvent = "";
     public FMOD.Studio.EventInstance entityDeath;
 
@@ -45,19 +47,26 @@ public abstract class EntityBase : MonoBehaviour
         Debug.Log(entityName + " Has been slain.");
 
         entityKilled.Invoke(this);
-        
+
         Destroy(gameObject);
 
-        
+
     }
 
     public virtual void Damage(int damage = 1)
     {
-        if(damage <= 0){ return; }
-
+        if (damage <= 0) { return; }
         health -= damage;
-        if(health <= 0){OnDeath();}
+        if (health <= 0) { OnDeath(); }
 
         Debug.Log(entityName + " took damage");
+    }
+
+    public virtual void SpawnAtPosition(Vector3 position)
+    {
+        transform.position = position;
+        if (!transform.TryGetComponent(out Rigidbody rb)) return;
+        rb.linearVelocity = Vector3.zero; //get rid of gravity built up during falls
+        entitySpawned.Invoke(this);
     }
 }
