@@ -1,18 +1,25 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RespawnManager : MonoBehaviour
 {
     [SerializeField] Transform respawnPoint;
     [SerializeField] Transform checkpointHolder;
+
+    [SerializeField] GameObject deathNotifier;
+    bool playerDead = true;
+
+    [SerializeField] InputActionReference respawn;
     private void Start()
     {
         StartCoroutine(InitializeRespawnManager());
     }
     IEnumerator InitializeRespawnManager()
     {
-        yield return new WaitUntil (() => Player.instance != null);
-        Player.instance.entityKilled.AddListener(OnPlayerKilled);
+        deathNotifier.SetActive(false);
+        yield return new WaitUntil(() => Player.instance != null);
+        Player.instance.entityKilled.AddListener((runner) => OnPlayerKilled());
         respawnPoint.position = Player.instance.transform.position;
 
         var checkpoints = checkpointHolder.GetComponentsInChildren<PlayerCheckpoint>();
@@ -23,13 +30,32 @@ public class RespawnManager : MonoBehaviour
     }
 
 
-    protected void OnPlayerKilled(EntityBase runner)
+    protected void OnPlayerKilled()
     {
-        runner.SpawnAtPosition(respawnPoint.position);
+        deathNotifier.SetActive(true);
+        playerDead = true;
+        respawn.action.performed += OnPlayerKilled;
     }
+
+    void OnPlayerKilled(InputAction.CallbackContext ctx)
+    {
+        respawn.action.performed -= OnPlayerKilled;
+        Player.instance.SpawnAtPosition(respawnPoint.position);
+        playerDead = false;
+        deathNotifier.SetActive(false);
+    }
+
+
 
     protected void OnCheckpointReached(PlayerCheckpoint checkpoint)
     {
         respawnPoint.position = checkpoint.transform.position;
     }
+
+    private void Update()
+    {
+
+    }
 }
+
+    
