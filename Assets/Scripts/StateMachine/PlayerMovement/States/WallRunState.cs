@@ -11,8 +11,11 @@ public class WallRunState : PlayerMovementState
     public bool jumpWithOffset, isRight;
     [SerializeField] float lookAngleDifference;
     public Vector3 wallRunDirection;
+    [SerializeField] Vector3 lastWallRunDirection;
+    public float maxTransitionAngle; // Cuts off a wall run if the angle between two surfaces are too great
     public RaycastHit storedCollision;
     public Vector3 wallRunContactNormal;
+    public Vector3 lastContactPosition;
     public Vector3 raycastCheckVector => (transform.forward * raycastForwardCheckDist) + transform.right * (isRight ? 1 : -1);
     public ApplyAngleProportional camAngle;
     
@@ -60,8 +63,9 @@ public class WallRunState : PlayerMovementState
 
     public override void FixedUpdate()
     {
-        // Debug.Log(wallRunContactNormal);
-        // Debug.Log("IS WALL RUNNING");
+        lastWallRunDirection = wallRunDirection;
+
+
 
         movement.CalculateLookRotation();
         lookAngleDifference = Vector3.Angle(transform.forward, wallRunDirection);
@@ -86,17 +90,23 @@ public class WallRunState : PlayerMovementState
             {
                 wallRunDirection *= -1;
             }
+
+            if(Vector3.Angle(wallRunDirection, lastWallRunDirection) > maxTransitionAngle){
+                movement.SetState(movement.airborneState);
+                return;
+            }
     
             // Debug info
             // Debug.DrawRay(hitInfo.point, hitInfo.normal);
             // Debug.DrawRay(hitInfo.point, Vector3.Cross(Vector3.up, hitInfo.normal));
 
             // Apply velocities
-            if(Vector3.Distance(transform.position, hitPoint) > wallRunMaxDist) { transform.position = hitPoint + hitInfo.normal * movement.bodyRadius; }
 
+            // if(Vector3.Distance(transform.position, hitPoint) > wallRunMaxDist) { transform.position = hitPoint + hitInfo.normal * movement.bodyRadius; } This was causing a bug where the player moves abnormally fast when facing away from the wall at a certain angle. Meant to be a way to ensure the player is confined to be against the wall
             rigidbody.linearVelocity =
-            wallRunDirection * Time.fixedDeltaTime * currentWallRunSpeed ;
-                Debug.DrawRay(hitInfo.point, hitInfo.normal);
+            wallRunDirection * Time.fixedDeltaTime * currentWallRunSpeed;
+            Debug.DrawRay(hitInfo.point, hitInfo.normal);
+
         }
         else
         {

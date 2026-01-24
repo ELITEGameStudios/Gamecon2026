@@ -108,7 +108,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 6239881831769578202, guid: c48edf97c2f83c64fbe403bcd75ab01f, type: 3}
 --- !u!114 &4962847443140572867
@@ -126,6 +126,12 @@ MonoBehaviour:
   maxHealth: 1
   health: 0
   entityName: Dummy
+  entityKilled:
+    m_PersistentCalls:
+      m_Calls: []
+  entitySpawned:
+    m_PersistentCalls:
+      m_Calls: []
   FMODDeathEvent: event:/DeathEvent
   baseMovementSpeed: 0
   contactDamage: 0

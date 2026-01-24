@@ -129,6 +129,13 @@ public class ProjectileAbilities : MonoBehaviour
             StartCoroutine(BlinkCoroutine());
         }
     }
+
+    private void Blink()
+    {
+        currentBlinkTimer = blinkCooldownTime;
+        playerMovement.Blink();
+        featherKnife.Pickup();
+    }
     
     
     public void ResetRecallCooldown()
@@ -272,9 +279,7 @@ public class ProjectileAbilities : MonoBehaviour
             if(t > blinkTimeMarker && !hasBlinked)
             {
                 // The actual blink event
-                currentBlinkTimer = blinkCooldownTime;
-                playerMovement.Blink();
-                featherKnife.Pickup();
+                Blink();
                 hasBlinked = true;
             } 
 
