@@ -3,7 +3,6 @@ using UnityEngine;
 [System.Serializable]
 public class AirborneState : PlayerMovementState
 {
-    public float jumpPower;
     public float airStrafeForce = 0.5f;
     public int extraJumps, jumpsLeft;
 

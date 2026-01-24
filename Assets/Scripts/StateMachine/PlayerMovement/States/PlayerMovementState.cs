@@ -3,6 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerMovementState : State
 {
+    public float jumpPower;
     public PlayerMovementStateMachine movement;
     public PlayerMovementState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
     {
@@ -25,7 +26,11 @@ public class PlayerMovementState : State
         
     }
 
-    public virtual void Jump(){}
+    public virtual void Jump()
+    {
+        rigidbody.AddForce(transform.up * jumpPower, ForceMode.Impulse);
+        movement.playerJump.start();
+    }
     public virtual void OnStartWalking(){}
     public virtual void OnStopWalking(){}
     

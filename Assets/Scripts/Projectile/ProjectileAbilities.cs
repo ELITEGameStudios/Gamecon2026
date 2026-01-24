@@ -39,10 +39,12 @@ public class ProjectileAbilities : MonoBehaviour
     
     
     [Header("BlinkProperties")]
-    public float blinkTime = 5f;
+    public float blinkCooldownTime;
+    public float blinkEffectTime = 0.33f;
     public float currentBlinkTimer;
     public bool canBlink => currentBlinkTimer <= 0;
 
+    public PlayerVFXManager playerVFXManager;
 
     void Start()
     {
@@ -124,9 +126,7 @@ public class ProjectileAbilities : MonoBehaviour
     {
         if (canBlink)
         {
-            currentBlinkTimer = blinkTime;
-            playerMovement.Blink();
-            featherKnife.Pickup();
+            StartCoroutine(BlinkCoroutine());
         }
     }
     
@@ -256,5 +256,32 @@ public class ProjectileAbilities : MonoBehaviour
         postProcessVolume.weight = 0f;
         postProcessVolume.profile = originalProfile;
         hitstopEffectCoroutine = null;
+    }
+
+    private IEnumerator BlinkCoroutine()
+    {
+        float timer = 0f;
+        bool hasBlinked = false;
+        float blinkTimeMarker = 0.3f;
+        
+        while (timer < blinkEffectTime)
+        {
+            float t = timer / blinkEffectTime;
+            playerVFXManager.blinkVolume.weight = playerVFXManager.blinkPPCurve.Evaluate(t);
+            
+            if(t > blinkTimeMarker && !hasBlinked)
+            {
+                // The actual blink event
+                currentBlinkTimer = blinkCooldownTime;
+                playerMovement.Blink();
+                featherKnife.Pickup();
+                hasBlinked = true;
+            } 
+
+            timer += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        playerVFXManager.blinkVolume.weight = 0f;
     }
 }

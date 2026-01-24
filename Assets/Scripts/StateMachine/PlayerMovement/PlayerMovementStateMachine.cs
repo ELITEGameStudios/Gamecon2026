@@ -7,6 +7,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovementStateMachine : StateMachine
 {
+    public static PlayerMovementStateMachine instance {get; private set;}
+
+
     [Header("Base Properties")]
     public float baseSpeed = 5f;
     public float clampedRotationY = 85;
@@ -17,6 +20,7 @@ public class PlayerMovementStateMachine : StateMachine
     public float speedMultiplier = 1f;
     public float bodyRadius = 0.5f;
     public float liveMaxSpeed {get { return baseSpeed * speedMultiplier; }}
+    public float currentVelocity {get { return rigidbody.linearVelocity.magnitude; }}
     
     public PlayerMovementState currentState => base.currentState as PlayerMovementState;
     
@@ -24,6 +28,7 @@ public class PlayerMovementStateMachine : StateMachine
     public GroundedState groundedState;
     public WallRunState wallRunState;
     public AirborneState airborneState;
+    public DashState dashState;
     public string stateName;
     
     [Header("Other Transforms")]
@@ -38,8 +43,10 @@ public class PlayerMovementStateMachine : StateMachine
 
     public bool hasMovementInput => movementInput.magnitude > movingConsiderationDeadzone;
     public bool hadMovementInputLastFrame;
+    public bool hasDash;
 
     public bool isConsideredMoving => hasMovementInput && rigidbody.linearVelocity.magnitude > movingConsiderationDeadzone;
+    public bool canDash => currentState != dashState && hasDash && currentState != wallRunState;
     public bool wasMovingLastFrame;
 
     public InputActionReference move, jump, look, dash;
@@ -53,13 +60,17 @@ public class PlayerMovementStateMachine : StateMachine
     [Header("External References")]
     public Projectile featherKnife;
 
-
     void Awake(){ 
-        defaultState = airborneState; 
+
+        if(instance == null) {instance = this;}
+        else if(instance != this){Destroy(this);}
         
+        defaultState = airborneState; 
+
         airborneState.OnReset();
         groundedState.OnReset();
         wallRunState.OnReset();
+        dashState.OnReset();
 
         playerJump = FMODUnity.RuntimeManager.CreateInstance(FMODJumpEvent);
         playerLand = FMODUnity.RuntimeManager.CreateInstance(FMODLandEvent);
@@ -73,15 +84,19 @@ public class PlayerMovementStateMachine : StateMachine
     protected override void OnUnityEnable()
     {
         jump.action.started += Jump;
+        dash.action.performed += OnDashInput;
     }
 
     protected override void OnUnityDisable()
     {
         jump.action.started -= Jump;
+        dash.action.performed -= OnDashInput;
     }
 
     protected override void OnUpdate()
     {
+
+
         FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerJump, transform);
         FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerLand, transform);
     }
@@ -131,6 +146,18 @@ public class PlayerMovementStateMachine : StateMachine
         currentState.Jump();
     }
 
+    public void OnDashInput(InputAction.CallbackContext ctx){
+        if (canDash)
+        {
+            Debug.Log("adfggre");
+            Dash();       
+        }
+    }
+
+    public void Dash(){
+        SetState(dashState);
+    }
+
     public void Blink(){
         SetState(airborneState);
         transform.position = featherKnife.transform.position;
@@ -177,7 +204,7 @@ public class PlayerMovementStateMachine : StateMachine
 
     void CheckWallViaRay(Collision collision = null, bool ignoreWallRunTimer = false)
     {
-        if(!wallRunState.canWallRun && !ignoreWallRunTimer){return;}
+        if(!wallRunState.canWallRun && !ignoreWallRunTimer ){return;}
 
         RaycastHit hit;
 

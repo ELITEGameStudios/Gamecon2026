@@ -6,7 +6,6 @@ using FMOD;
 [System.Serializable]
 public class GroundedState : PlayerMovementState
 {
-    public float jumpPower;
     public bool walking => movement.movementInput.magnitude > 0.1f && rigidbody.linearVelocity.magnitude > 0.1f;
     
     // [FMODUnity.EventRef(MigrateTo ="EventReference")]
@@ -21,6 +20,7 @@ public class GroundedState : PlayerMovementState
 
     public override void Start()
     {
+        movement.hasDash = true;
     }
 
     public override void Update()
@@ -58,11 +58,6 @@ public class GroundedState : PlayerMovementState
         
     // }
 
-    public override void Jump()
-    {
-        rigidbody.AddForce(transform.up * jumpPower, ForceMode.Impulse);
-        movement.playerJump.start();
-    }
 
     public override void OnCollisionExit(Collision collision)
     {
