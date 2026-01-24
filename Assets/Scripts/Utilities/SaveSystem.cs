@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -12,14 +13,10 @@ public class SaveSystem : IFileManager
         }
         return null;
     }
-
-
     public T ParseFromJson<T>(string contents) where T : class
     {
         return JsonUtility.FromJson<T>(contents);
     }
-
-
     public string Read(string path)
     {
         string fileContents = File.ReadAllText(path);
