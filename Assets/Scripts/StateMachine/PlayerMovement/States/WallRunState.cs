@@ -3,8 +3,8 @@ using UnityEngine;
 [System.Serializable]
 public class WallRunState : PlayerMovementState
 {
-    public float jumpPower;
-    public float wallRunSpeed;
+    public float wallRunMinSpeed;
+    public float currentWallRunSpeed;
     public float wallRunMaxDist;
     public float raycastForwardCheckDist = 0.1f;
     
@@ -20,7 +20,7 @@ public class WallRunState : PlayerMovementState
     // Determines if the player cannot wall run for a set time after finishing a wall run. should be a short interval
     public float wallRunSleepInterval = 0.2f;
     float currentWallRunSleepTimer;
-    public bool canWallRun => currentWallRunSleepTimer <= 0;
+    public bool canWallRun => currentWallRunSleepTimer <= 0 && movement.currentVelocity >= wallRunMinSpeed;
 
 
     public WallRunState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
@@ -30,6 +30,7 @@ public class WallRunState : PlayerMovementState
 
     public override void Start()
     {
+        movement.hasDash = true;
         movement.OnStopWalking();
         Vector3 closestPoint = storedCollision.collider.ClosestPoint(transform.position);
         Vector3 raycastDir = (closestPoint - transform.position).normalized;
@@ -37,32 +38,30 @@ public class WallRunState : PlayerMovementState
         camAngle.SetAngle(15 * (isRight ? 1 : -1));
         if (Physics.Raycast(transform.position, raycastDir, out RaycastHit hit, Mathf.Infinity))
         {
+            // Determine the direction in world space the player is supposed to run
             wallRunDirection = Vector3.Cross(Vector3.up, hit.normal);
             if(Vector3.Angle(wallRunDirection, transform.forward) > 90)
             {
                 wallRunDirection *= -1;
             }
 
-            Debug.DrawRay(hit.point, hit.normal);
-            Debug.DrawRay(hit.point, Vector3.Cross(Vector3.up, hit.normal));
+
+            // Determine the speed in which the player will wall run
+            float currentSpeed = movement.currentVelocity;
+            // if(currentSpeed < wallRunMinSpeed){currentWallRunSpeed = wallRunMinSpeed; return;} // Sets to the min wall run speed if your speed is slower. (May be obselete since wall run might reqire you tp be this speed)
+            
+            // Speed will be between the current speed and the minimum wall run speed, determined by the angle of your entry velocity and the wall's run direction
+            currentWallRunSpeed = Mathf.Lerp(
+                currentSpeed, wallRunMinSpeed, 
+                Mathf.Clamp(Vector3.Angle(rigidbody.linearVelocity, wallRunDirection) / 90, 0, 1)
+            )/ Time.fixedDeltaTime;
         }
-
-        // wallRunDirection = storedCollision.transform.forward;
-        // wallRunDirection =
-        //     Vector3.Angle(transform.forward, wallRunDirection) <
-        //     Vector3.Angle(transform.forward, -wallRunDirection) ?
-        //     wallRunDirection :
-        //     wallRunDirection * -1;
-
-        // wallRunContactNormal = (transform.position - storedCollision.GetContact(0).point).normalized;
-        // // wallRunContactNormal -= Vector3.up * wallRunContactNormal.y;
-        // Debug.Log(wallRunContactNormal);
     }
 
     public override void FixedUpdate()
     {
-        Debug.Log(wallRunContactNormal);
-        Debug.Log("IS WALL RUNNING");
+        // Debug.Log(wallRunContactNormal);
+        // Debug.Log("IS WALL RUNNING");
 
         movement.CalculateLookRotation();
         lookAngleDifference = Vector3.Angle(transform.forward, wallRunDirection);
@@ -96,7 +95,7 @@ public class WallRunState : PlayerMovementState
             if(Vector3.Distance(transform.position, hitPoint) > wallRunMaxDist) { transform.position = hitPoint + hitInfo.normal * movement.bodyRadius; }
 
             rigidbody.linearVelocity =
-            wallRunDirection * Time.fixedDeltaTime * wallRunSpeed ;
+            wallRunDirection * Time.fixedDeltaTime * currentWallRunSpeed ;
                 Debug.DrawRay(hitInfo.point, hitInfo.normal);
         }
         else
@@ -114,7 +113,6 @@ public class WallRunState : PlayerMovementState
 
     public override void Jump()
     {   
-        // Debug.Log(Vector3.SignedAngle(wallRunDirection, wallRunContactNormal, Vector3.up));
 
         float xJumpDirection = 
             jumpWithOffset 
