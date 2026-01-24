@@ -37,7 +37,12 @@ public class LeaderboardManager : MonoBehaviour
         this.currentLevel = currentLevel;
         ClearExistingEntryGameObjects();//clear placeholders
 
-        levelCompletions = saveSystem.LoadAll<LevelAttempt>(GetDataFolderPath());
+        var saveDirectory = saveSystem.GetDirectory(GetDataFolderPath());
+        levelCompletions.Clear();
+        foreach (var save in saveDirectory)
+        {
+            levelCompletions.Add(saveSystem.ParseFromJson<LevelAttempt>(save));
+        }
         if (levelCompletions.Count == 0) return;
         levelCompletions = leaderboardService.SortAttemptsByTime(levelCompletions);
         foreach (var data in levelCompletions)

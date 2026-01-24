@@ -13,25 +13,13 @@ public class SaveSystem : IFileManager
         return null;
     }
 
-    public T Load<T>(string path) where T : class
+
+    public T ParseFromJson<T>(string contents) where T : class
     {
-        T result = JsonUtility.FromJson<T>(path);
-        return result;
+        return JsonUtility.FromJson<T>(contents);
     }
 
-    public List<T> LoadAll<T>(string path) where T : class
-    {
-        List<T> results = new ();
-        var directory = GetDirectory(path);
-        foreach (var item in directory)
-        {
-            var itemPath = Path.Combine(path, item);
-            var contents = File.ReadAllText(itemPath);
-            var obj = Load<T>(contents);
-            results.Add(obj);
-        }
-        return results;
-    }
+
     public string Read(string path)
     {
         string fileContents = File.ReadAllText(path);
@@ -58,11 +46,6 @@ public class SaveSystem : IFileManager
         string fileDestination = Path.Combine(path, name + ".json");
         File.WriteAllText(fileDestination, newFile);
         return true;
-    }
-
-    public void Write(string path)
-    {
-
     }
 
 
