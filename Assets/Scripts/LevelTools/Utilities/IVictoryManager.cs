@@ -17,7 +17,7 @@ public class KillTargets : IVictoryCondition
     public event Action victoryAchieved;
     public event Action defeatAchieved;
 
-    const float TIME_TO_WIN = 5.0f;
+    float timeToWin = 5.0f;
 
     bool gameOver;
     bool IVictoryCondition.gameOver { get => gameOver; set => gameOver = value; }
@@ -37,10 +37,14 @@ public class KillTargets : IVictoryCondition
     public void TimerLogic(float tracker)
     {
         if (gameOver) return;
-        if (tracker > TIME_TO_WIN)
+        if (tracker > timeToWin)
         {
             defeatAchieved?.Invoke();
             gameOver = true;
         }
+    }
+    public KillTargets(float time)
+    { 
+        timeToWin = time;
     }
 }

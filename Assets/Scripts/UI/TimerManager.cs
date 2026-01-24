@@ -53,7 +53,7 @@ public class TimerManager : MonoBehaviour
         runTimer = true;
     }
 
-    public float GetTimer()
+    public float GetCurrentLevelTime()
     {
         return timerTracker;
     }

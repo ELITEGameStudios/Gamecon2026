@@ -10,13 +10,12 @@ public class HUDManager : MonoBehaviour
 
     [SerializeField] private TMP_Text waveDisplay;
 
-    public void InitManager(IEntityManager entityManager)
+    public void InitManager(IEntityManager entityManager, IVictoryCondition victoryCondition)
     {
-
-        InitWaveDisplay(entityManager);
+        InitWaveDisplay(entityManager, victoryCondition);
     }
 
-    void InitWaveDisplay(IEntityManager entityManager)
+    void InitWaveDisplay(IEntityManager entityManager, IVictoryCondition victoryCondition)
     {
         if (waveDisplay == null) return;
         if (entityManager is WaveManager waveManager)
@@ -24,12 +23,12 @@ public class HUDManager : MonoBehaviour
             Debug.Log("Init HUD manager");
             waveDisplay.gameObject.SetActive(true);
             waveManager.waveStarted += OnWaveChanged;
-            waveManager.allEnemiesDefeated += OnLevelComplete;
         }
         else
         {
             waveDisplay.gameObject.SetActive(false);
         }
+        victoryCondition.victoryAchieved += OnLevelComplete;
     }
 
 

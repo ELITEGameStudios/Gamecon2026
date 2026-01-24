@@ -4,7 +4,7 @@ using System.Diagnostics;
 public interface IEntityManager
 {
      bool spawnEnemies { set; get; }
-
+     event Action allEnemiesDefeated; 
     void Initialize();
 
     void OnEnemyDefeated(EnemyBase enemy);
