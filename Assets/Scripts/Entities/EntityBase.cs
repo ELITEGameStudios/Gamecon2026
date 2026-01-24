@@ -8,10 +8,8 @@ public abstract class EntityBase : MonoBehaviour
     public float normalizedHealth => health / maxHealth;
     public string entityName;
 
-    public UnityEvent<EntityBase> entityKilled = new();
-    public UnityEvent<EntityBase> entitySpawned = new();
-
-
+   [HideInInspector] public UnityEvent<EntityBase> entityKilled = new();
+   [HideInInspector] public UnityEvent<EntityBase> entitySpawned = new();
 
     [Header("FMOD events")]
     public string FMODDeathEvent = "";

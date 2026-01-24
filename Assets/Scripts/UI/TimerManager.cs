@@ -52,4 +52,9 @@ public class TimerManager : MonoBehaviour
         playerSpawned = false;
         runTimer = true;
     }
+
+    public float GetTimer()
+    {
+        return timerTracker;
+    }
 }
