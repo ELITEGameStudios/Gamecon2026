@@ -11,11 +11,12 @@ public class LeaderboardService
     public string GetFormattedTime(float time)
     {
         var timespan = TimeSpan.FromSeconds(time);
-        return timespan.ToString("mm\\:ss\\ff");
+        return timespan.ToString("mm\\:ss\\:fff");
     }
     public bool IsNameAllowed(string attemptName, List<LevelAttempt> attempts)
     {
         if (attemptName.Length == 0) return false;
+        var hash = attemptName.ToHashSet();
         foreach (var attempt in attempts)
         {
             if (attempt.name == attemptName)
