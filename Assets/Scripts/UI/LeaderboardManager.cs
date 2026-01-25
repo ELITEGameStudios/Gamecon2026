@@ -65,13 +65,11 @@ public class LeaderboardManager : MonoBehaviour
 
     public void OnLevelOver(float time)
     {
-        Debug.Log("Level over");
-        if (time == FAILURE_LEVEL_TIME) return; // means u lost
-        Debug.Log("Level over");
         completionTime = time;
         leaderboardDisplay.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
-        saveAttemptButton.interactable = true;
+        saveAttemptButton.interactable = (time != FAILURE_LEVEL_TIME);
+        attemptNamer.interactable = (time != FAILURE_LEVEL_TIME);
     }
     public void SaveNewAttempt()
     {

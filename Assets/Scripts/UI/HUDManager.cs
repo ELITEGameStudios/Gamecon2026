@@ -28,7 +28,8 @@ public class HUDManager : MonoBehaviour
         {
             waveDisplay.gameObject.SetActive(false);
         }
-        victoryCondition.victoryAchieved += OnLevelComplete;
+        victoryCondition.victoryAchieved += OnLevelWon;
+        victoryCondition.defeatAchieved += OnLevelLost;
     }
 
 
@@ -38,10 +39,15 @@ public class HUDManager : MonoBehaviour
         waveDisplay.text = "Wave " + index;
     }
 
-    void OnLevelComplete()
+    void OnLevelWon()
     {
         Debug.Log("Level complete");
         waveDisplay.text = "VICTORY";
+    }
+
+    void OnLevelLost()
+    {
+        waveDisplay.text = "DEFEAT";
     }
     public void UpdateRecallCooldown(float currentCooldown, float maxCooldown)
     {
