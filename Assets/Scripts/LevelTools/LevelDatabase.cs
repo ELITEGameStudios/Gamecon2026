@@ -9,7 +9,8 @@ public class LevelDatabase : ScriptableObject
     [System.Serializable]
     public enum LevelNames
     {
-        TestLevel,
+        TutorialLevel,
+        TestLevel
     }
 
 
