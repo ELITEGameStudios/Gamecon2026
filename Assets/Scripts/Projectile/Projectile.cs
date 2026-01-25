@@ -25,7 +25,8 @@ public class Projectile : MonoBehaviour
     [SerializeField] private ProjectileAbilities projectileAbilities;
     
     [Header("RecallData")]
-    [SerializeField] private Vector3 embeddedPos;
+    public Vector3 embeddedPos {get; private set;}
+    public Vector3 throwDirection {get; private set;}
     [SerializeField] private AnimationCurve recallAnimationCurve;
     public float baseRecallSpeed = 50f; // Overall speed multiplier
     public float maxBoostDistance = 180f; // Distance threshold for speed boost
@@ -255,6 +256,7 @@ public class Projectile : MonoBehaviour
     {
         transform.SetParent(null);
         transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(-90, 180, 0);
+        throwDirection = direction;
         SetState(ProjectileState.Flying);
         
         rb.linearVelocity = direction * speed;

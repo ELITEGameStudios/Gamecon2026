@@ -41,7 +41,9 @@ public class LeaderboardManager : MonoBehaviour
         levelCompletions.Clear();
         foreach (var save in saveDirectory)
         {
-            levelCompletions.Add(saveSystem.ParseFromJson<LevelAttempt>(save));
+            var saveData = saveSystem.Read(save);
+            Debug.Log("Save data == " + saveData);
+            levelCompletions.Add(saveSystem.ParseFromJson<LevelAttempt>(saveData));
         }
         if (levelCompletions.Count == 0) return;
         levelCompletions = leaderboardService.SortAttemptsByTime(levelCompletions);

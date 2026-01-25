@@ -19,6 +19,8 @@ public class PlayerMovementStateMachine : StateMachine
     public float groundedCheckDist = 0.15f;
     public float speedMultiplier = 1f;
     public float bodyRadius = 0.5f;
+    public Vector3 blinkBoxSize;
+    public LayerMask blinkBoxLayerMask;
     public float liveMaxSpeed {get { return baseSpeed * speedMultiplier; }}
     public float currentVelocity {get { return rigidbody.linearVelocity.magnitude; }}
     
@@ -160,7 +162,18 @@ public class PlayerMovementStateMachine : StateMachine
 
     public void Blink(){
         SetState(airborneState);
-        transform.position = featherKnife.transform.position;
+        Vector3 targetPos = featherKnife.transform.position;
+        Quaternion rot = featherKnife.transform.rotation;
+        for (float i = 0; i < 5; i += 0.2f)
+        {
+            targetPos = featherKnife.transform.position - featherKnife.throwDirection * i;
+            if(Physics.OverlapBox(targetPos, blinkBoxSize, Quaternion.identity, blinkBoxLayerMask).Length > 0){
+                continue;
+            }
+            break;
+        }
+
+        transform.position = targetPos;
         CheckWallViaRay(ignoreWallRunTimer: true);
     }
 

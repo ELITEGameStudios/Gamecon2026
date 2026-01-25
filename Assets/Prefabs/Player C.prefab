@@ -5692,6 +5692,10 @@ MonoBehaviour:
   groundedCheckDist: 0.15
   speedMultiplier: 1
   bodyRadius: 0.5
+  blinkBoxSize: {x: 1, y: 1.9, z: 1}
+  blinkBoxLayerMask:
+    serializedVersion: 2
+    m_Bits: 255
   groundedState:
     name: Grounded
     rigidbody: {fileID: 0}
@@ -5713,13 +5717,16 @@ MonoBehaviour:
     movement: {fileID: 5837548833278922391}
     wallRunMinSpeed: 10
     currentWallRunSpeed: 0
-    wallRunMaxDist: 1
+    wallRunMaxDist: 0.8
     raycastForwardCheckDist: 0
     jumpWithOffset: 0
     isRight: 0
     lookAngleDifference: 0
     wallRunDirection: {x: 0, y: 0, z: 0}
+    lastWallRunDirection: {x: 0, y: 0, z: 0}
+    maxTransitionAngle: 65
     wallRunContactNormal: {x: 0, y: 0, z: 0}
+    lastContactPosition: {x: 0, y: 0, z: 0}
     camAngle: {fileID: 2336920269275116042}
     wallRunSleepInterval: 0.2
   airborneState:
@@ -5864,6 +5871,12 @@ MonoBehaviour:
   maxHealth: 1
   health: 1
   entityName: 
+  entityKilled:
+    m_PersistentCalls:
+      m_Calls: []
+  entitySpawned:
+    m_PersistentCalls:
+      m_Calls: []
   FMODDeathEvent: event:/DeathEvent
 --- !u!114 &712407731034041875
 MonoBehaviour:
