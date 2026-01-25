@@ -23,7 +23,7 @@ public class WallRunState : PlayerMovementState
     // Determines if the player cannot wall run for a set time after finishing a wall run. should be a short interval
     public float wallRunSleepInterval = 0.2f;
     float currentWallRunSleepTimer;
-    public bool canWallRun => currentWallRunSleepTimer <= 0 && movement.currentVelocity >= wallRunMinSpeed;
+    public bool canWallRun => currentWallRunSleepTimer <= 0;// && movement.currentVelocity >= wallRunMinSpeed;
 
 
     public WallRunState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
@@ -51,7 +51,7 @@ public class WallRunState : PlayerMovementState
 
             // Determine the speed in which the player will wall run
             float currentSpeed = movement.currentVelocity;
-            // if(currentSpeed < wallRunMinSpeed){currentWallRunSpeed = wallRunMinSpeed; return;} // Sets to the min wall run speed if your speed is slower. (May be obselete since wall run might reqire you tp be this speed)
+            if(currentSpeed < wallRunMinSpeed){currentWallRunSpeed = wallRunMinSpeed; return;} // Sets to the min wall run speed if your speed is slower. (May be obselete since wall run might reqire you tp be this speed)
             
             // Speed will be between the current speed and the minimum wall run speed, determined by the angle of your entry velocity and the wall's run direction
             currentWallRunSpeed = Mathf.Lerp(
