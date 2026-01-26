@@ -19,6 +19,7 @@ public class SaveSystem : IFileManager
     }
     public string Read(string path)
     {
+        if (!File.Exists(path)) return string.Empty;
         string fileContents = File.ReadAllText(path);
         return fileContents;
     }
@@ -30,6 +31,11 @@ public class SaveSystem : IFileManager
         string fileDestination = Path.Combine(path, name + ".json");
         File.WriteAllText(fileDestination, newFile);
         return true;
+    }
+
+    public string GetAsJson(object contents)
+    {
+        return JsonUtility.ToJson(contents);
     }
 
     public bool EnsureSave(string path, string name, object contents)

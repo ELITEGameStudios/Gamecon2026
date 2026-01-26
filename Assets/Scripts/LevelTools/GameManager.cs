@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TimerManager timerManager;
     [SerializeField] HUDManager hudManager;
     [SerializeField] LeaderboardManager leaderboardManager;
+    [SerializeField] SettingsMenu settingsScreen;
 
     [Header("Temporary Level Picker")]
     [SerializeField] LevelDatabase.LevelNames currentLevel;
@@ -26,6 +27,11 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Couldn't find current level " + currentLevel.ToString() + ": " + handle.OperationException);
             return;
+        }
+
+        if (hudManager == null)
+        {
+            hudManager = FindFirstObjectByType<HUDManager>();
         }
         switch (levelObject.levelType)
         {
@@ -46,7 +52,10 @@ public class GameManager : MonoBehaviour
             gameEnding += leaderboardManager.OnLevelOver;
             leaderboardManager.InitManager(currentLevel);            
         }
-
+        if (settingsScreen != null)
+        {
+            gameEnding += settingsScreen.OnGameOver;
+        }
     }
 
     private void Awake()
@@ -58,18 +67,14 @@ public class GameManager : MonoBehaviour
     void OnVictory()
     {   
         if (gameOver) return;
-        Debug.Log("gameOver list = " + gameEnding.GetInvocationList());
         gameOver = true;
         gameEnding.Invoke(timerManager.GetCurrentLevelTime());
-        Debug.Log("Won game");
     }
     void OnDefeat()
     {
         if (gameOver) return;
-        Debug.Log("gameOver list = " + gameEnding.GetInvocationList());
         gameOver = true;
         gameEnding?.Invoke(LeaderboardManager.FAILURE_LEVEL_TIME);
-        Debug.Log("Lost game");
     }
     private void OnDestroy()
     {

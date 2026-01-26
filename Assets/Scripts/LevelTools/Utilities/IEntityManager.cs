@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 public interface IEntityManager
 {
      bool spawnEnemies { set; get; }
@@ -77,7 +76,6 @@ public class WaveManager : IEntityManager
             newEnemy.entityKilled.AddListener((entity) => OnEnemyDefeated(newEnemy));
             enemiesInGateRemaining.Add(newEnemy);
         }
-        UnityEngine.Debug.Log("Spawned " + enemiesInGateRemaining.Count + " enemies");
         currentGate = data;
     }
 
@@ -102,7 +100,6 @@ public class WaveManager : IEntityManager
             {
                 waveEnded?.Invoke();
                 StartNextWave();
-                UnityEngine.Debug.Log("Starting new wave");
             }
             else
             {

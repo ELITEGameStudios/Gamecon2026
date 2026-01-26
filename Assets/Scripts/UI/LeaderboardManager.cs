@@ -37,7 +37,7 @@ public class LeaderboardManager : MonoBehaviour
         this.currentLevel = currentLevel;
         ClearExistingEntryGameObjects();//clear placeholders
 
-        var saveDirectory = saveSystem.GetDirectory(GetDataFolderPath());
+        var saveDirectory = saveSystem.GetDirectory(LeaderboardService.GetDataFolderPath(currentLevel));
         levelCompletions.Clear();
         foreach (var save in saveDirectory)
         {
@@ -81,12 +81,8 @@ public class LeaderboardManager : MonoBehaviour
         }
         saveAttemptButton.interactable = false;
         LevelAttempt newEntry = new(attemptName, completionTime);
-        saveSystem.EnsureSave(GetDataFolderPath(), attemptName, newEntry);
+        saveSystem.EnsureSave(LeaderboardService.GetDataFolderPath(currentLevel), attemptName, newEntry);
         InitManager(currentLevel);
-    }
-    public string GetDataFolderPath()
-    {
-        return Application.persistentDataPath + "/playerSaves/" + currentLevel.ToString();
     }
 
     public void CloseLeaderboard()
