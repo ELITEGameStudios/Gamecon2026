@@ -1,9 +1,12 @@
 using UnityEngine;
 using System;
+using NUnit.Framework;
 
 
 public interface IVictoryCondition
 {
+
+    public const float TIMER_DISABLED_VALUE = -1.0f;
     bool gameOver { get; set; }
     event Action victoryAchieved;
     event Action defeatAchieved;
@@ -19,7 +22,7 @@ public class KillTargets : IVictoryCondition
 
     float timeToWin = 5.0f;
 
-    bool gameOver;
+    public bool gameOver = false;
     bool IVictoryCondition.gameOver { get => gameOver; set => gameOver = value; }
 
     public void Initialize()
@@ -36,7 +39,7 @@ public class KillTargets : IVictoryCondition
     }
     public void TimerLogic(float tracker)
     {
-        if (gameOver) return;
+        if (gameOver || timeToWin <= IVictoryCondition.TIMER_DISABLED_VALUE) return;
         if (tracker > timeToWin)
         {
             defeatAchieved?.Invoke();
@@ -48,3 +51,4 @@ public class KillTargets : IVictoryCondition
         timeToWin = time;
     }
 }
+
