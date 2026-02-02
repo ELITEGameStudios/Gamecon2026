@@ -28,8 +28,8 @@ public class AirborneState : PlayerMovementState
             rigidbody.linearVelocity.z
         );
         topDownTargetMagnitude = topDownVelocityVector.magnitude;
-        // initialRelativeVelocity = rigidbody.linearVelocity;
-        // initialRelativeVelocity = transform.worldToLocalMatrix.MultiplyPoint(transform.position + rigidbody.linearVelocity);
+        initialRelativeVelocity = transform.worldToLocalMatrix.MultiplyPoint(transform.position + rigidbody.linearVelocity);
+        // Debug.Log
     }
 
     public override void FixedUpdate()
@@ -43,18 +43,20 @@ public class AirborneState : PlayerMovementState
         //     newVelocityFactor.z
         // );
 
+        Vector3 initialToWorld = transform.localToWorldMatrix.MultiplyPoint(initialRelativeVelocity ) - transform.position;
+
         if (airStrafeForce > 0){
             rigidbody.AddForce(
             (
                 (transform.right * movement.movementInput.x) 
-                //+ (transform.forward * movement.movementInput.y)
+                + (transform.forward * movement.movementInput.y)
             ) * Time.fixedDeltaTime * airStrafeForce, ForceMode.Force);
         }
         
         rigidbody.linearVelocity = new Vector3(
-            rigidbody.linearVelocity.x,
+            initialToWorld.x,
             Mathf.Clamp(rigidbody.linearVelocity.y, maxDownwardVelocity, Mathf.Infinity),
-            rigidbody.linearVelocity.z
+            initialToWorld.z
         );  
     }
 
@@ -68,9 +70,10 @@ public class AirborneState : PlayerMovementState
 
     public override void OnCollisionEnter(Collision collision)
     {
-        // if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")){
-        //     movement.SetState(movement.groundedState);
-        //     movement.playerLand.start();
+        // if (!movement.CheckGrounded())
+        // {
+        //     rigidbody.linearVelocity += collision.impulse;
+        //     initialRelativeVelocity = transform.worldToLocalMatrix.MultiplyPoint(transform.position + rigidbody.linearVelocity);
         // }
     }
 

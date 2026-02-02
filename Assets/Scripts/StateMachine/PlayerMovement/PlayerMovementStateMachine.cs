@@ -119,7 +119,7 @@ public class PlayerMovementStateMachine : StateMachine
         if(wasMovingLastFrame && !isConsideredMoving) { OnStopWalking(); }
 
         if(currentState != groundedState){
-            if (CheckGrounded())
+            if (CheckGrounded() && currentState != dashState)
             {
                 SetState(groundedState);
                 playerLand.start();
@@ -229,16 +229,30 @@ public class PlayerMovementStateMachine : StateMachine
 
         RaycastHit hit;
 
+        // Checks if there is a potential wall to run on and the general direction it is relative to the player
         if(Physics.Raycast(transform.position, transform.right * -1, out hit, maxWallCheckDist)){ wallRunState.isRight = false;  }
         else if(Physics.Raycast(transform.position, transform.right, out hit, maxWallCheckDist)){ wallRunState.isRight = true;  }
         else{return;}
         
+        // Checks if the wall running collider is the same as the grounding collider for the player
         Collider groundedCol = GetGroundedCollider();
         if(groundedCol == hit.collider){return;}
         
+        // Getting angle roll difference
         float upDiff = Vector3.Angle(Vector3.up, hit.normal);
         float downDiff = Vector3.Angle(Vector3.down, hit.normal);
         float angleRoll = upDiff < downDiff ? upDiff : downDiff;
+
+        // Wall run direction
+        Vector3 testWallRunDir = Vector3.Cross(Vector3.up, hit.normal);
+        if(Vector3.Angle(testWallRunDir, transform.forward) > 90) { testWallRunDir *= -1; }
+
+        // Testing look difference between player and wall direction
+        float currentLookAngleDifference = Vector3.Angle(transform.forward, testWallRunDir);
+        if(currentLookAngleDifference < wallRunState.lookAngleDifferenceRange.x || currentLookAngleDifference > wallRunState.lookAngleDifferenceRange.y)
+        {
+            return;
+        }
 
         // if(collision == null || hit.collider == collision.collider){ 
         if(angleRoll >= minWallTangentSlope && (collision == null || hit.collider == collision.collider)){ 
@@ -253,11 +267,11 @@ public class PlayerMovementStateMachine : StateMachine
     void OnCollisionEnter(Collision collision)
     {
         if(currentState != null){
-            currentState.OnCollisionEnter(collision);
-
             if(currentState != wallRunState && currentState != groundedState){
                 CheckWallViaRay(collision);
             }
+
+            currentState.OnCollisionEnter(collision);
         };
 
     }
