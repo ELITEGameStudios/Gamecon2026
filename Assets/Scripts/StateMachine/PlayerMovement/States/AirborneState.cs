@@ -4,7 +4,10 @@ using UnityEngine;
 public class AirborneState : PlayerMovementState
 {
     public float airStrafeForce = 0.5f;
+    public float topDownTargetMagnitude;
+    public float maxDownwardVelocity;
     public int extraJumps, jumpsLeft;
+    public Vector3 initialRelativeVelocity, topDownVelocityVector;
 
     public AirborneState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
     {
@@ -20,18 +23,39 @@ public class AirborneState : PlayerMovementState
     {
         movement.OnStopWalking();
         jumpsLeft = extraJumps;
+        topDownVelocityVector = new Vector2(
+            rigidbody.linearVelocity.x,
+            rigidbody.linearVelocity.z
+        );
+        topDownTargetMagnitude = topDownVelocityVector.magnitude;
+        // initialRelativeVelocity = rigidbody.linearVelocity;
+        // initialRelativeVelocity = transform.worldToLocalMatrix.MultiplyPoint(transform.position + rigidbody.linearVelocity);
     }
 
     public override void FixedUpdate()
     {
         movement.CalculateLookRotation();
+        // Vector3 newVelocityFactor = transform.localToWorldMatrix.MultiplyPoint(initialRelativeVelocity);
+        
+        // rigidbody.linearVelocity = new Vector3(
+        //     newVelocityFactor.x,
+        //     rigidbody.linearVelocity.y,
+        //     newVelocityFactor.z
+        // );
+
         if (airStrafeForce > 0){
             rigidbody.AddForce(
             (
-                (transform.right * movement.movementInput.x) +
-                (transform.forward * movement.movementInput.y)
+                (transform.right * movement.movementInput.x) 
+                //+ (transform.forward * movement.movementInput.y)
             ) * Time.fixedDeltaTime * airStrafeForce, ForceMode.Force);
         }
+        
+        rigidbody.linearVelocity = new Vector3(
+            rigidbody.linearVelocity.x,
+            Mathf.Clamp(rigidbody.linearVelocity.y, maxDownwardVelocity, Mathf.Infinity),
+            rigidbody.linearVelocity.z
+        );  
     }
 
     public override void Jump()

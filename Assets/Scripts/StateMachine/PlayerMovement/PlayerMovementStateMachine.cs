@@ -23,6 +23,14 @@ public class PlayerMovementStateMachine : StateMachine
     public LayerMask blinkBoxLayerMask;
     public float liveMaxSpeed {get { return baseSpeed * speedMultiplier; }}
     public float currentVelocity {get { return rigidbody.linearVelocity.magnitude; }}
+    public float current2DVelocity {
+        get { 
+            return new Vector2(
+                rigidbody.linearVelocity.x, 
+                rigidbody.linearVelocity.z
+            ).magnitude; 
+        }
+    }
     
     public PlayerMovementState currentState => base.currentState as PlayerMovementState;
     
