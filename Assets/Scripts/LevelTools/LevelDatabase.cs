@@ -10,7 +10,8 @@ public class LevelDatabase : ScriptableObject
     public enum LevelNames
     {
         TutorialLevel,
-        TestLevel
+        TestLevel,
+        DevRoom_Temi,
     }
 
 

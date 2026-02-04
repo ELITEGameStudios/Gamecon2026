@@ -41,7 +41,6 @@ public class Projectile : MonoBehaviour
     private Collider col;
     
     private Transform embedParent;
-
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
