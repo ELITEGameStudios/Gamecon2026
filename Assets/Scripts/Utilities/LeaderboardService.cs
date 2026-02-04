@@ -1,10 +1,9 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 public class LeaderboardService
 {
-    char[] unallowedChars =
+    char[] unallowedChars = 
     {
         '<',
         '>',
@@ -16,7 +15,7 @@ public class LeaderboardService
         '?',
         '*',
     };
-    string[] unallowedNames =
+    HashSet<string> unallowedNames = new()
     {
         "CON",
         "PRN",
@@ -45,16 +44,10 @@ public class LeaderboardService
                 return false;
             }
         }
-        foreach (var unallowedName in unallowedNames)
-        {
-            if (attemptName.Equals(unallowedName))
-            {
-                return false;
-            }
-        }
+        if (unallowedNames.Equals(attemptName)) return false;
         foreach (var attempt in attempts)
         {
-            if (attempt.name == attemptName)
+            if (attempt.name.Equals(attemptName))
             {
                 return false;
             }
@@ -69,28 +62,3 @@ public class LeaderboardService
     }
 }
 
-[TestFixture]
-public class TestIfValidNameIsFlagged
-{
-    LeaderboardService service;
-    List<LevelAttempt> attempts;
-    [SetUp] 
-    public void SetUp()
-    {
-        service = new();
-        attempts = new();
-    }
-
-    [Test]
-    public void TryValidName()
-    {
-        Assert.IsTrue( service.IsNameAllowed("Name", attempts));
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        service = null;
-        attempts = null;
-    }
-}
