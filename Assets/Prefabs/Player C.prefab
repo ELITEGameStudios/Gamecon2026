@@ -226,59 +226,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!1 &2123446602129931692
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7204409649046523041}
-  - component: {fileID: 1837064246957016365}
-  m_Layer: 3
-  m_Name: I dont know why this box is here
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7204409649046523041
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2123446602129931692}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.08, z: 0.86}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 947569911892450442}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1837064246957016365
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2123446602129931692}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2177365231998236451
 GameObject:
   m_ObjectHideFlags: 0
@@ -5288,7 +5235,7 @@ Camera:
   m_GameObject: {fileID: 7251006073480440276}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0.09878959, g: 0.10517871, b: 0.18867922, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -5558,7 +5505,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 743407300137307247}
-  - {fileID: 7204409649046523041}
   - {fileID: 7280931948175992934}
   - {fileID: 1637449169364819559}
   - {fileID: 4731171556806045123}
@@ -5651,7 +5597,7 @@ Rigidbody:
   m_GameObject: {fileID: 9105646310362161738}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 1
+  m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -5703,8 +5649,13 @@ MonoBehaviour:
     transform: {fileID: 0}
     finished: 0
     started: 0
-    jumpPower: 22
+    jumpPower: 16
     movement: {fileID: 5837548833278922391}
+    overshootKp: 0.15
+    rampupKp: 0.15
+    desiredSpeed: 0
+    turnThresholdAngle: 120
+    desiredVelocity: {x: 0, y: 0, z: 0}
     FMODWalkEvent: event:/FootstepsEvent
   wallRunState:
     name: On Wall
@@ -5719,15 +5670,17 @@ MonoBehaviour:
     currentWallRunSpeed: 0
     wallRunMaxDist: 0.8
     raycastForwardCheckDist: 0
+    maxTransitionAngle: 65
+    wallRunAdditiveSpeed: 500
+    lookAngleDifferenceRange: {x: 0, y: 60}
+    camAngle: {fileID: 2336920269275116042}
+    lookAngleDifference: 0
     jumpWithOffset: 0
     isRight: 0
-    lookAngleDifference: 0
     wallRunDirection: {x: 0, y: 0, z: 0}
     lastWallRunDirection: {x: 0, y: 0, z: 0}
-    maxTransitionAngle: 65
     wallRunContactNormal: {x: 0, y: 0, z: 0}
     lastContactPosition: {x: 0, y: 0, z: 0}
-    camAngle: {fileID: 2336920269275116042}
     wallRunSleepInterval: 0.2
   airborneState:
     name: Airborne
@@ -5736,11 +5689,15 @@ MonoBehaviour:
     transform: {fileID: 0}
     finished: 0
     started: 0
-    jumpPower: 27
+    jumpPower: 13
     movement: {fileID: 5837548833278922391}
-    airStrafeForce: 1000
+    airStrafeForce: 750
+    topDownTargetMagnitude: 0
+    maxDownwardVelocity: -100
     extraJumps: 1
     jumpsLeft: 0
+    initialRelativeVelocity: {x: 0, y: 0, z: 0}
+    topDownVelocityVector: {x: 0, y: 0, z: 0}
   dashState:
     name: Dash
     rigidbody: {fileID: 0}

@@ -7,6 +7,11 @@ using FMOD;
 public class GroundedState : PlayerMovementState
 {
     public bool walking => movement.movementInput.magnitude > 0.1f && rigidbody.linearVelocity.magnitude > 0.1f;
+    public float overshootKp;
+    public float rampupKp;
+    public float desiredSpeed;
+    public float turnThresholdAngle;
+    public Vector3 desiredVelocity;
     
     // [FMODUnity.EventRef(MigrateTo ="EventReference")]
     public string FMODWalkEvent = "";
@@ -35,12 +40,22 @@ public class GroundedState : PlayerMovementState
         movement.CalculateLookRotation();
         if(movement.movementInput.magnitude > 1){movement.movementInput.Normalize();}
 
-        rigidbody.linearVelocity =
+
+        desiredSpeed = Mathf.Lerp(movement.current2DVelocity, movement.liveMaxSpeed * Time.fixedDeltaTime, movement.currentVelocity > movement.liveMaxSpeed ? overshootKp : rampupKp);
+        desiredVelocity =             
             (
                 (transform.right * movement.movementInput.x) +
                 (transform.forward * movement.movementInput.y)
-            ) * Time.fixedDeltaTime * movement.liveMaxSpeed
-            + (transform.up * rigidbody.linearVelocity.y);
+            ) * desiredSpeed;
+
+        if(Vector3.Angle(desiredVelocity, rigidbody.linearVelocity) > turnThresholdAngle)
+        {
+            desiredVelocity /= Vector3.Angle(desiredVelocity, rigidbody.linearVelocity) * desiredSpeed / 180;
+        }
+
+        // UnityEngine.Debug.Log("Current: " + movement.current2DVelocity + " | Intended:" + desiredSpeed);
+        rigidbody.linearVelocity =
+            desiredVelocity + (transform.up * rigidbody.linearVelocity.y);
     }
 
     public override void OnStartWalking()

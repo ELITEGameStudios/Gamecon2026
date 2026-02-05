@@ -4,7 +4,10 @@ using UnityEngine;
 public class AirborneState : PlayerMovementState
 {
     public float airStrafeForce = 0.5f;
+    public float topDownTargetMagnitude;
+    public float maxDownwardVelocity;
     public int extraJumps, jumpsLeft;
+    public Vector3 initialRelativeVelocity, topDownVelocityVector;
 
     public AirborneState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
     {
@@ -20,18 +23,41 @@ public class AirborneState : PlayerMovementState
     {
         movement.OnStopWalking();
         jumpsLeft = extraJumps;
+        topDownVelocityVector = new Vector2(
+            rigidbody.linearVelocity.x,
+            rigidbody.linearVelocity.z
+        );
+        topDownTargetMagnitude = topDownVelocityVector.magnitude;
+        initialRelativeVelocity = transform.worldToLocalMatrix.MultiplyPoint(transform.position + rigidbody.linearVelocity);
+        // Debug.Log
     }
 
     public override void FixedUpdate()
     {
         movement.CalculateLookRotation();
+        // Vector3 newVelocityFactor = transform.localToWorldMatrix.MultiplyPoint(initialRelativeVelocity);
+        
+        // rigidbody.linearVelocity = new Vector3(
+        //     newVelocityFactor.x,
+        //     rigidbody.linearVelocity.y,
+        //     newVelocityFactor.z
+        // );
+
+        Vector3 initialToWorld = transform.localToWorldMatrix.MultiplyPoint(initialRelativeVelocity ) - transform.position;
+
         if (airStrafeForce > 0){
             rigidbody.AddForce(
             (
-                (transform.right * movement.movementInput.x) +
-                (transform.forward * movement.movementInput.y)
+                (transform.right * movement.movementInput.x) 
+                + (transform.forward * movement.movementInput.y)
             ) * Time.fixedDeltaTime * airStrafeForce, ForceMode.Force);
         }
+        
+        rigidbody.linearVelocity = new Vector3(
+            initialToWorld.x,
+            Mathf.Clamp(rigidbody.linearVelocity.y, maxDownwardVelocity, Mathf.Infinity),
+            initialToWorld.z
+        );  
     }
 
     public override void Jump()
@@ -44,9 +70,10 @@ public class AirborneState : PlayerMovementState
 
     public override void OnCollisionEnter(Collision collision)
     {
-        // if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")){
-        //     movement.SetState(movement.groundedState);
-        //     movement.playerLand.start();
+        // if (!movement.CheckGrounded())
+        // {
+        //     rigidbody.linearVelocity += collision.impulse;
+        //     initialRelativeVelocity = transform.worldToLocalMatrix.MultiplyPoint(transform.position + rigidbody.linearVelocity);
         // }
     }
 
