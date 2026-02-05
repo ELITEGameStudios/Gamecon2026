@@ -44,7 +44,7 @@ public class LeaderboardService
                 return false;
             }
         }
-        if (unallowedNames.Equals(attemptName)) return false;
+        if (unallowedNames.Contains(attemptName.ToUpper().Trim())) return false;
         foreach (var attempt in attempts)
         {
             if (attempt.name.Equals(attemptName))

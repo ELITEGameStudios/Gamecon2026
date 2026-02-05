@@ -4,7 +4,7 @@ using static Unity.Collections.Unicode;
 public abstract class EntityBase : MonoBehaviour
 {
     public int maxHealth = 1;
-    public int health;
+    [HideInInspector] public int health;
     public float normalizedHealth => health / maxHealth;
     public string entityName;
 
@@ -26,7 +26,7 @@ public abstract class EntityBase : MonoBehaviour
     }
     protected virtual void OnUpdate()
     {
-        if(FMODDeathEvent != "")
+        if(FMODDeathEvent != "" && transform.parent != null)
         {
             FMODUnity.RuntimeManager.AttachInstanceToGameObject(entityDeath, transform.parent);
         }

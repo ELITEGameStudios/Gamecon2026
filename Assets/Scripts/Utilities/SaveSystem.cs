@@ -48,6 +48,4 @@ public class SaveSystem : IFileManager
         File.WriteAllText(fileDestination, newFile);
         return true;
     }
-
-
 }

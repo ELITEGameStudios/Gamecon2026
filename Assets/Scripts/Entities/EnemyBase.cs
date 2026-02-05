@@ -8,6 +8,8 @@ public class EnemyBase : EntityBase
     public float baseMovementSpeed = 5;
     public int contactDamage = 0;
 
+    public Collider collider;
+
 
     /* ---------------------------Template Inherited function documentation------------------------- */
     // Feel free to copy paste these into any new enemy you implement so you can have documentation comments at hand
@@ -17,6 +19,7 @@ public class EnemyBase : EntityBase
     protected override void Init()
     {
         base.Init();
+        if (collider == null) collider = GetComponent<Collider>();
         // Put your code here
 
     }
