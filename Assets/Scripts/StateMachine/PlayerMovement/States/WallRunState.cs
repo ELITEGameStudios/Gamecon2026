@@ -109,6 +109,16 @@ public class WallRunState : PlayerMovementState
                 movement.SetState(movement.airborneState);
                 return;
             }
+
+            if(Vector3.Angle(wallRunDirection, lastWallRunDirection) > maxTransitionAngle){
+                movement.SetState(movement.airborneState);
+                return;
+            }
+
+            if(Vector3.Angle(wallRunDirection, lastWallRunDirection) > maxTransitionAngle){
+                movement.SetState(movement.airborneState);
+                return;
+            }
     
             // Debug info
             // Debug.DrawRay(hitInfo.point, hitInfo.normal);
@@ -120,8 +130,11 @@ public class WallRunState : PlayerMovementState
 
             if(Vector3.Distance(transform.position, hitPoint) > wallRunMaxDist) { transform.position = hitPoint + hitInfo.normal * movement.bodyRadius; } //This is causing a bug where the player moves abnormally fast when facing away from the wall at a certain angle. Meant to be a way to ensure the player is confined to be against the wall
             
+
+            // if(Vector3.Distance(transform.position, hitPoint) > wallRunMaxDist) { transform.position = hitPoint + hitInfo.normal * movement.bodyRadius; } This was causing a bug where the player moves abnormally fast when facing away from the wall at a certain angle. Meant to be a way to ensure the player is confined to be against the wall
             rigidbody.linearVelocity =
             wallRunDirection * Time.fixedDeltaTime * currentWallRunSpeed;
+            Debug.DrawRay(hitInfo.point, hitInfo.normal);
 
         }
         else
