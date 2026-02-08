@@ -12,6 +12,7 @@ public class LevelDatabase : ScriptableObject
         TutorialLevel,
         TestLevel,
         DevRoom_Temi,
+        MapSystemTestLevel,
     }
 
 

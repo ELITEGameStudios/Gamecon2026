@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using static Unity.Collections.Unicode;
 public abstract class EntityBase : MonoBehaviour
 {
+
     public int maxHealth = 1;
     [HideInInspector] public int health;
     public float normalizedHealth => health / maxHealth;
@@ -14,6 +15,7 @@ public abstract class EntityBase : MonoBehaviour
     [Header("FMOD events")]
     public string FMODDeathEvent = "";
     public FMOD.Studio.EventInstance entityDeath;
+    public bool hostedByParent; // Used optionally only for instantiating some select entities
 
     void Awake()
     {
@@ -72,5 +74,11 @@ public abstract class EntityBase : MonoBehaviour
         if (!transform.TryGetComponent(out Rigidbody rb)) return;
         rb.linearVelocity = Vector3.zero; //get rid of gravity built up during falls
         entitySpawned.Invoke(this);
+    }
+
+    public virtual void CollisionEnterEvent(Collision collision){}
+    
+    void OnCollisionEnter(Collision collision){
+        CollisionEnterEvent(collision);
     }
 }

@@ -49,7 +49,7 @@ public class EnemyBase : EntityBase
     }
 
     // Handles contact damage against the player
-    void OnCollisionEnter(Collision collision)
+    public override void CollisionEnterEvent(Collision collision)
     {
         Debug.Log("");
         if(collision.gameObject == Player.instance.gameObject)

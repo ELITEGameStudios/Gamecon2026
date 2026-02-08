@@ -5,6 +5,7 @@ using UnityEngine.AddressableAssets;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance {get; private set;}
     public IVictoryCondition victoryCondition;
     public IEntityManager entityManager;
 
@@ -40,7 +41,7 @@ public class GameManager : MonoBehaviour
                 
                 entityManager = new WaveManager(levelObject);
                 entityManager.Initialize();
-                hudManager.InitManager(entityManager, victoryCondition);
+                if(hudManager != null) hudManager.InitManager(entityManager, victoryCondition);
                 entityManager.allEnemiesDefeated += victoryCondition.OnEnemiesDefeated;
                 break;
         }
@@ -60,6 +61,9 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        if(Instance == null){Instance = this;}
+        else if(Instance != this){Destroy(this);}
+
         _ = InitializeManager();
     }
 
@@ -89,5 +93,6 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         OnTimerUpdated();
+        if(entityManager is WaveManager){(entityManager as WaveManager).UpdateWaves();}
     }
 }

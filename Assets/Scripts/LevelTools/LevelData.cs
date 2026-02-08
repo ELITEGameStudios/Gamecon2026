@@ -14,7 +14,8 @@ public class LevelData : ScriptableObject
         Survive,
     }
     public LevelType levelType = LevelType.KillTargets;
-   public List<WaveData> levelWaves = new();
+//    public List<WaveData> levelWaves = new();
+   public List<WaveBase> levelWaves = new();
     /// <summary>
     /// Length of time before the level is deemed failed. Setting the value to -1 makes the level infinite duration.
     /// </summary>
