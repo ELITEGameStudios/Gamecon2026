@@ -9,6 +9,16 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private TMP_Text recallCooldownText; // Optional text display
 
     [SerializeField] private TMP_Text waveDisplay;
+    public ScreenDimmer screenDimmer;
+    
+
+    public static HUDManager Instance { get; private set;}
+
+    void Awake()
+    {
+        if(Instance == null){Instance = this;}
+        else if(Instance != this){Destroy(gameObject);}
+    }
 
     public void InitManager(IEntityManager entityManager, IVictoryCondition victoryCondition)
     {

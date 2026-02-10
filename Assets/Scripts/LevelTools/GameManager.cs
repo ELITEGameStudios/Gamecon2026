@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance {get; private set;}
     public IVictoryCondition victoryCondition;
     public IEntityManager entityManager;
+    public bool initialized;
 
     event Action<float> gameEnding;
     [Header("Managers")]
@@ -65,6 +66,12 @@ public class GameManager : MonoBehaviour
         else if(Instance != this){Destroy(this);}
 
         _ = InitializeManager();
+
+    }
+
+    public void Initialize()
+    {
+        _ = InitializeManager();
     }
 
 
@@ -92,6 +99,8 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
+        if(!initialized) return;
+
         OnTimerUpdated();
         if(entityManager is WaveManager){(entityManager as WaveManager).UpdateWaves();}
     }

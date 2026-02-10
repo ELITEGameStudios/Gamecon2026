@@ -46,10 +46,10 @@ public class AirborneState : PlayerMovementState
         Vector3 initialToWorld = transform.localToWorldMatrix.MultiplyPoint(initialRelativeVelocity ) - transform.position;
         float inVelocity = rigidbody.linearVelocity.magnitude;
 
-        if (airStrafeForce > 0){
-            initialToWorld +=  (transform.right * movement.movementInput.x * inVelocity/2) * Time.fixedDeltaTime * airStrafeForce;
-            rigidbody.linearVelocity = rigidbody.linearVelocity.normalized * inVelocity;
-        }
+        // if (airStrafeForce > 0){
+        //     initialToWorld +=  (transform.right * movement.movementInput.x * inVelocity/2) * Time.fixedDeltaTime * airStrafeForce;
+        //     rigidbody.linearVelocity = rigidbody.linearVelocity.normalized * inVelocity;
+        // }
 
         rigidbody.linearVelocity = new Vector3(
             initialToWorld.x,
