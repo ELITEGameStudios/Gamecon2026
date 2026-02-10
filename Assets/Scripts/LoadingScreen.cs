@@ -16,6 +16,12 @@ public class LoadingScreen : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    void Start()
+    {
+        dimmer.DimScreen(1, 0, 100);
+        dimmer.DimScreen(0, 1, 100);
+    }
+
     public void TriggerScreen(bool visible, float time = 1.5f)
     {
         dimmer.DimScreen(visible ? 1 : 0, time, 100);

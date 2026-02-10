@@ -25,6 +25,11 @@ public class ScreenDimmer : MonoBehaviour
         currentOperation.time = time;
         currentOperation.dimPriority = dimPriority;
 
+        if(time <= 0){
+            alpha = targetAlpha;
+            image.color = Color.Lerp(Color.clear, Color.black, alpha);
+        }
+
         timer = time;
     }
 

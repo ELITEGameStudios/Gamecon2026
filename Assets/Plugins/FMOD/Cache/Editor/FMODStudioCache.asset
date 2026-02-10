@@ -69,11 +69,38 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639062567749967899
+  lastModified: 639063428902694598
   FileSizes:
   - Name: Desktop
-    Value: 1040
+    Value: 1136
   Exists: 1
+--- !u!114 &-2268201380787441039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NormalButtonScroll
+  m_EditorClassIdentifier: 
+  Path: event:/NormalButtonScroll
+  Guid:
+    Data1: -299542311
+    Data2: 1129442366
+    Data3: 868499855
+    Data4: -674670508
+  Banks:
+  - {fileID: 5125965493783677315}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3433
 --- !u!114 &-1142070308645436291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,12 +151,14 @@ MonoBehaviour:
   - {fileID: 4989816754187725419}
   - {fileID: 2423527646633715673}
   - {fileID: 4600795868130799903}
+  - {fileID: 4031925087671048160}
+  - {fileID: -2268201380787441039}
   EditorParameters: []
   MasterBanks:
   - {fileID: 5125965493783677315}
   StringsBanks:
   - {fileID: -2964189403956306362}
-  cacheTime: 639062567749967899
+  cacheTime: 639063428902694598
   cacheVersion: 131634
 --- !u!114 &2423527646633715673
 MonoBehaviour:
@@ -185,6 +214,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1108
+--- !u!114 &4031925087671048160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/PlayButtonPress
+  m_EditorClassIdentifier: 
+  Path: event:/PlayButtonPress
+  Guid:
+    Data1: 958119278
+    Data2: 1217918148
+    Data3: -1454703993
+    Data4: -166832669
+  Banks:
+  - {fileID: 5125965493783677315}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 10599
 --- !u!114 &4600795868130799903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,7 +263,7 @@ MonoBehaviour:
   - {fileID: 5125965493783677315}
   IsStream: 0
   Is3D: 1
-  IsOneShot: 1
+  IsOneShot: 0
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
@@ -254,8 +310,8 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639062567749967899
+  lastModified: 639063428902659380
   FileSizes:
   - Name: Desktop
-    Value: 1394112
+    Value: 1507776
   Exists: 1
