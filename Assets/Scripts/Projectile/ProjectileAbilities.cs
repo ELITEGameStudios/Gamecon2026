@@ -46,6 +46,10 @@ public class ProjectileAbilities : MonoBehaviour
 
     public PlayerVFXManager playerVFXManager;
 
+    [Header("FMOD events")]
+    public string FMODParryEvent = "", FMODShootEvent = "";
+    public FMOD.Studio.EventInstance parrySFX, shootSFX;
+
     void Start()
     {
         if (postProcessVolume != null)
@@ -53,7 +57,13 @@ public class ProjectileAbilities : MonoBehaviour
             originalProfile = postProcessVolume.profile;
         }
     }
-    
+
+    void Awake()
+    {
+        if(FMODParryEvent != ""){ parrySFX = FMODUnity.RuntimeManager.CreateInstance(FMODParryEvent); }
+        if(FMODShootEvent != ""){ shootSFX = FMODUnity.RuntimeManager.CreateInstance(FMODShootEvent); }
+    }
+
     void OnEnable()
     {
         fireAction.action.started += OnFirePressed;
@@ -72,6 +82,9 @@ public class ProjectileAbilities : MonoBehaviour
 
     void Update()
     {
+        if(FMODParryEvent != "") { FMODUnity.RuntimeManager.AttachInstanceToGameObject(parrySFX, transform); }
+        if(FMODShootEvent != "") { FMODUnity.RuntimeManager.AttachInstanceToGameObject(shootSFX, transform); }
+
         if (currentRecallCooldown > 0)
         {
             currentRecallCooldown -= Time.deltaTime;
@@ -205,6 +218,11 @@ public class ProjectileAbilities : MonoBehaviour
         if (parry)
         {
             StartCoroutine(ParryCoroutine());
+            parrySFX.start();
+        }
+        else
+        {
+            shootSFX.start();
         }
     }
     

@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour
         {
             gameEnding += settingsScreen.OnGameOver;
         }
+
     }
 
     private void Awake()
@@ -66,6 +67,7 @@ public class GameManager : MonoBehaviour
         else if(Instance != this){Destroy(this);}
 
         _ = InitializeManager();
+        initialized = true;
 
     }
 

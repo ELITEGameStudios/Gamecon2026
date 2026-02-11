@@ -1,6 +1,4 @@
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 [RequireComponent (typeof(ProjectileVelocityModifier))]
 public class ProjectileHomingModifier : ProjectileModifier

@@ -8,7 +8,7 @@ public class SceneSystem : MonoBehaviour
 {
     [SerializeField] private List<Scene> scenes;
     [SerializeField] private Scene activeScene;  
-    [SerializeField] private string gameSceneName; 
+    [SerializeField] private string gameSceneName, menusSceneName; 
     [SerializeField] private float flexibleTransitionTime = 1.5f; 
     [SerializeField] private AsyncOperation sceneLoadOperation;
     public static SceneSystem Instance { get; private set; }
@@ -17,13 +17,19 @@ public class SceneSystem : MonoBehaviour
         if(Instance == null) {Instance = this;}
         else if(Instance != this) {Destroy(this);}
         
-        DontDestroyOnLoad(gameObject);       
+        DontDestroyOnLoad(gameObject);
+
+    }
+
+    void Start(){
     }
 
     public void GameInitializationFunction(){
         StartCoroutine(GameInitializationCoroutine());
-        // FadeOut();
-        // Invoke(nameof(InitializeScenes),  flexibleTransitionTime);
+    }
+
+    public void MenusInitializationFunction(){
+        SceneManager.LoadScene(menusSceneName);
     }
 
     public void UpdateSceneData(){
