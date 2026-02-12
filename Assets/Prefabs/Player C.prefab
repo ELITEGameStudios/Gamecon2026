@@ -5699,7 +5699,7 @@ MonoBehaviour:
     airStrafeForce: 30
     maxDownwardVelocity: -100
     strafeThresholdVel: 15
-    extraJumps: 1
+    extraJumps: 0
     jumpsLeft: 0
     initialRelativeVelocity: {x: 0, y: 0, z: 0}
     topDownVelocityVector: {x: 0, y: 0, z: 0}
@@ -5719,6 +5719,7 @@ MonoBehaviour:
     dashPower: 10
     minimumAdditiveVelocity: 0
     additive: 0
+    canAirJump: 0
   stateName: 
   feetTf: {fileID: 7280931948175992934}
   headTf: {fileID: 743407300137307247}

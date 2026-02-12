@@ -9,7 +9,7 @@ public class DashState : PlayerMovementState
     public float currentDashTimer;
     public float dashPower = 5;
     public float minimumAdditiveVelocity = 7;
-    public bool additive;
+    public bool additive, canAirJump;
 
     public DashState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
     {
@@ -81,8 +81,11 @@ public class DashState : PlayerMovementState
 
     public override void Jump()
     {
-        base.Jump();
-        movement.SetState(movement.airborneState);
+        if(canAirJump || movement.CheckGrounded())
+        {
+            base.Jump();
+            movement.SetState(movement.airborneState);
+        }
     }
 
     public override void End(bool interrupted = false)
