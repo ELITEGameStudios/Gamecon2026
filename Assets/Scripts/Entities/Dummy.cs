@@ -28,7 +28,7 @@ public class Dummy : EnemyBase
     }
 
     // You can choose to process your code before or after health is updated. Be advised that processing code AFTER may not run if the object dies through this damage event
-    public override void Damage(int damage = 0)
+    public override void Damage(int damage = 1)
     {
         Debug.Log("Dummy method called");
         base.Damage();

@@ -42,7 +42,7 @@ public class EnemyBase : EntityBase
     }
 
     // You can choose to process your code before or after health is updated. Be advised that processing code AFTER may not run if the object dies through this damage event
-    public override void Damage(int damage = 0)
+    public override void Damage(int damage = 1)
     {
         // Before damage event is internally processed
         if (enemyShield != null) damage = 0;
