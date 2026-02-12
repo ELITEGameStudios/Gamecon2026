@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 20a70182c2708254683b91f18868db30, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -151,7 +151,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 20a70182c2708254683b91f18868db30, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -188,9 +188,11 @@ GameObject:
   - component: {fileID: 3259758790423607040}
   - component: {fileID: 6507794403972543954}
   - component: {fileID: 3193529535189615693}
-  - component: {fileID: -5268125727532819075}
+  - component: {fileID: 3861533442697411192}
+  - component: {fileID: 8525423786340817820}
+  - component: {fileID: 5949575903253624087}
   m_Layer: 0
-  m_Name: TestProjectile
+  m_Name: TestBanshee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -233,6 +235,7 @@ MonoBehaviour:
   projectileActivated:
     m_PersistentCalls:
       m_Calls: []
+  projectileModifiers: []
   projectileCollider: {fileID: 2746665368929302230}
   meshObjects: {fileID: 5375457598533216604}
   rb: {fileID: 3657084110959660343}
@@ -298,7 +301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c538cf4cd1e0914d8ca60be30d2bae9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  priority: 300
+  priority: 400
   projectileSpeed: 10
 --- !u!114 &6507794403972543954
 MonoBehaviour:
@@ -332,12 +335,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   priority: 100
+  contactEvent:
+    m_PersistentCalls:
+      m_Calls: []
   damage: 1
+  hasLimitedHits: 0
   numberOfHits: 1
   contactableLayers:
     serializedVersion: 2
-    m_Bits: 200
---- !u!114 &-5268125727532819075
+    m_Bits: 8
+--- !u!114 &3861533442697411192
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -346,8 +353,41 @@ MonoBehaviour:
   m_GameObject: {fileID: 5942817925007762328}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0315d1d6a9e43a439f41fec76ebcd0a, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ff5cf1d510328245afa54e5eede43cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   priority: 0
-  maxLifetime: 7
+--- !u!114 &8525423786340817820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5942817925007762328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9848254f6364b764b978c35ef62f3cdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  priority: 300
+  maxDistanceBeforeClampAttempt: 150
+  maxDistanceToTryClamp: 9999
+  timeUntilWarp: 60
+  minSpeedIncreaseIfMaxDistanceExceeded: 5
+  maxSpeedIncreaseIfMaxDistanceExceeded: 5
+  clampType: 1
+--- !u!114 &5949575903253624087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5942817925007762328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bd459f97629d254d810880112ffd247, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  priority: 99999
+  freezeDurationWhenPlayerDies: 300
+  freezeType: 1

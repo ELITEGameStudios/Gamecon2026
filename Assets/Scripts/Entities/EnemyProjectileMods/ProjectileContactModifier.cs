@@ -1,4 +1,5 @@
 
+using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,9 +11,12 @@ using UnityEngine.Events;
 public class ProjectileContactModifier : ProjectileModifier
 {
 
+    public UnityEvent<EnemyProjectile, Player> contactEvent;
+
     [Header("Attributes")]
     [SerializeField] protected int damage = 1;
-    [SerializeField] protected int numberOfHits = 1;
+    [SerializeField] protected bool hasLimitedHits = true;
+    [SerializeField, ShowIf(nameof(HasLimitedHits))] protected int numberOfHits = 1;
     [SerializeField] LayerMask contactableLayers;
 
     Vector3 previousProjectilePosition;
@@ -20,16 +24,29 @@ public class ProjectileContactModifier : ProjectileModifier
 
     protected HashSet<Collider> ignoredColliders = new();
 
+
+    bool overrideCollisionLogic = false;// Other mods can set this to true to override the default collision logic and just use the raycast check for contact
+
+    bool HasLimitedHits() => hasLimitedHits;
     public override void InitModifier(EnemyProjectile projectile)
     {
         base.InitModifier(projectile);
         projectile.projectileFired.AddListener(OnProjectileFired);
     }
 
+    public void OverrideCollisionLogic()
+    {
+        overrideCollisionLogic = true;
+    }
     public void OnProjectileFired(EnemyProjectile projectile)
     {
+        ResetIgnoredColliders();
+    }
+
+    public void ResetIgnoredColliders()
+    {
         ignoredColliders.Clear();
-        ignoredColliders.Add(projectile.enemy.collider);
+        ignoredColliders.Add(projectile.enemy.GetComponent<Collider>());
     }
     public void CheckForContact()
     {
@@ -39,17 +56,24 @@ public class ProjectileContactModifier : ProjectileModifier
             var hit = terrainCheck.collider;
             if (hit.TryGetComponent(out Player player))
             {
-                player.Damage(damage);
-                ignoredColliders.Add(hit);
+                OnPlayerCollision(player, hit);
             }
             OnContact(projectile);
         }
 
     }
+
+    public void OnPlayerCollision(Player player, Collider hit)
+    {
+        player.Damage(damage);
+        ignoredColliders.Add(hit);
+        contactEvent.Invoke(projectile, player);
+    }
     public virtual void OnContact(EnemyProjectile projectile)
     {
+        if (!hasLimitedHits) return;
         hitsRemaining -= 1;
-        if (hitsRemaining == 0)
+        if (hitsRemaining == 0 && !overrideCollisionLogic)
         {
             projectile.DestroyProjectile();
         }

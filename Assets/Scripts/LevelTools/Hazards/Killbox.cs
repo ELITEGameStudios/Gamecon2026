@@ -10,6 +10,13 @@ public class Killbox : MonoBehaviour
         }
         else if (other.TryGetComponent(out EnemyProjectile proj))
         {
+            foreach (var mod in proj.projectileModifiers)
+            {
+                if (mod.GetType() == typeof(ProjectileIndestructibleModifier))
+                {
+                    return;
+                }
+            }
             proj.DestroyProjectile();
         }
     }

@@ -10,8 +10,10 @@ public class RangedEnemy : EnemyBase
     [SerializeField] List<ProjectileFireInformation> projectileInfo;
     [SerializeField] EntityDetector entityDetector;
     [SerializeField] float cooldown = 20.0f;
-
+    [SerializeField] float delayBeforeFiring = 0.0f;
     float cooldownTracker = 0.0f;
+
+    bool firing = false;
 
     Dictionary<ProjectileFireInformation, Queue<EnemyProjectile>> projectilePools = new();  
     private void Start()
@@ -34,7 +36,7 @@ public class RangedEnemy : EnemyBase
 
                 var prefab = projectileInfo[i].projectilePrefab;
                 var projectile = Instantiate(prefab);
-                projectile.InitProjectile(this);
+                projectile.InitProjectile(transform);
                 projectile.DestroyProjectile();
                 projectilePools[projectileInfo[i]].Enqueue(projectile);
             }
@@ -50,8 +52,7 @@ public class RangedEnemy : EnemyBase
             {
                 if (entity is Player player)
                 {
-                    StartCoroutine(FireProjectilesInBurst(player));
-                    cooldownTracker = cooldown;
+                   if (!firing) StartCoroutine(FireProjectilesInBurst(player));
                 }
             }
         }
@@ -69,7 +70,9 @@ public class RangedEnemy : EnemyBase
     IEnumerator FireProjectilesInBurst(Player player)
     {
         if (projectileInfo == null) yield break;
-        yield return new WaitForSeconds(projectileInfo[0].delayBeforeShot);
+        firing = true;
+        int fireCount = 0;
+        yield return new WaitForSeconds(delayBeforeFiring);
         foreach (var info in projectileInfo)
         {
             EnemyProjectile projectile = projectilePools[info].Dequeue();
@@ -79,7 +82,11 @@ public class RangedEnemy : EnemyBase
             }
             projectile.Activate(player.transform, transform.position + info.offset);
             projectilePools[info].Enqueue(projectile);
-            yield return new WaitForSeconds(info.delayAfterShot);
+           if (info != projectileInfo[^1]) yield return new WaitForSeconds(info.delayAfterShot);
+            fireCount++;
         }
+        cooldownTracker = cooldown;
+        firing = false;
+        Debug.Log("Fired " + fireCount + " projectiles from " + name);
     }
 }

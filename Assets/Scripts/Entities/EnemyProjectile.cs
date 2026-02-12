@@ -17,13 +17,13 @@ public class EnemyProjectile : MonoBehaviour
     [HideInInspector] public UnityEvent<ProjectileTarget> projectileActivated; //transform is target
 
 
-    List<ProjectileModifier> projectileModifiers = new();
+    [HideInInspector]  public List<ProjectileModifier> projectileModifiers = new();
 
 
     public Collider projectileCollider;
     public GameObject meshObjects;
     public Rigidbody rb;
-    public EnemyBase enemy;
+    public Transform enemy;
 
    bool active = false;
 
@@ -41,7 +41,7 @@ public class EnemyProjectile : MonoBehaviour
            Destroy(gameObject);
        }
     } 
-    public void InitProjectile(EnemyBase e)
+    public void InitProjectile(Transform e)
     {
         enemy = e;
         var mods = GetComponents<ProjectileModifier>();
@@ -80,11 +80,19 @@ public class EnemyProjectile : MonoBehaviour
         meshObjects.SetActive(true);
         active = true;
     }
+
+    public T GetProjectileModifier<T>() where T : ProjectileModifier
+    {
+        foreach (var mod in projectileModifiers)
+        {
+            if (mod is T) return mod as T;
+        }
+        return null;
+    }
 }
 [System.Serializable]
 public class ProjectileFireInformation
 {
-    public float delayBeforeShot = 0.0f;
     public EnemyProjectile projectilePrefab;
     public float delayAfterShot = 0.0f;
     /// <summary>

@@ -39,24 +39,24 @@ public class ProjectileHomingModifier : ProjectileModifier
 
         float distance = Vector3.Distance(target.position, projectile.enemy.transform.position);
 
-
-        float distanceAsPercentage = Mathf.Clamp01(distance / maxRange);
-
         float proximityModifier;
-        if (invertProximity)
+        if (distance > maxRange)
         {
-            proximityModifier = Mathf.Lerp(minHomingProximityModifier, maxHomingProximityModifier, distanceAsPercentage);
+            proximityModifier = invertProximity ? minHomingProximityModifier : maxHomingProximityModifier;
         }
         else
         {
-            proximityModifier = Mathf.Lerp(maxHomingProximityModifier, minHomingProximityModifier, distanceAsPercentage);
+            float distanceAsPercentage = Mathf.Clamp01(distance / maxRange);
+            if (invertProximity)
+            {
+                proximityModifier = Mathf.Lerp(minHomingProximityModifier, maxHomingProximityModifier, distanceAsPercentage);
+            }
+            else
+            {
+                proximityModifier = Mathf.Lerp(maxHomingProximityModifier, minHomingProximityModifier, distanceAsPercentage);
+            }
         }
         projectile.projectileSpeed = Vector3.Lerp(projectile.projectileSpeed, desired, projectileHoming * proximityModifier * Time.fixedDeltaTime);
-
-        Debug.Log("Proximity Modifier: " + proximityModifier);
-
-
-
     }
 
     public override void UpdateModifier()

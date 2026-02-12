@@ -8,9 +8,9 @@ public class RespawnManager : MonoBehaviour
     [SerializeField] Transform checkpointHolder;
 
     [SerializeField] GameObject deathNotifier;
-    bool playerDead = true;
+    bool playerDead = false;
 
-    [SerializeField] InputActionReference respawn;
+    public InputActionReference respawn;
     private void Start()
     {
         StartCoroutine(InitializeRespawnManager());
@@ -34,18 +34,23 @@ public class RespawnManager : MonoBehaviour
     {
         deathNotifier.SetActive(true);
         playerDead = true;
-        respawn.action.performed += OnPlayerKilled;
+        respawn.action.performed += OnRespawnRequest;
     }
 
-    void OnPlayerKilled(InputAction.CallbackContext ctx)
+    void OnRespawnRequest(InputAction.CallbackContext ctx)
     {
-        respawn.action.performed -= OnPlayerKilled;
+        if (!playerDead) return;
+        respawn.action.performed -= OnRespawnRequest;
         Player.instance.SpawnAtPosition(respawnPoint.position);
-        playerDead = false;
         deathNotifier.SetActive(false);
+        playerDead = false;
+        Debug.Log("Respawned player at " + respawnPoint.position);
     }
 
-
+    public bool IsPlayerDead()
+    {
+        return playerDead;
+    }
 
     protected void OnCheckpointReached(PlayerCheckpoint checkpoint)
     {
