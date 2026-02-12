@@ -9,6 +9,7 @@ public class EnemyBase : EntityBase
     public int contactDamage = 0;
 
     public Collider collider;
+    [SerializeField] ShieldEntity enemyShield;
 
 
     /* ---------------------------Template Inherited function documentation------------------------- */
@@ -44,7 +45,8 @@ public class EnemyBase : EntityBase
     public override void Damage(int damage = 1)
     {
         // Before damage event is internally processed
-        base.Damage();
+        if (enemyShield != null) damage = 0;
+        base.Damage(damage);
         // after damage event is internally processed 
     }
 

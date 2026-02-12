@@ -9,6 +9,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2138415374352791910, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
+      propertyPath: enemyShield
+      value: 
+      objectReference: {fileID: 4687627186010777127}
+    - target: {fileID: 2138415374352791910, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
       propertyPath: projectileInfo.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -126,6 +130,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be2e92a032092a6408e847fd0148637f, type: 3}
+--- !u!114 &4687627186010777127 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 585086598944691717, guid: be2e92a032092a6408e847fd0148637f, type: 3}
+  m_PrefabInstance: {fileID: 5265668110799761442}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a85a95949339445b097f8696dc7ba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4740535419586273680 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 638010204206305714, guid: be2e92a032092a6408e847fd0148637f, type: 3}

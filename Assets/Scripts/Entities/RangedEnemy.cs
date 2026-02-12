@@ -50,13 +50,13 @@ public class RangedEnemy : EnemyBase
 
     private void FixedUpdate()
     {
-        if (entityDetector.DetectedEntities.Count > 0 && cooldownTracker <= 0.0f)
+        if (entityDetector.DetectedEntities.Count > 0)
         {
             foreach (var entity in entityDetector.DetectedEntities)
             {
-                if (entity is Player player)
+                if (entity is Player player )
                 {
-                   if (!firing) StartCoroutine(FireProjectilesInBurst(player));
+                   if (!firing && cooldownTracker <= 0.0f) StartCoroutine(FireProjectilesInBurst(player));
                    transform.LookAt(player.transform);
                 }
             }
