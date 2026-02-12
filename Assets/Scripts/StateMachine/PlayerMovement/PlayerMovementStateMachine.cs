@@ -15,6 +15,7 @@ public class PlayerMovementStateMachine : StateMachine
     public float clampedRotationY = 85;
     public float movingConsiderationDeadzone = 0.1f;
     public float minWallTangentSlope = 80;
+    public float wallRunLinearVelocityMaxAngleDif = 60;
     public float maxWallCheckDist = 5;
     public float groundedCheckDist = 0.15f;
     public float speedMultiplier = 1f;
@@ -23,6 +24,7 @@ public class PlayerMovementStateMachine : StateMachine
     public LayerMask blinkBoxLayerMask;
     public float liveMaxSpeed {get { return baseSpeed * speedMultiplier; }}
     public float currentVelocity {get { return rigidbody.linearVelocity.magnitude; }}
+    public float previousCurrentVelocity;
     public float current2DVelocity {
         get { 
             return new Vector2(
@@ -130,6 +132,11 @@ public class PlayerMovementStateMachine : StateMachine
         hadMovementInputLastFrame = hasMovementInput; 
     }
 
+    protected override void PostStateFixedUpdate()
+    {
+        previousCurrentVelocity = currentVelocity;
+    }
+
     public void OnStartWalking()
     {
         currentState.OnStartWalking();
@@ -172,7 +179,7 @@ public class PlayerMovementStateMachine : StateMachine
         SetState(airborneState);
         Vector3 targetPos = featherKnife.transform.position;
         Quaternion rot = featherKnife.transform.rotation;
-        for (float i = 0; i < 5; i += 0.2f)
+        for (float i = 0; i < 0.5f; i += 0.1f)
         {
             targetPos = featherKnife.transform.position - featherKnife.throwDirection * i;
             if(Physics.OverlapBox(targetPos, blinkBoxSize, Quaternion.identity, blinkBoxLayerMask).Length > 0){
@@ -246,6 +253,7 @@ public class PlayerMovementStateMachine : StateMachine
         // Wall run direction
         Vector3 testWallRunDir = Vector3.Cross(Vector3.up, hit.normal);
         if(Vector3.Angle(testWallRunDir, transform.forward) > 90) { testWallRunDir *= -1; }
+        if(Vector3.Angle(testWallRunDir, rigidbody.linearVelocity) > wallRunLinearVelocityMaxAngleDif){return;}
 
         // Testing look difference between player and wall direction
         float currentLookAngleDifference = Vector3.Angle(transform.forward, testWallRunDir);
@@ -258,6 +266,7 @@ public class PlayerMovementStateMachine : StateMachine
         if(angleRoll >= minWallTangentSlope && (collision == null || hit.collider == collision.collider)){ 
 
             wallRunState.storedCollision = hit; 
+            wallRunState.initRaycastDir = wallRunState.isRight? transform.right : transform.right * -1;
             SetState(wallRunState);
 
             Debug.DrawRay(hit.point, hit.normal);

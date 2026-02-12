@@ -7,6 +7,8 @@ public class WallRunState : PlayerMovementState
     public float wallRunMinSpeed;
     public float currentWallRunSpeed;
     public float wallRunMaxDist;
+    public float jumpXStrength = 0.25f;
+    public float jumpYStrength = 0.25f;
     public float raycastForwardCheckDist = 0.1f;
     public float maxTransitionAngle; // Cuts off a wall run if the angle between two surfaces are too great
     public float wallRunAdditiveSpeed; // The speed to add to a valid wall run
@@ -23,6 +25,7 @@ public class WallRunState : PlayerMovementState
     public Vector3 wallRunContactNormal;
     public Vector3 lastContactPosition;
     public Vector3 raycastCheckVector => (transform.forward * raycastForwardCheckDist) + transform.right * (isRight ? 1 : -1);
+    public Vector3 initRaycastDir;
     
 
     // Determines if the player cannot wall run for a set time after finishing a wall run. should be a short interval
@@ -40,11 +43,11 @@ public class WallRunState : PlayerMovementState
     {
         movement.hasDash = true;
         movement.OnStopWalking();
-        Vector3 closestPoint = storedCollision.collider.ClosestPoint(transform.position);
-        Vector3 raycastDir = (closestPoint - transform.position).normalized;
+        // Vector3 closestPoint = storedCollision.collider.ClosestPoint(transform.position);
+        // Vector3 raycastDir = (closestPoint - transform.position).normalized;
         
         camAngle.SetAngle(15 * (isRight ? 1 : -1));
-        if (Physics.Raycast(transform.position, raycastDir, out RaycastHit hit, Mathf.Infinity))
+        if (Physics.Raycast(transform.position, initRaycastDir, out RaycastHit hit, Mathf.Infinity))
         {
             // Determine the direction in world space the player is supposed to run
             wallRunDirection = Vector3.Cross(Vector3.up, hit.normal);
@@ -55,10 +58,10 @@ public class WallRunState : PlayerMovementState
 
 
             // Determine the speed in which the player will wall run
-            float currentSpeed = movement.currentVelocity;
+            float currentSpeed = movement.currentVelocity / Time.fixedDeltaTime;
             if(currentSpeed < wallRunMinSpeed){currentWallRunSpeed = wallRunMinSpeed; return;} // Sets to the min wall run speed if your speed is slower. (May be obselete since wall run might reqire you tp be this speed)
             
-            currentWallRunSpeed = currentSpeed + wallRunAdditiveSpeed;
+            currentWallRunSpeed = currentSpeed;
 
             // (Legacy) Speed will be between the current speed and the minimum wall run speed, determined by the angle of your entry velocity and the wall's run direction
             // currentWallRunSpeed = Mathf.Lerp(
@@ -70,8 +73,6 @@ public class WallRunState : PlayerMovementState
 
     public override void FixedUpdate()
     {
-        lastWallRunDirection = wallRunDirection;
-
 
 
         movement.CalculateLookRotation();
@@ -79,6 +80,7 @@ public class WallRunState : PlayerMovementState
 
         if(Physics.Raycast(transform.position, raycastCheckVector.normalized, out RaycastHit hitInfo, movement.maxWallCheckDist))
         {
+            lastWallRunDirection = wallRunDirection;
 
             // Getting angle roll difference
             float upDiff = Vector3.Angle(Vector3.up, hitInfo.normal);
@@ -91,12 +93,13 @@ public class WallRunState : PlayerMovementState
             }
             
             // Calculate movement direction
-            wallRunDirection = Vector3.Cross(Vector3.up, hitInfo.normal);
             wallRunContactNormal = hitInfo.normal;
+            wallRunDirection = Vector3.Cross(Vector3.up, hitInfo.normal);
             if(Vector3.Angle(wallRunDirection, transform.forward) > 90) { wallRunDirection *= -1; }
 
             // Ends run if transition angle between wall planes is invalid
             if(Vector3.Angle(wallRunDirection, lastWallRunDirection) > maxTransitionAngle){
+                Debug.Log("Ended it.");
                 movement.SetState(movement.airborneState);
                 return;
             }
@@ -110,16 +113,6 @@ public class WallRunState : PlayerMovementState
                 return;
             }
 
-            if(Vector3.Angle(wallRunDirection, lastWallRunDirection) > maxTransitionAngle){
-                movement.SetState(movement.airborneState);
-                return;
-            }
-
-            if(Vector3.Angle(wallRunDirection, lastWallRunDirection) > maxTransitionAngle){
-                movement.SetState(movement.airborneState);
-                return;
-            }
-    
             // Debug info
             // Debug.DrawRay(hitInfo.point, hitInfo.normal);
             Debug.DrawRay(hitInfo.point, Vector3.Cross(Vector3.up, hitInfo.normal));
@@ -135,7 +128,7 @@ public class WallRunState : PlayerMovementState
             rigidbody.linearVelocity =
             wallRunDirection * Time.fixedDeltaTime * currentWallRunSpeed;
             Debug.DrawRay(hitInfo.point, hitInfo.normal);
-
+            
         }
         else
         {
@@ -155,12 +148,12 @@ public class WallRunState : PlayerMovementState
 
         float xJumpDirection = 
             jumpWithOffset 
-                ? (1 * ( Vector3.SignedAngle(wallRunDirection, wallRunContactNormal, Vector3.up) < 0 ? 1 : -1 ))
+                ? (isRight ? -jumpXStrength : jumpXStrength )
                 : 0;
 
-        rigidbody.AddForce(
-            ( transform.up + (transform.right * xJumpDirection)  ).normalized
-            * jumpPower, ForceMode.Impulse);
+        rigidbody.linearVelocity = 
+            ( transform.forward + (transform.up * jumpYStrength) + (transform.right * xJumpDirection)  ).normalized *
+            (currentWallRunSpeed + wallRunAdditiveSpeed) * Time.fixedDeltaTime;
 
         movement.SetState(movement.airborneState);
     }

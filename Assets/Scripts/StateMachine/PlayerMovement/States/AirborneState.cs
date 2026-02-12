@@ -4,8 +4,8 @@ using UnityEngine;
 public class AirborneState : PlayerMovementState
 {
     public float airStrafeForce = 0.5f;
-    public float topDownTargetMagnitude;
     public float maxDownwardVelocity;
+    public float strafeThresholdVel;
     public int extraJumps, jumpsLeft;
     public Vector3 initialRelativeVelocity, topDownVelocityVector;
 
@@ -27,8 +27,7 @@ public class AirborneState : PlayerMovementState
             rigidbody.linearVelocity.x,
             rigidbody.linearVelocity.z
         );
-        topDownTargetMagnitude = topDownVelocityVector.magnitude;
-        initialRelativeVelocity = transform.worldToLocalMatrix.MultiplyPoint(transform.position + rigidbody.linearVelocity);
+        // initialRelativeVelocity = transform.worldToLocalMatrix.MultiplyPoint(transform.position + rigidbody.linearVelocity);
         // Debug.Log
     }
 
@@ -43,19 +42,42 @@ public class AirborneState : PlayerMovementState
         //     newVelocityFactor.z
         // );
 
-        Vector3 initialToWorld = transform.localToWorldMatrix.MultiplyPoint(initialRelativeVelocity ) - transform.position;
-        float inVelocity = rigidbody.linearVelocity.magnitude;
+        // Vector3 initialToWorld = transform.localToWorldMatrix.MultiplyPoint(initialRelativeVelocity ) - transform.position;
+        Vector2 velocity2D = new Vector2(
+            rigidbody.linearVelocity.x, 
+            rigidbody.linearVelocity.z
+        );
 
-        // if (airStrafeForce > 0){
-        //     initialToWorld +=  (transform.right * movement.movementInput.x * inVelocity/2) * Time.fixedDeltaTime * airStrafeForce;
-        //     rigidbody.linearVelocity = rigidbody.linearVelocity.normalized * inVelocity;
-        // }
+        Vector2 right2D = new Vector2(
+            transform.right.x, 
+            transform.right.z
+        );
+
+        Vector2 forward2D = new Vector2(
+            transform.forward.x, 
+            transform.forward.z
+        );
+        
+        float previousVel = velocity2D.magnitude;
+
+
+        if (airStrafeForce > 0){
+            
+            velocity2D += 
+                ((right2D * movement.movementInput.x) + (forward2D * movement.movementInput.y)) 
+                * airStrafeForce * Time.fixedDeltaTime;
+            
+            if(previousVel > strafeThresholdVel && velocity2D.magnitude >= previousVel) { 
+                velocity2D = velocity2D.normalized * previousVel;
+            }
+        }
 
         rigidbody.linearVelocity = new Vector3(
-            initialToWorld.x,
+            velocity2D.x,
             Mathf.Clamp(rigidbody.linearVelocity.y, maxDownwardVelocity, Mathf.Infinity),
-            initialToWorld.z
+            velocity2D.y
         );  
+        
     }
 
     public override void Jump()

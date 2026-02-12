@@ -5633,7 +5633,8 @@ MonoBehaviour:
   baseSpeed: 300
   clampedRotationY: 85
   movingConsiderationDeadzone: 0.1
-  minWallTangentSlope: 45
+  minWallTangentSlope: 65
+  wallRunLinearVelocityMaxAngleDif: 60
   maxWallCheckDist: 5
   groundedCheckDist: 0.15
   speedMultiplier: 1
@@ -5642,6 +5643,7 @@ MonoBehaviour:
   blinkBoxLayerMask:
     serializedVersion: 2
     m_Bits: 255
+  previousCurrentVelocity: 0
   groundedState:
     name: Grounded
     rigidbody: {fileID: 0}
@@ -5669,18 +5671,21 @@ MonoBehaviour:
     wallRunMinSpeed: 650
     currentWallRunSpeed: 0
     wallRunMaxDist: 0.8
+    jumpXStrength: 0.25
+    jumpYStrength: 0.6
     raycastForwardCheckDist: 0
     maxTransitionAngle: 65
-    wallRunAdditiveSpeed: 500
+    wallRunAdditiveSpeed: 200
     lookAngleDifferenceRange: {x: 0, y: 60}
     camAngle: {fileID: 2336920269275116042}
     lookAngleDifference: 0
-    jumpWithOffset: 0
+    jumpWithOffset: 1
     isRight: 0
     wallRunDirection: {x: 0, y: 0, z: 0}
     lastWallRunDirection: {x: 0, y: 0, z: 0}
     wallRunContactNormal: {x: 0, y: 0, z: 0}
     lastContactPosition: {x: 0, y: 0, z: 0}
+    initRaycastDir: {x: 0, y: 0, z: 0}
     wallRunSleepInterval: 0.2
   airborneState:
     name: Airborne
@@ -5691,9 +5696,9 @@ MonoBehaviour:
     started: 0
     jumpPower: 13
     movement: {fileID: 5837548833278922391}
-    airStrafeForce: 750
-    topDownTargetMagnitude: 0
+    airStrafeForce: 30
     maxDownwardVelocity: -100
+    strafeThresholdVel: 15
     extraJumps: 1
     jumpsLeft: 0
     initialRelativeVelocity: {x: 0, y: 0, z: 0}
@@ -5813,6 +5818,8 @@ MonoBehaviour:
   blinkEffectTime: 0.33
   currentBlinkTimer: 0
   playerVFXManager: {fileID: 5621036908769530523}
+  FMODParryEvent: 
+  FMODShootEvent: 
 --- !u!114 &7815783333853658338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5835,6 +5842,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   FMODDeathEvent: event:/DeathEvent
+  hostedByParent: 0
 --- !u!114 &712407731034041875
 MonoBehaviour:
   m_ObjectHideFlags: 0

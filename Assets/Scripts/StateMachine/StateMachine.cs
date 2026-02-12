@@ -111,6 +111,8 @@ public class StateMachine : MonoBehaviour
 
         if (currentState != null && !currentState.finished)
         { currentState.FixedUpdate(); }
+        
+        PostStateFixedUpdate();
     }
 
     protected virtual void OnSetState(){}
@@ -120,6 +122,7 @@ public class StateMachine : MonoBehaviour
     protected virtual void OnUnityEnable(){}
     protected virtual void OnUnityDisable(){}
     protected virtual void OnFixedUpdate(){}
+    protected virtual void PostStateFixedUpdate(){}
     protected virtual void OnInactiveUpdate(){}
 }   
     
