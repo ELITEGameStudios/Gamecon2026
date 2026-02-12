@@ -56,6 +56,7 @@ public class WaveManager : IEntityManager
 
     public void UpdateWaves()
     {
+        if (currentWave == null) return;
         currentWave.InternalWaveUpdate();
         if (!currentWave.finishedProcesses)
         {
