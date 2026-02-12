@@ -9,8 +9,12 @@ public class RangedEnemy : EnemyBase
     [SerializeField] float projectilePoolSize = 10;
     [SerializeField] List<ProjectileFireInformation> projectileInfo;
     [SerializeField] EntityDetector entityDetector;
+
+    [Header("Firing Attributes")]
     [SerializeField] float cooldown = 20.0f;
     [SerializeField] float delayBeforeFiring = 0.0f;
+
+   
     float cooldownTracker = 0.0f;
 
     bool firing = false;
@@ -53,6 +57,7 @@ public class RangedEnemy : EnemyBase
                 if (entity is Player player)
                 {
                    if (!firing) StartCoroutine(FireProjectilesInBurst(player));
+                   transform.LookAt(player.transform);
                 }
             }
         }

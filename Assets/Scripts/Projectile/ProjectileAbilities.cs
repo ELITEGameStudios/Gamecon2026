@@ -50,6 +50,8 @@ public class ProjectileAbilities : MonoBehaviour
     public string FMODParryEvent = "", FMODShootEvent = "";
     public FMOD.Studio.EventInstance parrySFX, shootSFX;
 
+    bool parryActive = false;
+
     void Start()
     {
         if (postProcessVolume != null)
@@ -124,7 +126,8 @@ public class ProjectileAbilities : MonoBehaviour
         if(currentRecallCooldown > 0 || featherKnife.currentState == Projectile.ProjectileState.Idle){return;}
         else
         {
-            if(featherKnife.currentState == Projectile.ProjectileState.Flying) { featherKnife.SetEmbeddedPos(); }
+            parryActive = false;
+            if (featherKnife.currentState == Projectile.ProjectileState.Flying) { featherKnife.SetEmbeddedPos(); }
             featherKnife.SetState(Projectile.ProjectileState.Recalling);
             currentRecallCooldown = recallCooldown;
             
@@ -148,6 +151,7 @@ public class ProjectileAbilities : MonoBehaviour
         currentBlinkTimer = blinkCooldownTime;
         playerMovement.Blink();
         featherKnife.Pickup();
+        parryActive = false;
     }
     
     
@@ -179,6 +183,7 @@ public class ProjectileAbilities : MonoBehaviour
     {
         Vector3 spawnPos;
 
+        parryActive = parry;
         if (parry)
         {
             // For parry, spawn the projectile further away from camera
@@ -306,5 +311,10 @@ public class ProjectileAbilities : MonoBehaviour
         }
 
         playerVFXManager.blinkVolume.weight = 0f;
+    }
+
+    public bool ProjectileInParryState()
+    {
+        return parryActive;
     }
 }

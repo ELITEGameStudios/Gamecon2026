@@ -22,7 +22,7 @@ public class Projectile : MonoBehaviour
     
     [Header("Player Reference")]
     [SerializeField] private Transform playerTransform;
-    [SerializeField] private ProjectileAbilities projectileAbilities;
+    public ProjectileAbilities projectileAbilities;
     
     [Header("RecallData")]
     public Vector3 embeddedPos {get; private set;}
