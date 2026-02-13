@@ -5643,6 +5643,8 @@ MonoBehaviour:
   blinkBoxLayerMask:
     serializedVersion: 2
     m_Bits: 255
+  frictionMat: {fileID: 0}
+  slipMat: {fileID: 0}
   previousCurrentVelocity: 0
   groundedState:
     name: Grounded
@@ -5696,6 +5698,7 @@ MonoBehaviour:
     started: 0
     jumpPower: 13
     movement: {fileID: 5837548833278922391}
+    airStrafeForwardForce: 0
     airStrafeForce: 30
     maxDownwardVelocity: -100
     strafeThresholdVel: 15
@@ -5725,7 +5728,7 @@ MonoBehaviour:
   headTf: {fileID: 743407300137307247}
   movementInput: {x: 0, y: 0}
   lookInput: {x: 0, y: 0}
-  rotSensitivity: {x: 0.5, y: 0.5}
+  rotSensitivity: {x: 4, y: 4}
   hadMovementInputLastFrame: 0
   hasDash: 0
   wasMovingLastFrame: 0
@@ -5735,7 +5738,9 @@ MonoBehaviour:
   dash: {fileID: -4048086248360759698, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   FMODJumpEvent: event:/JumpEvent
   FMODLandEvent: event:/LandEvent
+  mainCol: {fileID: 7378985173793908190}
   featherKnife: {fileID: 3736855633952113512}
+  groundedHelper: {fileID: 0}
 --- !u!114 &8944397084400037447
 MonoBehaviour:
   m_ObjectHideFlags: 0

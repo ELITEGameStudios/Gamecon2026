@@ -22,6 +22,7 @@ public class PlayerMovementStateMachine : StateMachine
     public float bodyRadius = 0.5f;
     public Vector3 blinkBoxSize;
     public LayerMask blinkBoxLayerMask;
+    public PhysicsMaterial frictionMat, slipMat;
     public float liveMaxSpeed {get { return baseSpeed * speedMultiplier; }}
     public float currentVelocity {get { return rigidbody.linearVelocity.magnitude; }}
     public float previousCurrentVelocity;
@@ -70,6 +71,7 @@ public class PlayerMovementStateMachine : StateMachine
     public FMOD.Studio.EventInstance playerJump, playerLand;
 
     [Header("External References")]
+    public Collider mainCol;
     public Projectile featherKnife;
     public GroundedHelper groundedHelper;
 
@@ -120,7 +122,8 @@ public class PlayerMovementStateMachine : StateMachine
 
         if(!wasMovingLastFrame && isConsideredMoving) { OnStartWalking(); }
         if(wasMovingLastFrame && !isConsideredMoving) { OnStopWalking(); }
-
+        
+        mainCol.material = hasMovementInput ? slipMat : frictionMat;
         if(currentState != groundedState){
             if (CheckGrounded() && currentState != dashState)
             {
