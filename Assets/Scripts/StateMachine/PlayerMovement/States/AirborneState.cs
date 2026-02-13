@@ -3,6 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class AirborneState : PlayerMovementState
 {
+    public float airStrafeForwardForce = 0.5f;
     public float airStrafeForce = 0.5f;
     public float maxDownwardVelocity;
     public float strafeThresholdVel;
@@ -64,8 +65,7 @@ public class AirborneState : PlayerMovementState
         if (airStrafeForce > 0){
             
             velocity2D += 
-                ((right2D * movement.movementInput.x) + (forward2D * movement.movementInput.y)) 
-                * airStrafeForce * Time.fixedDeltaTime;
+                ((right2D * movement.movementInput.x * airStrafeForce) + (forward2D * movement.movementInput.y * airStrafeForwardForce)) * Time.fixedDeltaTime;
             
             if(previousVel > strafeThresholdVel && velocity2D.magnitude >= previousVel) { 
                 velocity2D = velocity2D.normalized * previousVel;

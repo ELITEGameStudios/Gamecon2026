@@ -59,6 +59,11 @@ public abstract class EntityBase : MonoBehaviour
 
     }
 
+    public void Die()
+    {
+        OnDeath();
+    }
+
     public virtual void Damage(int damage = 1)
     {
         if (damage <= 0) { return; }

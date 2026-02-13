@@ -6,7 +6,7 @@ public class Killbox : MonoBehaviour
     {
         if (other.TryGetComponent(out EntityBase entity))
         {
-            entity.Damage(entity.health + 1);
+            entity.Die();
         }
         else if (other.TryGetComponent(out EnemyProjectile proj))
         {
