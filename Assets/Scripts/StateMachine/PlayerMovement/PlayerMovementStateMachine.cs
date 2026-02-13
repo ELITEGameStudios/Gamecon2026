@@ -253,7 +253,7 @@ public class PlayerMovementStateMachine : StateMachine
         // Wall run direction
         Vector3 testWallRunDir = Vector3.Cross(Vector3.up, hit.normal);
         if(Vector3.Angle(testWallRunDir, transform.forward) > 90) { testWallRunDir *= -1; }
-        if(Vector3.Angle(testWallRunDir, rigidbody.linearVelocity) > wallRunLinearVelocityMaxAngleDif){return;}
+        //if(Vector3.Angle(testWallRunDir, rigidbody.linearVelocity) > wallRunLinearVelocityMaxAngleDif){return;}
 
         // Testing look difference between player and wall direction
         float currentLookAngleDifference = Vector3.Angle(transform.forward, testWallRunDir);
