@@ -71,6 +71,7 @@ public class PlayerMovementStateMachine : StateMachine
 
     [Header("External References")]
     public Projectile featherKnife;
+    public GroundedHelper groundedHelper;
 
     void Awake(){ 
 
@@ -214,6 +215,9 @@ public class PlayerMovementStateMachine : StateMachine
 
     public bool CheckGrounded()
     {
+        return groundedHelper.isGrounded;
+
+        Debug.DrawLine(feetTf.position, feetTf.position + Vector3.down * groundedCheckDist);
         if (Physics.Raycast(feetTf.position, Vector3.down, out RaycastHit hit, groundedCheckDist))
         {
             return true;

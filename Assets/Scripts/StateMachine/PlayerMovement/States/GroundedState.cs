@@ -74,6 +74,11 @@ public class GroundedState : PlayerMovementState
     // }
 
 
+    public override void OnCollisionEnter(Collision collision)
+    {
+
+    }
+
     public override void OnCollisionExit(Collision collision)
     {
         // if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")){
