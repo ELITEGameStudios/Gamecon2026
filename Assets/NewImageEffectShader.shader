@@ -3,17 +3,20 @@ Shader "Clouds/MainCloudShader"
     Properties
     {
         _MaxRange("Max Range", float) = 25
+        _MinRange("Minimum Range", float) = 0
         _Interval("Raymarch Interval Length", Range(0.1, 10)) = 0.1
         _BandingNoiseIntensity("Banding Noise Intensity", float) = 1
         
-        _FogDensity("Additive Fog Per Step", Range(0, 1)) = 0.005
+        _FogDensity("Additive Fog Per Step", Range(0, 100)) = 0.005
+        _FogMaxDensity("Max Fog Density", Range(0, 1)) = 1
         _FogColor("Additive Fog color", Color) = (1, 1, 1, 1)
         _FogNoiseTex("Noise texture", 3D) = "white" {}
         _FogNoiseTile("Noise Tiling", float) = 1
         _FogNoiseFactor("Noise Factor", Range(0, 10)) = 0.1
+        _FogLerp("Noise Lerp", Range(0, 1)) = 0
         
         _FogHeight("Height Y", float) = 0
-        _FogHeightTransition("Height Exp", Range(0.001, 100)) = 1
+        _FogHeightTransition("Height Exp", Range(1, 100)) = 1
     }
     SubShader
     {
@@ -34,6 +37,7 @@ Shader "Clouds/MainCloudShader"
 
 
             float _MaxRange;
+            float _MinRange;
             float _Interval;
             float _FogDensity;
             float4 _FogColor;
@@ -44,6 +48,8 @@ Shader "Clouds/MainCloudShader"
             float _FogNoiseFactor;
             float _FogHeight;
             float _FogHeightTransition;
+            float _FogMaxDensity;
+            float _FogLerp;
 
             float4 frag(Varyings IN) : SV_Target
             {
@@ -58,28 +64,43 @@ Shader "Clouds/MainCloudShader"
                 float targetDistance = min(dist, _MaxRange);
 
                 float finalColorFactor = 1;
+                float density = _FogDensity * 0.01;
 
-                float currentDist = InterleavedGradientNoise(IN.texcoord * _BlitTexture_TexelSize.zw, (int)(_Time.y / max(HALF_EPS, unity_DeltaTime.x))) * _BandingNoiseIntensity;
+                float currentDist = _MinRange + InterleavedGradientNoise(IN.texcoord * _BlitTexture_TexelSize.zw, (int)(_Time.y / max(HALF_EPS, unity_DeltaTime.x))) * _BandingNoiseIntensity;
                 while(currentDist < targetDistance){
                     float3 currentPosition = _WorldSpaceCameraPos + dir * currentDist;
                     float4 noiseValue = _FogNoiseTex.SampleLevel(sampler_TrilinearRepeat, (currentPosition * 0.01 * _FogNoiseTile) + _Time * 0.01, 0);
                     // float noiseDensity = saturate(dot(noiseValue, noiseValue) - _FogNoiseFactor) * _FogDensity * lerp(1, 0, pow(currentPosition.y - _FogHeight, _FogHeightExp) );
-                    float noiseDensity = saturate(dot(noiseValue, noiseValue) - _FogNoiseFactor) * _FogDensity * lerp(1, 0, (currentPosition.y - _FogHeight) / _FogHeightTransition);
-                    if(noiseDensity > 0){
-                        finalColorFactor *= exp(-noiseDensity * _Interval);
+                    float noiseDensity = saturate(
+                        (dot(noiseValue, noiseValue) - _FogNoiseFactor) * density);
+                        
+                    float inputDensity = 
+                        lerp(noiseDensity, density, _FogLerp)
+                        * lerp(1, 0, (currentPosition.y - _FogHeight + _FogHeightTransition) / _FogHeightTransition)
+                        * _FogMaxDensity;
 
+                    if(inputDensity > 0){
+                        finalColorFactor *= exp(-inputDensity);
                     }
                     
                     // if(final)
                     // finalColor += _FogDensity ;
+
+                    if(finalColorFactor < 1-_FogMaxDensity){
+                        finalColorFactor = 1-_FogMaxDensity;
+                        break;
+                    }
                     
                     currentDist+=_Interval;
                 }
-
+                
+                // finalColorFactor *= _FogMaxDensity;
 
                 // return float4(dir/2, 1);
                 // return float4(frac(position), 1);
-                return lerp(inputColor,(_FogColor), (1-saturate(finalColorFactor)));
+                finalColorFactor = saturate(finalColorFactor);
+                // return finalColorFactor;
+                return lerp(_FogColor, inputColor, finalColorFactor);
             }
             ENDHLSL
         }

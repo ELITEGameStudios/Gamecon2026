@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CloudEffect
+  m_Name: CloudBlueMist
   m_Shader: {fileID: 4800000, guid: 1d3c414db8442a8409e765d7d13c3876, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -34,20 +34,20 @@ Material:
     m_Ints: []
     m_Floats:
     - _BandingNoiseIntensity: 2
-    - _FogDensity: 100
-    - _FogHeight: 4.81
+    - _FogDensity: 43.1
+    - _FogHeight: 12.2
     - _FogHeightExp: 3.6
-    - _FogHeightTransition: 9.5
-    - _FogLerp: 0
-    - _FogMaxDensity: 1
-    - _FogNoiseFactor: 1.49
+    - _FogHeightTransition: 100
+    - _FogLerp: 1
+    - _FogMaxDensity: 0.5
+    - _FogNoiseFactor: 1.73
     - _FogNoiseTile: 1.78
     - _FogNoiseTileX: 1000
     - _FogNoiseTileY: 2.57
     - _Interval: 2
-    - _MaxRange: 29.4
-    - _MinRange: 7.27
+    - _MaxRange: 23.2
+    - _MinRange: 0
     m_Colors:
-    - _FogColor: {r: 0.8588236, g: 0.9176471, b: 0.9803922, a: 1}
+    - _FogColor: {r: 0.14199996, g: 0.5589152, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
