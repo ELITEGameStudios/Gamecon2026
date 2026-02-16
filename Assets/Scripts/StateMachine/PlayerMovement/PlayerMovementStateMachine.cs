@@ -110,7 +110,8 @@ public class PlayerMovementStateMachine : StateMachine
 
     protected override void OnUpdate()
     {
-
+        HUDManager.Instance.dashElement.SetReady(canDash);
+        // HUDManager.Instance.dashElement.SetFillFactor();
 
         FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerJump, transform);
         FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerLand, transform);

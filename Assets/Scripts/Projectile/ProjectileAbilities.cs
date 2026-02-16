@@ -16,8 +16,8 @@ public class ProjectileAbilities : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private float parryTiming = 0.8f; // 0.8 = last 20% of distance is parryable
-    [SerializeField] private float recallCooldown = 8f;
-    private float currentRecallCooldown;
+    public float recallCooldown = 8f;
+    public float currentRecallCooldown;
     [SerializeField] private float parryForce = 500f;
     [SerializeField] private float hitStopTime = 0.1f;
     [SerializeField] private HUDManager hudManager;
@@ -107,6 +107,8 @@ public class ProjectileAbilities : MonoBehaviour
             float currentDistance = Vector3.Distance(featherKnife.transform.position, transform.position);
             float totalDistance = featherKnife.totalRecallDistance;
             float progress = 1f - (currentDistance / totalDistance);
+            
+            
         
             // Parry when close to the player (last 20% of journey)
             if(progress > parryTiming)
@@ -131,10 +133,9 @@ public class ProjectileAbilities : MonoBehaviour
             featherKnife.SetState(Projectile.ProjectileState.Recalling);
             currentRecallCooldown = recallCooldown;
             
-            if (hudManager != null)
-            {
-                hudManager.UpdateRecallCooldown(currentRecallCooldown, recallCooldown);
-            }
+            
+            HUDManager.Instance.UpdateRecallCooldown(currentRecallCooldown, recallCooldown);
+            HUDManager.Instance.recallElement.Activate();
         }
     }
     
@@ -224,6 +225,7 @@ public class ProjectileAbilities : MonoBehaviour
         {
             StartCoroutine(ParryCoroutine());
             parrySFX.start();
+            HUDManager.Instance.recallElement.Parry();
         }
         else
         {

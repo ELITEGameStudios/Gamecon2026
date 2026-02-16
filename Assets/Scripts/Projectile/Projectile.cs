@@ -62,6 +62,21 @@ public class Projectile : MonoBehaviour
         {
             RecallUpdate();
         }
+        else
+        {
+            if(HUDManager.Instance.recallElement != null)
+            {
+                if( projectileAbilities.currentRecallCooldown <= 0 && currentState != ProjectileState.Recalling && currentState != ProjectileState.Idle) {
+                    HUDManager.Instance.recallElement.SetFillFactor(1);
+                    HUDManager.Instance.recallElement.SetReady(true);
+                }
+                else
+                {
+                    HUDManager.Instance.recallElement.SetFillFactor(( projectileAbilities.recallCooldown - projectileAbilities.currentRecallCooldown) / projectileAbilities.recallCooldown);
+                    HUDManager.Instance.recallElement.SetReady(false);
+                }
+            }
+        }
     }
 
     public void SetState(ProjectileState newState)
@@ -123,6 +138,7 @@ public class Projectile : MonoBehaviour
 
         float currentDistance = Vector3.Distance(transform.position, initProjectilePosition.position);
         recallProgress = 1f - (currentDistance / totalRecallDistance);
+        HUDManager.Instance.recallElement.SetSpeed(recallProgress);
     
         // Calculate distance-based speed boost
         float distanceBoost = 1f;
@@ -156,6 +172,7 @@ public class Projectile : MonoBehaviour
         if (currentDistance < 0.1f)
         {
             ReturnToIdle();
+            
         }
     }
 
@@ -266,11 +283,13 @@ public class Projectile : MonoBehaviour
 
     private void ReturnToIdle()
     {
+        if(HUDManager.Instance != null) HUDManager.Instance.recallElement.Deactivate();
+        
         if (currentState != ProjectileState.Flying && currentState != ProjectileState.Recalling)
             return;
         
         SetState(ProjectileState.Idle);
-        
+
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         
@@ -286,6 +305,7 @@ public class Projectile : MonoBehaviour
         rb.isKinematic = true;
         col.enabled = false;
         gameObject.SetActive(false);
+
         
         // Instantly return to hand + idle state
         transform.SetParent(initProjectilePosition);
@@ -294,5 +314,6 @@ public class Projectile : MonoBehaviour
     
         gameObject.SetActive(true);
         SetState(ProjectileState.Idle);
+        if(HUDManager.Instance != null) HUDManager.Instance.recallElement.Deactivate();
     }
 }

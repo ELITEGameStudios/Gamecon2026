@@ -28,6 +28,8 @@ public class DashState : PlayerMovementState
         currentDashTimer = dashTime;
         Debug.Log("Started dash");
         SetDashVelocity();
+
+        HUDManager.Instance.dashElement.Activate();
     }
 
     private void SetDashVelocity()
@@ -54,16 +56,16 @@ public class DashState : PlayerMovementState
             movementVector.x,
             0,
             movementVector.y
-        ) * dashPower;
+        ) * (dashPower + (additive ? rigidbody.linearVelocity.magnitude : 0));
 
-        if(additive)
-        {
-            dashVelocity += new Vector3(
-                rigidbody.linearVelocity.x,
-                0,
-                rigidbody.linearVelocity.z
-            );
-        }
+        // if(additive)
+        // {
+        //     dashVelocity += new Vector3(
+        //         rigidbody.linearVelocity.x,
+        //         0,
+        //         rigidbody.linearVelocity.z
+        //     );
+        // }
         PlayerVFXManager.instance.DashEffect(input);
     }
 

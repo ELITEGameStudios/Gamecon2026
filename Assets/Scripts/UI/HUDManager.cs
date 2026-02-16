@@ -11,6 +11,11 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private TMP_Text waveDisplay;
     public ScreenDimmer screenDimmer;
     
+    [Header("Gameplay UI Elements")]
+    public FillTimerHudElement dashElement; 
+    public RecallHUD recallElement; 
+    public FillTimerHudElement blinkElement; 
+    
 
     public static HUDManager Instance { get; private set;}
 
@@ -61,22 +66,26 @@ public class HUDManager : MonoBehaviour
     }
     public void UpdateRecallCooldown(float currentCooldown, float maxCooldown)
     {
-        if (recallCooldownFill == null) return;
+        // if (recallCooldownFill == null) return;
 
         if (currentCooldown > 0)
         {
             float fillAmount = currentCooldown / maxCooldown;
-            recallCooldownFill.fillAmount = fillAmount;
+
             
-            if (recallCooldownText != null)
-                recallCooldownText.gameObject.SetActive(true);
-                recallCooldownText.text = currentCooldown.ToString("F1");
+            // recallCooldownFill.fillAmount = fillAmount;
+            
+            // if (recallCooldownText != null)
+            //     recallCooldownText.gameObject.SetActive(true);
+            //     recallCooldownText.text = currentCooldown.ToString("F1");
         }
         else
         {
+
+
             if (recallCooldownText != null)
                 recallCooldownText.gameObject.SetActive(false);
-            recallCooldownFill.fillAmount = 0;
+            // recallCooldownFill.fillAmount = 0;
         }
     }
 }
