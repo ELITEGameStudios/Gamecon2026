@@ -40,6 +40,7 @@ public class Projectile : MonoBehaviour
     private Rigidbody rb;
     private Collider col;
     
+    [SerializeField] private Animator animator;
     private Transform embedParent;
     void Awake()
     {
@@ -81,6 +82,7 @@ public class Projectile : MonoBehaviour
 
     public void SetState(ProjectileState newState)
     {
+        ProjectileState oldState = currentState;
         currentState = newState;
         
         switch (currentState)
@@ -89,16 +91,22 @@ public class Projectile : MonoBehaviour
                 rb.isKinematic = true;
                 col.enabled = true;
                 col.isTrigger = false;
+                animator.SetTrigger("Idle");
                 break;
             case ProjectileState.Flying:
                 rb.isKinematic = false;
                 col.isTrigger = false;
+                
+                if(oldState != ProjectileState.Recalling){
+                    animator.SetTrigger("Flying");
+                }
                 break;
             case ProjectileState.Embedded:
                 rb.isKinematic = true;
                 col.isTrigger = true;
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
+                animator.SetTrigger("Idle");
 
                 SetEmbeddedPos();
                 break;
@@ -108,6 +116,7 @@ public class Projectile : MonoBehaviour
                 rb.angularVelocity = Vector3.zero;
                 rb.isKinematic = true;
                 col.isTrigger = true;
+                animator.SetTrigger("Recalling");
             
                 CancelInvoke(nameof(ReturnToIdle));
                 Invoke(nameof(ReturnToIdle), lifetime);
@@ -300,6 +309,11 @@ public class Projectile : MonoBehaviour
         gameObject.SetActive(true);
     }
     
+    public void OnParry()
+    {
+        animator.SetTrigger("Parried");
+    }
+
     public void Pickup()
     {   
         rb.isKinematic = true;

@@ -199,7 +199,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 1
   m_Cameras: []
-  m_RendererIndex: 0
+  m_RendererIndex: 1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -5327,7 +5327,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
+  m_RequiresDepthTextureOption: 1
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras:
@@ -5339,10 +5339,10 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
-  m_Dithering: 0
+  m_Dithering: 1
   m_ClearDepth: 1
   m_AllowXRRendering: 1
   m_AllowHDROutput: 1
@@ -5353,11 +5353,11 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    m_Quality: 3
-    m_FrameInfluence: 0.1
-    m_JitterScale: 1
+    m_Quality: 0
+    m_FrameInfluence: 0.112999976
+    m_JitterScale: 0
     m_MipBias: 0
-    m_VarianceClampScale: 0.9
+    m_VarianceClampScale: 1.2
     m_ContrastAdaptiveSharpening: 0
 --- !u!114 &2535014537696081642
 MonoBehaviour:
@@ -5818,7 +5818,8 @@ MonoBehaviour:
   playerMovement: {fileID: 5837548833278922391}
   camShaker: {fileID: 6892617791688083269}
   parryTiming: 0.7
-  recallCooldown: 0
+  recallCooldown: 4
+  currentRecallCooldown: 0
   parryForce: 50
   hitStopTime: 0.1
   hudManager: {fileID: 0}
@@ -6119,6 +6120,10 @@ PrefabInstance:
       value: -0.0000057585867
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 1293306962458888700}
+    - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: playerTransform
       value: 
       objectReference: {fileID: 947569911892450442}
@@ -6133,14 +6138,20 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2475966581838294851, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1293306962458888700}
+    - targetCorrespondingSourceObject: {fileID: 2475966581838294851, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1774322876644524193}
   m_SourcePrefab: {fileID: 100100000, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
 --- !u!114 &3736855633952113512 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
   m_PrefabInstance: {fileID: 5615901343660672649}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 8049013321304451530}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1b79602ba93482347ac43ec1f96ed3e8, type: 3}
@@ -6151,3 +6162,47 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2961036286376670713, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
   m_PrefabInstance: {fileID: 5615901343660672649}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8049013321304451530 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2475966581838294851, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+  m_PrefabInstance: {fileID: 5615901343660672649}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1293306962458888700
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8049013321304451530}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0d8eae6c2b6626f47bd0ca757fbb1cf1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1774322876644524193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8049013321304451530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dfc4fae253a6fa4d872a981a6eba67b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emissionString: _EmissionColor
+  primaryGlow: {fileID: 2100000, guid: c243c94a9de45b741bda5c92b61068fe, type: 2}
+  secondaryGlow: {fileID: 2100000, guid: f17286c9ea1bdcd40b5ca1fdd72fa49f, type: 2}
+  emissionPrimary: {r: 91.77356, g: 975.1923, b: 1024, a: 1}
+  emissionSecondary: {r: 36.79308, g: 222.86098, b: 220.41272, a: 1}

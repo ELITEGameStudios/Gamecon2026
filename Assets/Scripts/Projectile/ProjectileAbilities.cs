@@ -226,6 +226,7 @@ public class ProjectileAbilities : MonoBehaviour
             StartCoroutine(ParryCoroutine());
             parrySFX.start();
             HUDManager.Instance.recallElement.Parry();
+            featherKnife.OnParry();
         }
         else
         {
