@@ -270,6 +270,16 @@ public class PlayerMovementStateMachine : StateMachine
             return;
         }
 
+        Vector3 movementRelativeInput = (transform.forward * movementInput.y) + (transform.right * movementInput.x);
+
+        if(currentState != dashState){
+            if(
+                Vector3.Angle(movementRelativeInput, testWallRunDir) > wallRunState.maxMovementInputAngleDifference && currentState != dashState
+                || !hasMovementInput
+            )
+            {return;}
+        }
+
         // if(collision == null || hit.collider == collision.collider){ 
         if(angleRoll >= minWallTangentSlope && (collision == null || hit.collider == collision.collider)){ 
 

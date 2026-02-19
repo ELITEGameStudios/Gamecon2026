@@ -10,8 +10,10 @@ public class WallRunState : PlayerMovementState
     public float jumpXStrength = 0.25f;
     public float jumpYStrength = 0.25f;
     public float raycastForwardCheckDist = 0.1f;
+    public float barrierCheckDepth = 0.4f;
     public float maxTransitionAngle; // Cuts off a wall run if the angle between two surfaces are too great
     public float wallRunAdditiveSpeed; // The speed to add to a valid wall run
+    public float maxMovementInputAngleDifference;
     public Vector2 lookAngleDifferenceRange; // The range of angles by which the player can be looking relative to the wall they are running on.
     public ApplyAngleProportional camAngle;
 
@@ -112,6 +114,12 @@ public class WallRunState : PlayerMovementState
                 movement.SetState(movement.airborneState);
                 return;
             }
+
+            if(Physics.Raycast(hitInfo.point + hitInfo.normal * barrierCheckDepth, wallRunDirection, out RaycastHit forwardHitInfo, 1))
+            {
+                movement.SetState(movement.airborneState);
+            }
+            Debug.DrawRay(transform.position, wallRunDirection, Color.red);
 
             // Debug info
             // Debug.DrawRay(hitInfo.point, hitInfo.normal);
