@@ -80,7 +80,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 2848
+  Length: 2828
 --- !u!114 &-4902315579060070194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,10 +204,10 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639073801239099921
+  lastModified: 639073976723358962
   FileSizes:
   - Name: Desktop
-    Value: 1372
+    Value: 1422
   Exists: 1
 --- !u!114 &-2268201380787441039
 MonoBehaviour:
@@ -236,6 +236,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 3433
+--- !u!114 &-1736658104849085760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/DashEvent
+  m_EditorClassIdentifier: 
+  Path: event:/DashEvent
+  Guid:
+    Data1: -1317003152
+    Data2: 1273108496
+    Data3: 1967668869
+    Data4: -1214361606
+  Banks:
+  - {fileID: 5125965493783677315}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1500
 --- !u!114 &-1142070308645436291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,12 +320,13 @@ MonoBehaviour:
   - {fileID: -3105788517175024252}
   - {fileID: -4595963900804498159}
   - {fileID: -8785838895141928349}
+  - {fileID: -1736658104849085760}
   EditorParameters: []
   MasterBanks:
   - {fileID: 5125965493783677315}
   StringsBanks:
   - {fileID: -2964189403956306362}
-  cacheTime: 639073801239099921
+  cacheTime: 639073976723358962
   cacheVersion: 131634
 --- !u!114 &2423527646633715673
 MonoBehaviour:
@@ -477,10 +505,10 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639073801239089909
+  lastModified: 639073976723348981
   FileSizes:
   - Name: Desktop
-    Value: 1910496
+    Value: 1973248
   Exists: 1
 --- !u!114 &7387677239521562486
 MonoBehaviour:

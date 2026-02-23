@@ -9,6 +9,7 @@ public class WallRunState : PlayerMovementState
     public float wallRunMaxDist;
     public float jumpXStrength = 0.25f;
     public float jumpYStrength = 0.25f;
+    public float jumpZStrength = 0.25f;
     public float raycastForwardCheckDist = 0.1f;
     public float barrierCheckDepth = 0.4f;
     public float maxTransitionAngle; // Cuts off a wall run if the angle between two surfaces are too great
@@ -160,7 +161,7 @@ public class WallRunState : PlayerMovementState
                 : 0;
 
         rigidbody.linearVelocity = 
-            ( transform.forward + (transform.up * jumpYStrength) + (transform.right * xJumpDirection)  ).normalized *
+            ( (transform.forward * jumpZStrength) + (transform.up * jumpYStrength) + (transform.right * xJumpDirection)  ).normalized *
             (currentWallRunSpeed + wallRunAdditiveSpeed) * Time.fixedDeltaTime;
 
         movement.SetState(movement.airborneState);

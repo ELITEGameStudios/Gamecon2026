@@ -42,7 +42,7 @@ public class ProjectileAbilities : MonoBehaviour
     public float blinkCooldownTime;
     public float blinkEffectTime = 0.33f;
     public float currentBlinkTimer;
-    public bool canBlink => currentBlinkTimer <= 0;
+    public bool canBlink => currentBlinkTimer <= 0 && featherKnife.currentState != Projectile.ProjectileState.Idle;
 
     public PlayerVFXManager playerVFXManager;
 
@@ -102,6 +102,7 @@ public class ProjectileAbilities : MonoBehaviour
         }
 
         if (currentBlinkTimer > 0) { currentBlinkTimer -= Time.deltaTime; }
+        HUDManager.Instance.blinkElement.SetReady(canBlink);
     }
 
     private void OnFirePressed(InputAction.CallbackContext ctx)
@@ -161,6 +162,7 @@ public class ProjectileAbilities : MonoBehaviour
         playerMovement.Blink();
         featherKnife.Pickup();
         parryActive = false;
+        HUDManager.Instance.blinkElement.Activate();
     }
     
     
@@ -305,6 +307,8 @@ public class ProjectileAbilities : MonoBehaviour
         bool hasBlinked = false;
         float blinkTimeMarker = 0.3f;
         blinkSFX.start();
+
+        
         
         while (timer < blinkEffectTime)
         {
