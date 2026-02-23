@@ -29,6 +29,7 @@ public class DashState : PlayerMovementState
         Debug.Log("Started dash");
         SetDashVelocity();
 
+        movement.playerDash.start();
         HUDManager.Instance.dashElement.Activate();
     }
 

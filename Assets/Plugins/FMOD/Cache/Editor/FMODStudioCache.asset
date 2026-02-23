@@ -27,6 +27,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 800
+--- !u!114 &-5873000187674895612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NormalButtonPress
+  m_EditorClassIdentifier: 
+  Path: event:/NormalButtonPress
+  Guid:
+    Data1: 792532417
+    Data2: 1154925441
+    Data3: 1831940017
+    Data4: -1283845411
+  Banks:
+  - {fileID: 5125965493783677315}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2159
 --- !u!114 &-5683459389311835695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,10 +231,10 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639073981548620959
+  lastModified: 639074199210978693
   FileSizes:
   - Name: Desktop
-    Value: 1422
+    Value: 1516
   Exists: 1
 --- !u!114 &-2268201380787441039
 MonoBehaviour:
@@ -285,11 +312,11 @@ MonoBehaviour:
   - {fileID: 5125965493783677315}
   IsStream: 0
   Is3D: 1
-  IsOneShot: 1
+  IsOneShot: 0
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 300
+  Length: 336
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,12 +348,14 @@ MonoBehaviour:
   - {fileID: -4595963900804498159}
   - {fileID: -8785838895141928349}
   - {fileID: -1736658104849085760}
+  - {fileID: -5873000187674895612}
+  - {fileID: 6136357517692330216}
   EditorParameters: []
   MasterBanks:
   - {fileID: 5125965493783677315}
   StringsBanks:
   - {fileID: -2964189403956306362}
-  cacheTime: 639073981548620959
+  cacheTime: 639074199210978693
   cacheVersion: 131634
 --- !u!114 &2423527646633715673
 MonoBehaviour:
@@ -505,11 +534,38 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639073981548599619
+  lastModified: 639074199210928688
   FileSizes:
   - Name: Desktop
-    Value: 1973248
+    Value: 1996160
   Exists: 1
+--- !u!114 &6136357517692330216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/FootstepsEventOld
+  m_EditorClassIdentifier: 
+  Path: event:/FootstepsEventOld
+  Guid:
+    Data1: -974883623
+    Data2: 1175032714
+    Data3: -965522252
+    Data4: 1231742001
+  Banks:
+  - {fileID: 5125965493783677315}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 336
 --- !u!114 &7387677239521562486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -536,7 +592,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 2830
+  Length: 2126
 --- !u!114 &7726724505605689874
 MonoBehaviour:
   m_ObjectHideFlags: 0

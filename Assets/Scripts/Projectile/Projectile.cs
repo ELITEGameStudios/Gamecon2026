@@ -7,6 +7,7 @@ public class Projectile : MonoBehaviour
 {
     public enum ProjectileState {Idle, Flying, Embedded, Recalling}//, PickedUp}
     public ProjectileState currentState { get; private set; } = ProjectileState.Idle;
+    public Vector3 targetLocalScale;
     
     [Header("Flying Settings")]
     public float speed = 30f;
@@ -295,6 +296,7 @@ public class Projectile : MonoBehaviour
     {
         transform.SetParent(null);
         transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(-90, 180, 0);
+        transform.localScale = targetLocalScale;
         throwDirection = direction;
         SetState(ProjectileState.Flying);
         
@@ -319,6 +321,7 @@ public class Projectile : MonoBehaviour
         transform.SetParent(heldParent);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
+        transform.localScale = targetLocalScale;
         
         gameObject.SetActive(true);
     }
@@ -339,6 +342,7 @@ public class Projectile : MonoBehaviour
         transform.SetParent(heldParent);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
+        transform.localScale = targetLocalScale;
     
         gameObject.SetActive(true);
         SetState(ProjectileState.Idle);

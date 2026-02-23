@@ -188,12 +188,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b79602ba93482347ac43ec1f96ed3e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetLocalScale: {x: 500, y: 500, z: 500}
   speed: 80
   lifetime: 5
   pickUpRadius: 2
   embedDepth: 0.2
   hitEffect: {fileID: 0}
   initProjectilePosition: {fileID: 0}
+  heldParent: {fileID: 0}
   playerTransform: {fileID: 0}
   projectileAbilities: {fileID: 0}
   armRendererCam: {fileID: 0}
@@ -293,7 +295,6 @@ MonoBehaviour:
   maxSpeedBoost: 5
   totalRecallTime: 0
   totalRecallDistance: 0
-  animator: {fileID: 840440039517347714}
 --- !u!96 &3002411986993690705
 TrailRenderer:
   serializedVersion: 3

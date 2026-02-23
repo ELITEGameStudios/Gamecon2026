@@ -247,19 +247,20 @@ public class ProjectileAbilities : MonoBehaviour
         if (parry)
         {
             StartCoroutine(ParryCoroutine());
+            if(armAnimator != null){armAnimator.SetTrigger("Parry");}
             parrySFX.start();
             HUDManager.Instance.recallElement.Parry();
             featherKnife.OnParry();
         }
         else
         {
+            if(armAnimator != null){armAnimator.SetTrigger("Shoot");}
             shootSFX.start();
         }
     }
     
     private IEnumerator ParryCoroutine()
     {
-        if(armAnimator != null){armAnimator.SetTrigger("Shoot");}
 
         // Apply hitstop post processing immediately
         if (postProcessVolume != null && hitstopProfile != null)
