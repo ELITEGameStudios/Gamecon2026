@@ -137,6 +137,7 @@ public class WallRunState : PlayerMovementState
             rigidbody.linearVelocity =
             wallRunDirection * Time.fixedDeltaTime * currentWallRunSpeed;
             Debug.DrawRay(hitInfo.point, hitInfo.normal);
+            Debug.Log("Wallrun was fine");
             
         }
         else

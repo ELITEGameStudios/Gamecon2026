@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour
         {
             gameEnding += settingsScreen.OnGameOver;
         }
+        Debug.Log("Initialized");
 
     }
 
@@ -66,14 +67,16 @@ public class GameManager : MonoBehaviour
         if(Instance == null){Instance = this;}
         else if(Instance != this){Destroy(this);}
 
-        _ = InitializeManager();
-        initialized = true;
+        // _ = InitializeManager();
 
     }
 
     public void Initialize()
     {
+        if(initialized)return;
+
         _ = InitializeManager();
+        initialized = true;
     }
 
 

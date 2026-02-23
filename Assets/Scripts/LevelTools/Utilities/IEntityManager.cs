@@ -56,6 +56,8 @@ public class WaveManager : IEntityManager
 
     public void UpdateWaves()
     {
+        if(!GameManager.Instance.initialized){return;}
+
         if (currentWave == null) return;
         currentWave.InternalWaveUpdate();
         if (!currentWave.finishedProcesses)
@@ -83,6 +85,7 @@ public class WaveManager : IEntityManager
         activeProfiles = new();
         enemiesInWaveRemaining = new();
 
+        Debug.Log(currentWave);
         currentWave.InternalStart();
         // gateTracker = currentWave.timeBeforeFirstGate;
         // spawnedFirstGate = false;

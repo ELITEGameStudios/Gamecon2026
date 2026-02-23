@@ -36,6 +36,7 @@ public class HUDManager : MonoBehaviour
         if (entityManager is WaveManager waveManager)
         {
             Debug.Log("Init HUD manager");
+            waveDisplay.text = "Wave 1";
             waveDisplay.gameObject.SetActive(true);
             waveManager.waveStarted += OnWaveChanged;
         }

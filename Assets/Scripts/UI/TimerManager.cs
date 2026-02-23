@@ -29,7 +29,7 @@ public class TimerManager : MonoBehaviour
 
     private void Update()
     {
-        if (!runTimer) return;
+        if (!runTimer || !GameManager.Instance.initialized) return;
         timerTracker += Time.deltaTime;
         timerTimespan = TimeSpan.FromSeconds(timerTracker);
         timerDisplay.text = $"<mspace={spaceBetweenCharacters}em >{timerTimespan.ToString("mm\\:ss")}</mspace>";
