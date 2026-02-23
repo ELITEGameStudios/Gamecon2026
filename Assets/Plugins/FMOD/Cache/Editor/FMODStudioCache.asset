@@ -130,11 +130,11 @@ MonoBehaviour:
   - {fileID: 1405720437415962997}
   IsStream: 0
   Is3D: 1
-  IsOneShot: 1
+  IsOneShot: 0
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 300
+  Length: 278
 --- !u!114 &-6838770451864952286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -532,7 +532,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 2830
+  Length: 2104
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -564,12 +564,13 @@ MonoBehaviour:
   - {fileID: 4621019978117096081}
   - {fileID: -8126319085660268047}
   - {fileID: -1752097777992870032}
+  - {fileID: 4863433423040303645}
   EditorParameters: []
   MasterBanks:
   - {fileID: 1405720437415962997}
   StringsBanks:
   - {fileID: 9114747985906268585}
-  cacheTime: 639074331886014381
+  cacheTime: 639074604936111657
   cacheVersion: 131634
 --- !u!114 &10998266041711469
 MonoBehaviour:
@@ -613,10 +614,10 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639074331886004603
+  lastModified: 639074604936101445
   FileSizes:
   - Name: Desktop
-    Value: 1973248
+    Value: 1968800
   Exists: 1
 --- !u!114 &2423527646633715673
 MonoBehaviour:
@@ -780,6 +781,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 102380
+--- !u!114 &4863433423040303645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/NormalButtonPress
+  m_EditorClassIdentifier: 
+  Path: event:/NormalButtonPress
+  Guid:
+    Data1: -599073750
+    Data2: 1110751323
+    Data3: 2094169524
+    Data4: 1483939535
+  Banks:
+  - {fileID: 1405720437415962997}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2154
 --- !u!114 &4989816754187725419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1004,10 +1032,10 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639074331886014381
+  lastModified: 639074604936111657
   FileSizes:
   - Name: Desktop
-    Value: 1422
+    Value: 1470
   Exists: 1
 --- !u!114 &9167691374996464057
 MonoBehaviour:
