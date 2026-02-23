@@ -68,8 +68,7 @@ public class PlayerMovementStateMachine : StateMachine
     [Header("FMOD events")]
     public string FMODJumpEvent = "";
     public string FMODLandEvent = "";
-    public string FMODDashEvent = "";
-    public FMOD.Studio.EventInstance playerJump, playerLand, playerDash;
+    public FMOD.Studio.EventInstance playerJump, playerLand;
 
     [Header("External References")]
     public Collider mainCol;
@@ -90,7 +89,6 @@ public class PlayerMovementStateMachine : StateMachine
 
         playerJump = FMODUnity.RuntimeManager.CreateInstance(FMODJumpEvent);
         playerLand = FMODUnity.RuntimeManager.CreateInstance(FMODLandEvent);
-        playerDash = FMODUnity.RuntimeManager.CreateInstance(FMODDashEvent);
     }
 
     protected override void OnStart()
@@ -117,7 +115,6 @@ public class PlayerMovementStateMachine : StateMachine
 
         FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerJump, transform);
         FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerLand, transform);
-        FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerDash, transform);
     }
 
     protected override void OnFixedUpdate()
