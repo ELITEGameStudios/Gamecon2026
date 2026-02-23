@@ -47,8 +47,8 @@ public class ProjectileAbilities : MonoBehaviour
     public PlayerVFXManager playerVFXManager;
 
     [Header("FMOD events")]
-    public string FMODParryEvent = "", FMODShootEvent = "";
-    public FMOD.Studio.EventInstance parrySFX, shootSFX;
+    public string FMODParryEvent = "", FMODShootEvent = "", FMODBlinkEvent = "", FMODParryFailEvent = "";
+    public FMOD.Studio.EventInstance parrySFX, parryFailSFX, shootSFX, blinkSFX;
 
     bool parryActive = false;
 
@@ -62,8 +62,10 @@ public class ProjectileAbilities : MonoBehaviour
 
     void Awake()
     {
-        if(FMODParryEvent != ""){ parrySFX = FMODUnity.RuntimeManager.CreateInstance(FMODParryEvent); }
-        if(FMODShootEvent != ""){ shootSFX = FMODUnity.RuntimeManager.CreateInstance(FMODShootEvent); }
+        if(FMODParryEvent != "")    { parrySFX = FMODUnity.RuntimeManager.CreateInstance(FMODParryEvent); }
+        if(FMODShootEvent != "")    { shootSFX = FMODUnity.RuntimeManager.CreateInstance(FMODShootEvent); }
+        if(FMODParryFailEvent != ""){ parryFailSFX = FMODUnity.RuntimeManager.CreateInstance(FMODParryFailEvent); }
+        if(FMODBlinkEvent != "")    { blinkSFX = FMODUnity.RuntimeManager.CreateInstance(FMODBlinkEvent); }
     }
 
     void OnEnable()
@@ -86,6 +88,8 @@ public class ProjectileAbilities : MonoBehaviour
     {
         if(FMODParryEvent != "") { FMODUnity.RuntimeManager.AttachInstanceToGameObject(parrySFX, transform); }
         if(FMODShootEvent != "") { FMODUnity.RuntimeManager.AttachInstanceToGameObject(shootSFX, transform); }
+        if(FMODParryFailEvent != "") { FMODUnity.RuntimeManager.AttachInstanceToGameObject(parryFailSFX, transform); }
+        if(FMODBlinkEvent != "") { FMODUnity.RuntimeManager.AttachInstanceToGameObject(blinkSFX, transform); }
 
         if (currentRecallCooldown > 0)
         {
@@ -115,6 +119,10 @@ public class ProjectileAbilities : MonoBehaviour
             {
                 Debug.Log("Parried!");
                 TryShoot(true);
+            }
+            else if(progress > parryTiming - 0.25f)
+            {
+                parryFailSFX.start();
             }
         }
         else
@@ -296,6 +304,7 @@ public class ProjectileAbilities : MonoBehaviour
         float timer = 0f;
         bool hasBlinked = false;
         float blinkTimeMarker = 0.3f;
+        blinkSFX.start();
         
         while (timer < blinkEffectTime)
         {

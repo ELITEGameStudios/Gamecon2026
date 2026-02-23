@@ -1,5 +1,32 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8785838895141928349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/BlinkEvent
+  m_EditorClassIdentifier: 
+  Path: event:/BlinkEvent
+  Guid:
+    Data1: 505652011
+    Data2: 1230055426
+    Data3: -191598453
+    Data4: -1603484123
+  Banks:
+  - {fileID: 5125965493783677315}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 800
 --- !u!114 &-5683459389311835695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53,7 +80,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 2886
+  Length: 2848
 --- !u!114 &-4902315579060070194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,6 +108,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1200
+--- !u!114 &-4595963900804498159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/ThrowNew
+  m_EditorClassIdentifier: 
+  Path: event:/ThrowNew
+  Guid:
+    Data1: 1984239183
+    Data2: 1213311735
+    Data3: -1067365226
+    Data4: 2004359387
+  Banks:
+  - {fileID: 5125965493783677315}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 730
 --- !u!114 &-3497565408322446129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,6 +162,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 10599
+--- !u!114 &-3105788517175024252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/TutorialMusic
+  m_EditorClassIdentifier: 
+  Path: event:/TutorialMusic
+  Guid:
+    Data1: 2057184656
+    Data2: 1231932983
+    Data3: -730345072
+    Data4: -109037719
+  Banks:
+  - {fileID: 5125965493783677315}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 44000
 --- !u!114 &-2964189403956306362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,10 +204,10 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639073512271573713
+  lastModified: 639073801239099921
   FileSizes:
   - Name: Desktop
-    Value: 1182
+    Value: 1372
   Exists: 1
 --- !u!114 &-2268201380787441039
 MonoBehaviour:
@@ -208,12 +289,16 @@ MonoBehaviour:
   - {fileID: -5169756340296980502}
   - {fileID: 7726724505605689874}
   - {fileID: 8452309938543406399}
+  - {fileID: 7387677239521562486}
+  - {fileID: -3105788517175024252}
+  - {fileID: -4595963900804498159}
+  - {fileID: -8785838895141928349}
   EditorParameters: []
   MasterBanks:
   - {fileID: 5125965493783677315}
   StringsBanks:
   - {fileID: -2964189403956306362}
-  cacheTime: 639073512271573713
+  cacheTime: 639073801239099921
   cacheVersion: 131634
 --- !u!114 &2423527646633715673
 MonoBehaviour:
@@ -392,11 +477,38 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639073512271572397
+  lastModified: 639073801239089909
   FileSizes:
   - Name: Desktop
-    Value: 1527904
+    Value: 1910496
   Exists: 1
+--- !u!114 &7387677239521562486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/ParryWhiff
+  m_EditorClassIdentifier: 
+  Path: event:/ParryWhiff
+  Guid:
+    Data1: 1107245064
+    Data2: 1240243462
+    Data3: -2122042950
+    Data4: -1207418742
+  Banks:
+  - {fileID: 5125965493783677315}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2830
 --- !u!114 &7726724505605689874
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5736,6 +5736,7 @@ MonoBehaviour:
     jumpXStrength: 0.25
     jumpYStrength: 0.75
     raycastForwardCheckDist: 0
+    barrierCheckDepth: 0
     maxTransitionAngle: 65
     wallRunAdditiveSpeed: 200
     maxMovementInputAngleDifference: 50
@@ -5887,7 +5888,9 @@ MonoBehaviour:
   currentBlinkTimer: 0
   playerVFXManager: {fileID: 5621036908769530523}
   FMODParryEvent: event:/Parry
-  FMODShootEvent: event:/ThrowEvent
+  FMODShootEvent: event:/ThrowNew
+  FMODBlinkEvent: event:/BlinkEvent
+  FMODParryFailEvent: event:/ParryWhiff
 --- !u!114 &7815783333853658338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6136,6 +6139,22 @@ PrefabInstance:
       propertyPath: initProjectilePosition
       value: 
       objectReference: {fileID: 9043813615459997854}
+    - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.data[0].value
+      value: 0.9999939
+      objectReference: {fileID: 0}
+    - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.data[0].inSlope
+      value: -8.066208
+      objectReference: {fileID: 0}
+    - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.data[0].outSlope
+      value: -8.066208
+      objectReference: {fileID: 0}
+    - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: recallAnimationCurve.m_Curve.Array.data[0].outWeight
+      value: 0.85265535
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

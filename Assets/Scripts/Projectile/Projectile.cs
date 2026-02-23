@@ -32,7 +32,7 @@ public class Projectile : MonoBehaviour
     public float maxBoostDistance = 180f; // Distance threshold for speed boost
     public float maxSpeedBoost = 3f;      // How much to speed up (3x = 300% speed)
     public float recallCurrentTime { get; private set; }
-    public float totalRecallTime { get; private set; }
+    public float totalRecallTime;
 
     public float totalRecallDistance;
     private float recallProgress;
