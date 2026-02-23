@@ -48,7 +48,7 @@ public abstract class EntityBase : MonoBehaviour
     {
 
         health = 0; //prevent negative numbers
-        entityDeath.start();
+        if(FMODDeathEvent != "") {entityDeath.start();}
 
         Debug.Log(entityName + " Has been slain.");
 

@@ -26,6 +26,7 @@ public class GroundedState : PlayerMovementState
     public override void Start()
     {
         movement.hasDash = true;
+        if(movement.isConsideredMoving){OnStartWalking();}
     }
 
     public override void Update()
@@ -60,12 +61,22 @@ public class GroundedState : PlayerMovementState
 
     public override void OnStartWalking()
     {
+        PLAYBACK_STATE playback;
+        // if(playerWalkState != null)
+        // {
+            RESULT result = playerWalkState.getPlaybackState(out playback);
+            if(result == RESULT.OK){
+                if(playback != PLAYBACK_STATE.STOPPED){return;}
+            }
+                
+        // }
+
         playerWalkState = RuntimeManager.CreateInstance(FMODWalkEvent);
         playerWalkState.start();
     }
     public override void OnStopWalking()
     {
-        playerWalkState.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        playerWalkState.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
     }
 
     // public void UpdateFMODEvents()
@@ -92,6 +103,13 @@ public class GroundedState : PlayerMovementState
 
     public override void End(bool interrupted = false)
     {
+        playerWalkState.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        // PLAYBACK_STATE playback;
+        // RESULT result = playerWalkState.getPlaybackState(out playback);
+        // if(result == RESULT.OK){
+        //     if(playback != PLAYBACK_STATE.STOPPED){return;}
+        // }
+                
         base.End(interrupted);
     }
 }
