@@ -8542,19 +8542,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1330087053542064613, guid: a9b4fbcf360ca4abcbe0a68d9e1891b4, type: 3}
       propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1744019107701001332, guid: a9b4fbcf360ca4abcbe0a68d9e1891b4, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -7.65
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7410846314387240342, guid: a9b4fbcf360ca4abcbe0a68d9e1891b4, type: 3}
       propertyPath: m_Name
       value: CollumnCluster_D
-      objectReference: {fileID: 0}
-    - target: {fileID: 7410846314387240342, guid: a9b4fbcf360ca4abcbe0a68d9e1891b4, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7895740170352209708, guid: a9b4fbcf360ca4abcbe0a68d9e1891b4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8599,10 +8591,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 795479194585824348, guid: a9b4fbcf360ca4abcbe0a68d9e1891b4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1399210406}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a9b4fbcf360ca4abcbe0a68d9e1891b4, type: 3}
 --- !u!4 &957407601 stripped
 Transform:
@@ -9290,6 +9279,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 59ccd3a43ba0d4c51af3fa9dce56a03c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 816e7a907d0a38147a19bd6a7e6f7534, type: 2}
     - target: {fileID: 919132149155446097, guid: 59ccd3a43ba0d4c51af3fa9dce56a03c, type: 3}
       propertyPath: m_Name
       value: Monolith_A
@@ -11679,33 +11672,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
---- !u!1 &1399210402 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 795479194585824348, guid: a9b4fbcf360ca4abcbe0a68d9e1891b4, type: 3}
-  m_PrefabInstance: {fileID: 957407600}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &1399210406
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1399210402}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 1574686602759544065, guid: 48529941b11bd416f97ca082855617f5, type: 3}
 --- !u!4 &1400438621 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1927944887018549031, guid: cd93fc3c17a2b0d45a3d9588200b195a, type: 3}
@@ -18732,6 +18698,10 @@ PrefabInstance:
       propertyPath: m_DynamicOccludee
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1398670757339236831, guid: 086701aa551234a38b6c3db864834025, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e44e32ca835579f40b08b3d85f0a0ac7, type: 2}
     - target: {fileID: 8515130348181447272, guid: 086701aa551234a38b6c3db864834025, type: 3}
       propertyPath: m_Convex
       value: 0
@@ -18749,6 +18719,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1937016558}
     m_Modifications:
+    - target: {fileID: 2877142477289137036, guid: 7840a8d63fd7d43978095f82942a7b2d, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 816e7a907d0a38147a19bd6a7e6f7534, type: 2}
     - target: {fileID: 4010038798147541219, guid: 7840a8d63fd7d43978095f82942a7b2d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
