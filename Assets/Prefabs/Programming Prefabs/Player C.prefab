@@ -5449,7 +5449,7 @@ Transform:
   m_GameObject: {fileID: 8382149780426833419}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.15, y: 0.5, z: 0.23}
+  m_LocalPosition: {x: 0, y: 0.417, z: 0.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5624,9 +5624,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 1.7818065
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -0.109096766, z: 0}
 --- !u!135 &1494610835706569134
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5728,15 +5728,16 @@ MonoBehaviour:
     transform: {fileID: 0}
     finished: 0
     started: 0
-    jumpPower: 18
+    jumpPower: 0
     movement: {fileID: 5837548833278922391}
     wallRunMinSpeed: 400
     currentWallRunSpeed: 0
     wallRunMaxDist: 0.8
-    jumpXStrength: 0.25
-    jumpYStrength: 0.75
+    jumpXStrength: 0.2
+    jumpYStrength: 0.375
+    jumpZStrength: 0.425
     raycastForwardCheckDist: 0
-    barrierCheckDepth: 0
+    barrierCheckDepth: 0.4
     maxTransitionAngle: 65
     wallRunAdditiveSpeed: 200
     maxMovementInputAngleDifference: 50
@@ -5762,7 +5763,7 @@ MonoBehaviour:
     movement: {fileID: 5837548833278922391}
     airStrafeForwardForce: 0
     airStrafeForce: 10
-    maxDownwardVelocity: -50
+    maxDownwardVelocity: -40
     strafeThresholdVel: 15
     extraJumps: 0
     jumpsLeft: 0
@@ -5775,13 +5776,13 @@ MonoBehaviour:
     transform: {fileID: 0}
     finished: 0
     started: 0
-    jumpPower: 22
+    jumpPower: 13
     movement: {fileID: 5837548833278922391}
     dashVelocity: {x: 0, y: 0, z: 0}
     dashTime: 0.5
-    additiveForceThreshold: 50
+    additiveForceThreshold: 100
     currentDashTimer: 0
-    dashPower: 8
+    dashPower: 5
     minimumAdditiveVelocity: 0
     additive: 0
     canAirJump: 0
@@ -5800,6 +5801,7 @@ MonoBehaviour:
   dash: {fileID: -4048086248360759698, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   FMODJumpEvent: event:/JumpEvent
   FMODLandEvent: event:/LandEvent
+  FMODDashEvent: 
   mainCol: {fileID: 7378985173793908190}
   featherKnife: {fileID: 3736855633952113512}
   groundedHelper: {fileID: 1148601045446481162}
@@ -5818,6 +5820,7 @@ MonoBehaviour:
   featherKnife: {fileID: 3736855633952113512}
   projectileFirePoint: {fileID: 9043813615459997854}
   playerMovement: {fileID: 5837548833278922391}
+  armAnimator: {fileID: 0}
   camShaker: {fileID: 6892617791688083269}
   parryTiming: 0.7
   recallCooldown: 4
