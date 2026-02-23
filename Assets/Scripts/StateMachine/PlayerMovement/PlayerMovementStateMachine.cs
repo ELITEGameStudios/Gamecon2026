@@ -184,6 +184,7 @@ public class PlayerMovementStateMachine : StateMachine
     }
 
     public void Blink(){
+        
         SetState(airborneState);
         Vector3 targetPos = featherKnife.transform.position;
         Quaternion rot = featherKnife.transform.rotation;
