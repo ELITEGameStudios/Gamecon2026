@@ -11,6 +11,7 @@ public class ProjectileAbilities : MonoBehaviour
     [SerializeField] private Projectile featherKnife;
     [SerializeField] private Transform projectileFirePoint;
     [SerializeField] private PlayerMovementStateMachine playerMovement;
+    [SerializeField] private Animator armAnimator;
     [SerializeField] private Camera cam => Camera.main;
     public ApplyShake camShaker;
 
@@ -51,6 +52,7 @@ public class ProjectileAbilities : MonoBehaviour
     public FMOD.Studio.EventInstance parrySFX, parryFailSFX, shootSFX, blinkSFX;
 
     bool parryActive = false;
+    bool blinkedThisFrame; // just used for the animator
 
     void Start()
     {
@@ -86,10 +88,13 @@ public class ProjectileAbilities : MonoBehaviour
 
     void Update()
     {
+        blinkedThisFrame = false;
         if(FMODParryEvent != "") { FMODUnity.RuntimeManager.AttachInstanceToGameObject(parrySFX, transform); }
         if(FMODShootEvent != "") { FMODUnity.RuntimeManager.AttachInstanceToGameObject(shootSFX, transform); }
         if(FMODParryFailEvent != "") { FMODUnity.RuntimeManager.AttachInstanceToGameObject(parryFailSFX, transform); }
         if(FMODBlinkEvent != "") { FMODUnity.RuntimeManager.AttachInstanceToGameObject(blinkSFX, transform); }
+
+        if(armAnimator != null){armAnimator.SetBool("hasDagger", featherKnife.currentState == Projectile.ProjectileState.Idle);}
 
         if (currentRecallCooldown > 0)
         {
@@ -143,6 +148,7 @@ public class ProjectileAbilities : MonoBehaviour
             currentRecallCooldown = recallCooldown;
             
             
+            if(armAnimator != null){armAnimator.SetTrigger("Recall");}
             HUDManager.Instance.UpdateRecallCooldown(currentRecallCooldown, recallCooldown);
             HUDManager.Instance.recallElement.Activate();
         }
@@ -158,11 +164,18 @@ public class ProjectileAbilities : MonoBehaviour
 
     private void Blink()
     {
+        blinkedThisFrame = true;
+
         currentBlinkTimer = blinkCooldownTime;
         playerMovement.Blink();
         featherKnife.Pickup();
         parryActive = false;
         HUDManager.Instance.blinkElement.Activate();
+    }
+
+    public void OnPickup()
+    {
+        if(armAnimator != null && !blinkedThisFrame){armAnimator.SetTrigger("Catch");}
     }
     
     
@@ -246,6 +259,8 @@ public class ProjectileAbilities : MonoBehaviour
     
     private IEnumerator ParryCoroutine()
     {
+        if(armAnimator != null){armAnimator.SetTrigger("Shoot");}
+
         // Apply hitstop post processing immediately
         if (postProcessVolume != null && hitstopProfile != null)
         {
@@ -307,6 +322,7 @@ public class ProjectileAbilities : MonoBehaviour
         bool hasBlinked = false;
         float blinkTimeMarker = 0.3f;
         blinkSFX.start();
+        if(armAnimator != null){armAnimator.SetTrigger("Blink");}
 
         
         

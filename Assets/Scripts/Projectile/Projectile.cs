@@ -18,12 +18,19 @@ public class Projectile : MonoBehaviour
     public GameObject hitEffect;
     
     [Header("Idle Settings")]
-    public Transform initProjectilePosition;
+    public Transform initProjectilePosition, heldParent;
     
     [Header("Player Reference")]
     [SerializeField] private Transform playerTransform;
     public ProjectileAbilities projectileAbilities;
     
+    [Header("Camera Layer Data")]
+
+    public Camera armRendererCam;
+    public LayerMask armIdleCull, armFlyingCull;
+    public Camera mainCam;
+    public LayerMask mainIdleCull, mainFlyingCull;
+
     [Header("RecallData")]
     public Vector3 embeddedPos {get; private set;}
     public Vector3 throwDirection {get; private set;}
@@ -40,7 +47,7 @@ public class Projectile : MonoBehaviour
     private Rigidbody rb;
     private Collider col;
     
-    [SerializeField] private Animator animator;
+    // [SerializeField] private Animator animator;
     private Transform embedParent;
     void Awake()
     {
@@ -91,14 +98,21 @@ public class Projectile : MonoBehaviour
                 rb.isKinematic = true;
                 col.enabled = true;
                 col.isTrigger = false;
-                animator.SetTrigger("Idle");
+                // animator.SetTrigger("Idle");
+                projectileAbilities.OnPickup();
+
+                armRendererCam.cullingMask = armIdleCull;
+                mainCam.cullingMask = mainIdleCull;
                 break;
             case ProjectileState.Flying:
+                armRendererCam.cullingMask = armFlyingCull;
+                mainCam.cullingMask = mainFlyingCull;
+
                 rb.isKinematic = false;
                 col.isTrigger = false;
                 
                 if(oldState != ProjectileState.Recalling){
-                    animator.SetTrigger("Flying");
+                    // animator.SetTrigger("Flying");
                 }
                 break;
             case ProjectileState.Embedded:
@@ -106,7 +120,7 @@ public class Projectile : MonoBehaviour
                 col.isTrigger = true;
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
-                animator.SetTrigger("Idle");
+                // animator.SetTrigger("Idle");
 
                 SetEmbeddedPos();
                 break;
@@ -116,7 +130,7 @@ public class Projectile : MonoBehaviour
                 rb.angularVelocity = Vector3.zero;
                 rb.isKinematic = true;
                 col.isTrigger = true;
-                animator.SetTrigger("Recalling");
+                // animator.SetTrigger("Recalling");
             
                 CancelInvoke(nameof(ReturnToIdle));
                 Invoke(nameof(ReturnToIdle), lifetime);
@@ -302,7 +316,7 @@ public class Projectile : MonoBehaviour
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         
-        transform.SetParent(initProjectilePosition);
+        transform.SetParent(heldParent);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         
@@ -311,7 +325,7 @@ public class Projectile : MonoBehaviour
     
     public void OnParry()
     {
-        animator.SetTrigger("Parried");
+        // animator.SetTrigger("Parried");
     }
 
     public void Pickup()
@@ -322,7 +336,7 @@ public class Projectile : MonoBehaviour
 
         
         // Instantly return to hand + idle state
-        transform.SetParent(initProjectilePosition);
+        transform.SetParent(heldParent);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
     
