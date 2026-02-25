@@ -9,6 +9,11 @@ public class HUDElement : MonoBehaviour
     [SerializeField] protected Animator animator;
     [SerializeField] protected TMP_Text keybindText;
 
+    void Awake()
+    {
+       SetReady(false);
+    }
+
     public void SetKeybind(KeyCode keybind)
     {
         keybindText.text = keybind.ToString();
