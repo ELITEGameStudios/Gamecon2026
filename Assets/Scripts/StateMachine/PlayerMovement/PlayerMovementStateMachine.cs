@@ -75,6 +75,7 @@ public class PlayerMovementStateMachine : StateMachine
     public Collider mainCol;
     public Projectile featherKnife;
     public GroundedHelper groundedHelper;
+    [SerializeField] private Animator armAnimator;
 
     void Awake(){ 
 
@@ -113,6 +114,8 @@ public class PlayerMovementStateMachine : StateMachine
     protected override void OnUpdate()
     {
         HUDManager.Instance.dashElement.SetReady(canDash);
+        armAnimator.SetBool("isMoving", isConsideredMoving);
+        armAnimator.SetBool("IsGrounded", CheckGrounded());
         // HUDManager.Instance.dashElement.SetFillFactor();
 
         FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerJump, transform);
