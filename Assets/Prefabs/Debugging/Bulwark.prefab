@@ -9,6 +9,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2138415374352791910, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
+      propertyPath: type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2138415374352791910, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
       propertyPath: cooldown
       value: 6.5
       objectReference: {fileID: 0}
@@ -22,10 +26,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2138415374352791910, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
       propertyPath: projectileInfo.Array.size
-      value: 1
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2138415374352791910, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
+      propertyPath: projectileInfo.Array.data[1].offset.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2138415374352791910, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
+      propertyPath: projectileInfo.Array.data[1].delayAfterShot
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2138415374352791910, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
       propertyPath: projectileInfo.Array.data[0].projectilePrefab
+      value: 
+      objectReference: {fileID: 2778097845059599071, guid: 2dbbf1327effd7e42acdde5aa0aa75ed, type: 3}
+    - target: {fileID: 2138415374352791910, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
+      propertyPath: projectileInfo.Array.data[1].projectilePrefab
       value: 
       objectReference: {fileID: 2778097845059599071, guid: 2dbbf1327effd7e42acdde5aa0aa75ed, type: 3}
     - target: {fileID: 5076297836056734936, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
