@@ -75,7 +75,7 @@ public class PlayerMovementStateMachine : StateMachine
     public Collider mainCol;
     public Projectile featherKnife;
     public GroundedHelper groundedHelper;
-    [SerializeField] private Animator armAnimator;
+    public Animator armAnimator;
 
     void Awake(){ 
 

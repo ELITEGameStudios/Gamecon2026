@@ -49,6 +49,8 @@ public class WallRunState : PlayerMovementState
         // Vector3 closestPoint = storedCollision.collider.ClosestPoint(transform.position);
         // Vector3 raycastDir = (closestPoint - transform.position).normalized;
         
+        movement.armAnimator.SetBool("OnWall", true);   
+
         camAngle.SetAngle(15 * (isRight ? 1 : -1));
         if (Physics.Raycast(transform.position, initRaycastDir, out RaycastHit hit, Mathf.Infinity))
         {
@@ -171,6 +173,7 @@ public class WallRunState : PlayerMovementState
     public override void End(bool interrupted = false)
     {
         camAngle.SetAngle(0);
+        movement.armAnimator.SetBool("OnWall", false);
         currentWallRunSleepTimer = wallRunSleepInterval;
         base.End(interrupted);
     }
