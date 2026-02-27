@@ -12,6 +12,9 @@ public class EnemyBase : EntityBase
     [SerializeField] ShieldEntity enemyShield;
 
 
+    public EnemyType enemyType { private set; get; } = EnemyType.Dummy;
+    [SerializeField] EnemyType type = EnemyType.Grunt;
+
     /* ---------------------------Template Inherited function documentation------------------------- */
     // Feel free to copy paste these into any new enemy you implement so you can have documentation comments at hand
 
@@ -21,6 +24,7 @@ public class EnemyBase : EntityBase
     {
         base.Init();
         if (collider == null) collider = GetComponent<Collider>();
+        enemyType = type;
         // Put your code here
 
     }
@@ -59,4 +63,14 @@ public class EnemyBase : EntityBase
             Player.instance.Damage(contactDamage);
         }
     }
+}
+
+[System.Serializable]
+public enum EnemyType
+{
+    Grunt,
+    Duelist,
+    Bulwark,
+    Banshee,
+    Dummy
 }
