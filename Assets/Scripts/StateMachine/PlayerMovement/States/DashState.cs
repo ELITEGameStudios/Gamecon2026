@@ -9,6 +9,7 @@ public class DashState : PlayerMovementState
     public float currentDashTimer;
     public float dashPower = 5;
     public float minimumAdditiveVelocity = 7;
+    public AnimationCurve dashPowerOverSpeed;
     public bool additive, canAirJump;
 
     public DashState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
@@ -57,16 +58,9 @@ public class DashState : PlayerMovementState
             movementVector.x,
             0,
             movementVector.y
-        ) * (dashPower + (additive ? rigidbody.linearVelocity.magnitude : 0));
+        ) * ( dashPower * dashPowerOverSpeed.Evaluate(currentVelocity.magnitude) + (additive ? currentVelocity.magnitude : 0));
 
-        // if(additive)
-        // {
-        //     dashVelocity += new Vector3(
-        //         rigidbody.linearVelocity.x,
-        //         0,
-        //         rigidbody.linearVelocity.z
-        //     );
-        // }
+        // Debug.Log(dashPowerOverSpeed.Evaluate(currentVelocity.magnitude));
         PlayerVFXManager.instance.DashEffect(input);
     }
 

@@ -14,6 +14,7 @@ public class WallRunState : PlayerMovementState
     public float barrierCheckDepth = 0.4f;
     public float maxTransitionAngle; // Cuts off a wall run if the angle between two surfaces are too great
     public float wallRunAdditiveSpeed; // The speed to add to a valid wall run
+    public AnimationCurve wallRunAdditiveForceOverSpeed; // The speed to add to a valid wall run
     public float maxMovementInputAngleDifference;
     public Vector2 lookAngleDifferenceRange; // The range of angles by which the player can be looking relative to the wall they are running on.
     public ApplyAngleProportional camAngle;
@@ -165,7 +166,7 @@ public class WallRunState : PlayerMovementState
 
         rigidbody.linearVelocity = 
             ( (transform.forward * jumpZStrength) + (transform.up * jumpYStrength) + (transform.right * xJumpDirection)  ).normalized *
-            (currentWallRunSpeed + wallRunAdditiveSpeed) * Time.fixedDeltaTime;
+            (currentWallRunSpeed + wallRunAdditiveSpeed * wallRunAdditiveForceOverSpeed.Evaluate(currentWallRunSpeed)) * Time.fixedDeltaTime;
 
         movement.SetState(movement.airborneState);
     }

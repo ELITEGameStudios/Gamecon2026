@@ -1089,6 +1089,30 @@ MonoBehaviour:
     barrierCheckDepth: 0.4
     maxTransitionAngle: 65
     wallRunAdditiveSpeed: 200
+    wallRunAdditiveForceOverSpeed:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: -0.00003372175
+        outSlope: -0.00003372175
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.21228899
+      - serializedVersion: 3
+        time: 1000
+        value: 0
+        inSlope: -0.0022391307
+        outSlope: -0.0022391307
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.10111474
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     maxMovementInputAngleDifference: 50
     lookAngleDifferenceRange: {x: 0, y: 60}
     camAngle: {fileID: 5135691818557011457}
@@ -1110,10 +1134,10 @@ MonoBehaviour:
     started: 0
     jumpPower: 10
     movement: {fileID: 3750233208252415097}
-    airStrafeForwardForce: 0
-    airStrafeForce: 10
+    airStrafeForwardForce: 50
+    airStrafeForce: 50
     maxDownwardVelocity: -40
-    strafeThresholdVel: 15
+    strafeThresholdVel: 10
     extraJumps: 0
     jumpsLeft: 0
     initialRelativeVelocity: {x: 0, y: 0, z: 0}
@@ -1133,6 +1157,30 @@ MonoBehaviour:
     currentDashTimer: 0
     dashPower: 5
     minimumAdditiveVelocity: 0
+    dashPowerOverSpeed:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 25
+        value: 0.1
+        inSlope: -0.06615451
+        outSlope: -0.06615451
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.10900116
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     additive: 0
     canAirJump: 0
   stateName: 
