@@ -5,12 +5,15 @@ using UnityEngine;
 public interface IEntityManager
 {
      bool spawnEnemies { set; get; }
-     event Action allEnemiesDefeated; 
+     event Action allEnemiesDefeated;
+
     void Initialize();
 
     void OnEnemyDefeated(EnemyBase enemy);
 
     void TimerLogic(float tracker);
+
+    EnemyBase GetClosestEnemyToPosition(Vector3 position, List<EnemyType> blacklist);
 }
 
 [System.Serializable]
@@ -33,11 +36,8 @@ public class WaveManager : IEntityManager
     WaveBase currentWave;
     public List<SpawnProfile> activeProfiles;
 
-    float gateTracker;
-    int gateIndex = 0;
     public int waveIndex = 0;
 
-    bool initiatedWave = false;
 
     public List<EnemyBase> enemiesInWaveRemaining;
 
@@ -191,7 +191,32 @@ public class WaveManager : IEntityManager
 
         return newEntity;
     }
-    
+
+    public EnemyBase GetClosestEnemyToPosition(Vector3 position, List<EnemyType> blacklist)
+    {
+        if (enemiesInWaveRemaining.Count == 1) return enemiesInWaveRemaining[0];
+        float distanceToBeat = float.MaxValue;
+        EnemyBase closest = null;
+        foreach (var enemy in enemiesInWaveRemaining)
+        {
+            //Use sqr magnitude because the relative sizes between each element is what matters, not absolute
+            //for example:
+            //a = 100
+            //b = 1000
+            //spending time doing sqr root is unessary. sqrt(b) == 100 > sqrt(a) == 10 
+
+            if (blacklist.Contains(enemy.enemyType)) continue;
+
+            float distance = (position - enemy.transform.position).sqrMagnitude;
+            if (distance < distanceToBeat)
+            {
+                distanceToBeat = distance;
+                closest = enemy;
+            }
+        }
+        return closest;
+    }
+
     public WaveManager(LevelData data)
     {
         waveData = data.levelWaves;

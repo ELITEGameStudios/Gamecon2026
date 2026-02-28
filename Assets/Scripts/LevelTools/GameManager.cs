@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public bool initialized;
 
     event Action<float> gameEnding;
+
+    [SerializeField] Player player;
     [Header("Managers")]
     [SerializeField] TimerManager timerManager;
     [SerializeField] HUDManager hudManager;
@@ -23,6 +25,7 @@ public class GameManager : MonoBehaviour
     bool gameOver = false;
     private async Task InitializeManager()
     {
+        Debug.Log("Starting game manager init");
         var handle = Addressables.LoadAssetAsync<LevelData>(currentLevel.ToString());
         var levelObject = await handle.Task;
         if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Failed)
@@ -42,7 +45,7 @@ public class GameManager : MonoBehaviour
                 
                 entityManager = new WaveManager(levelObject);
                 entityManager.Initialize();
-                if(hudManager != null) hudManager.InitManager(entityManager, victoryCondition);
+                if (hudManager != null) hudManager.InitManager(entityManager, victoryCondition);
                 entityManager.allEnemiesDefeated += victoryCondition.OnEnemiesDefeated;
                 break;
         }
@@ -58,7 +61,12 @@ public class GameManager : MonoBehaviour
         {
             gameEnding += settingsScreen.OnGameOver;
         }
-        Debug.Log("Initialized");
+        if (player == null)
+        {
+            player = FindFirstObjectByType<Player>();
+        }
+        player.entityDetectionSystem.InitDetectionSystem(entityManager);
+        Debug.Log("Finished game manager init");
 
     }
 
@@ -67,14 +75,14 @@ public class GameManager : MonoBehaviour
         if(Instance == null){Instance = this;}
         else if(Instance != this){Destroy(this);}
 
-        // _ = InitializeManager();
+         Initialize();
 
     }
 
     public void Initialize()
     {
-        if(initialized)return;
-
+        if (initialized) return;
+        Debug.Log("Attempting initialization of game manager");
         _ = InitializeManager();
         initialized = true;
     }
@@ -84,7 +92,7 @@ public class GameManager : MonoBehaviour
     {   
         if (gameOver) return;
         gameOver = true;
-        gameEnding.Invoke(timerManager.GetCurrentLevelTime());
+        gameEnding?.Invoke(timerManager.GetCurrentLevelTime());
     }
     void OnDefeat()
     {
@@ -94,7 +102,7 @@ public class GameManager : MonoBehaviour
     }
     private void OnDestroy()
     {
-        victoryCondition.OnDisable();
+        victoryCondition?.OnDisable();
     }
     public void OnTimerUpdated()
     {

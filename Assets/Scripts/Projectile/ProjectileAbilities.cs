@@ -107,7 +107,13 @@ public class ProjectileAbilities : MonoBehaviour
         }
 
         if (currentBlinkTimer > 0) { currentBlinkTimer -= Time.deltaTime; }
-        HUDManager.Instance.blinkElement.SetReady(canBlink);
+        if (HUDManager.Instance != null)
+        {
+            if (HUDManager.Instance.blinkElement != null)
+            {
+                HUDManager.Instance.blinkElement.SetReady(canBlink);
+            }
+        }
     }
 
     private void OnFirePressed(InputAction.CallbackContext ctx)
@@ -149,8 +155,12 @@ public class ProjectileAbilities : MonoBehaviour
             
             
             if(armAnimator != null){armAnimator.SetTrigger("Recall");}
+
+            if (HUDManager.Instance != null) 
+            { 
             HUDManager.Instance.UpdateRecallCooldown(currentRecallCooldown, recallCooldown);
             HUDManager.Instance.recallElement.Activate();
+            }
         }
     }
     

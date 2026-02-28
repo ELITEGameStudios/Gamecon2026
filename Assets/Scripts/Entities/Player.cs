@@ -1,3 +1,4 @@
+using Autodesk.Fbx;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -5,12 +6,17 @@ public class Player : EntityBase
 {
     public static Player instance {get; private set;}
 
+    public EntityDetectionSystem entityDetectionSystem {get; private set;}
 
+
+    //lets the property be seralized
+    [SerializeField] EntityDetectionSystem feds;
     protected override void Init()
     {
         if(instance == null){ instance = this; }
         else if(instance != this){ Destroy(this); }
-
+        entityDetectionSystem = feds;
+        if (entityDetectionSystem == null) entityDetectionSystem = GetComponent<EntityDetectionSystem>();
         
         entityName = "The Yellow Runner";
         base.Init();
@@ -44,3 +50,4 @@ public class Player : EntityBase
     }
 
 }
+

@@ -2,10 +2,8 @@ using System;
 using System.Collections;
 using System.Globalization;
 using TMPro;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour

@@ -747,6 +747,7 @@ Transform:
   - {fileID: 408040215662575054}
   - {fileID: 1771104289695820870}
   - {fileID: 369942441406092580}
+  - {fileID: 830406467506117789}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 61.047, z: 0}
 --- !u!33 &986350710990813882
@@ -1115,6 +1116,7 @@ MonoBehaviour:
       m_Calls: []
   FMODDeathEvent: event:/DeathEvent
   hostedByParent: 0
+  feds: {fileID: 1707211187444820907}
 --- !u!114 &8799536224950672914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1244,6 +1246,55 @@ MonoBehaviour:
   range: 0.3
   naturalSlideDist: 0.1
   testV: {x: 0, y: 0, z: 0}
+--- !u!1 &6107453630266784315
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 830406467506117789}
+  - component: {fileID: 1707211187444820907}
+  m_Layer: 3
+  m_Name: FeatherEntityDetectionSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &830406467506117789
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6107453630266784315}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6450713759936305123}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1707211187444820907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6107453630266784315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 762a61c11e213f2449706f828e8f462b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 6450713759936305123}
+  knife: {fileID: 1103607397295038244}
+  deadzone: 60
+  turnSpeed: 1.4
+  blacklistedEnemies: 03000000
 --- !u!1 &6397439590599758029
 GameObject:
   m_ObjectHideFlags: 0
