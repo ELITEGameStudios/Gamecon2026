@@ -18,6 +18,7 @@ public class WallRunState : PlayerMovementState
     public float maxMovementInputAngleDifference;
     public Vector2 lookAngleDifferenceRange; // The range of angles by which the player can be looking relative to the wall they are running on.
     public ApplyAngleProportional camAngle;
+    public LayerMask wallRunMask;
 
 
     [Header("Live Properties")]
@@ -84,7 +85,7 @@ public class WallRunState : PlayerMovementState
         movement.CalculateLookRotation();
         lookAngleDifference = Vector3.Angle(transform.forward, wallRunDirection);
 
-        if(Physics.Raycast(transform.position, raycastCheckVector.normalized, out RaycastHit hitInfo, movement.maxWallCheckDist))
+        if(Physics.Raycast(transform.position, raycastCheckVector.normalized, out RaycastHit hitInfo, movement.maxWallCheckDist, wallRunMask, QueryTriggerInteraction.Ignore))
         {
             lastWallRunDirection = wallRunDirection;
 
@@ -95,6 +96,7 @@ public class WallRunState : PlayerMovementState
 
             // Check for valid wall roll angle 
             if(angleRoll < movement.minWallTangentSlope){ 
+                Debug.Log("Ended by roll. " + angleRoll);
                 movement.SetState(movement.airborneState);
             }
             
@@ -105,7 +107,7 @@ public class WallRunState : PlayerMovementState
 
             // Ends run if transition angle between wall planes is invalid
             if(Vector3.Angle(wallRunDirection, lastWallRunDirection) > maxTransitionAngle){
-                Debug.Log("Ended it.");
+                Debug.Log("Ended by transition angle.");
                 movement.SetState(movement.airborneState);
                 return;
             }
@@ -119,8 +121,9 @@ public class WallRunState : PlayerMovementState
                 return;
             }
 
-            if(Physics.Raycast(hitInfo.point + hitInfo.normal * barrierCheckDepth, wallRunDirection, out RaycastHit forwardHitInfo, 1))
+            if(Physics.Raycast(hitInfo.point + hitInfo.normal * barrierCheckDepth, wallRunDirection, out RaycastHit forwardHitInfo, 1, wallRunMask, QueryTriggerInteraction.Ignore))
             {
+                Debug.Log("Ended by barrier check system. ");
                 movement.SetState(movement.airborneState);
             }
             Debug.DrawRay(transform.position, wallRunDirection, Color.red);
@@ -145,6 +148,7 @@ public class WallRunState : PlayerMovementState
         }
         else
         {
+            Debug.Log("Ended by lack of wall surface.");
             movement.SetState(movement.airborneState);
         }
         

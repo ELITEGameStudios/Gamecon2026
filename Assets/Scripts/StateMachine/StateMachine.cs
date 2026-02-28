@@ -42,7 +42,7 @@ public class StateMachine : MonoBehaviour
     {
         TryAddState(state);
 
-        Debug.Log("state set to "+ state.name);
+        // Debug.Log("state set to "+ state.name);
         if(currentState != null) currentState.End();
         currentState = state;
         currentState.OnReset();

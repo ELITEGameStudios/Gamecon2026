@@ -176,7 +176,6 @@ public class PlayerMovementStateMachine : StateMachine
     public void OnDashInput(InputAction.CallbackContext ctx){
         if (canDash)
         {
-            Debug.Log("adfggre");
             Dash();       
         }
     }

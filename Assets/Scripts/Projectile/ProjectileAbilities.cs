@@ -150,6 +150,7 @@ public class ProjectileAbilities : MonoBehaviour
             
             if(armAnimator != null){armAnimator.SetTrigger("Recall");}
             HUDManager.Instance.UpdateRecallCooldown(currentRecallCooldown, recallCooldown);
+            HUDManager.Instance.TriggerRecallPrompt();
             HUDManager.Instance.recallElement.Activate();
         }
     }
@@ -171,6 +172,7 @@ public class ProjectileAbilities : MonoBehaviour
         featherKnife.Pickup();
         parryActive = false;
         HUDManager.Instance.blinkElement.Activate();
+        HUDManager.Instance.TriggerBlinkPrompt();
     }
 
     public void OnPickup()
@@ -198,6 +200,8 @@ public class ProjectileAbilities : MonoBehaviour
         
         if (cam == null) 
             return;
+        
+        HUDManager.Instance.TriggerShootPrompt();
         
         Shoot(parry);
         if (parry){ StartCoroutine(ParryCoroutine()); }
@@ -323,7 +327,11 @@ public class ProjectileAbilities : MonoBehaviour
         bool hasBlinked = false;
         float blinkTimeMarker = 0.3f;
         blinkSFX.start();
-        if(armAnimator != null){armAnimator.SetTrigger("Blink");}
+        
+        if(armAnimator != null){
+            armAnimator.SetTrigger("Blink");
+            armAnimator.SetBool("OnWall", false);
+        }
 
         
         

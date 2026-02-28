@@ -14,7 +14,13 @@ public class HUDManager : MonoBehaviour
     [Header("Gameplay UI Elements")]
     public FillTimerHudElement dashElement; 
     public RecallHUD recallElement; 
-    public FillTimerHudElement blinkElement; 
+    public FillTimerHudElement blinkElement;
+    
+    [Space(20)] 
+    // public GameUIPopup dashTutPrompt;
+    public GameUIPopup blinkPrompt;
+    public GameUIPopup shootPrompt;
+    public GameUIPopup recallPrompt;
     
 
     public static HUDManager Instance { get; private set;}
@@ -89,4 +95,9 @@ public class HUDManager : MonoBehaviour
             // recallCooldownFill.fillAmount = 0;
         }
     }
+
+    public void TriggerBlinkPrompt() {blinkPrompt.Deactivate(); blinkPrompt.locked = true;}
+    public void TriggerRecallPrompt() {recallPrompt.Deactivate(); recallPrompt.locked = true;}
+    public void TriggerShootPrompt() { shootPrompt.Deactivate(); shootPrompt.locked = true;}
+    // public void TriggerDashPrompt() {recallPrompt.Deactivate();}
 }

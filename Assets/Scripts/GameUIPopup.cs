@@ -14,6 +14,7 @@ public class GameUIPopup : MonoBehaviour
     public bool sendTimeCommandOnActive;
     public float targetTimescale = 0;
 
+    public bool locked;
 
 
 
@@ -30,6 +31,10 @@ public class GameUIPopup : MonoBehaviour
 
     public void Toggle()
     {
+        if(!GameManager.Instance.GetSettingsMenu().currentSettings.showTutorialPrompts && !active) return;
+        if(locked) return;
+
+
         // Main operation
         if(!dontDisable) gameObject.SetActive(!active);  
         if(animator != null){animator.SetBool(activePropertyName, !active);}

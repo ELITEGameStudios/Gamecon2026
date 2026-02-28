@@ -5,6 +5,7 @@ public class PlayerSettings
     //Video
     public Vector2Int resolution = new Vector2Int(1920, 1080);
     public bool fullscreen = true;
+    public bool showTutorialPrompts = true;
 
     //Audio
     public float bgmVolume = 1.0f;
@@ -29,6 +30,7 @@ public class PlayerSettings
         this.sfxVolume = other.sfxVolume;
         this.horizontalSensitivity = other.horizontalSensitivity;
         this.verticalSensitivity = other.verticalSensitivity;
+        this.showTutorialPrompts = other.showTutorialPrompts;
     }
 
     public static string GetPlayerSettingsDirectory()
