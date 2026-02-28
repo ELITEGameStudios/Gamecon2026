@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     [Header("Temporary Level Picker")]
     [SerializeField] LevelDatabase.LevelNames currentLevel;
 
+    public SettingsMenu GetSettingsMenu(){return settingsScreen;}
     bool gameOver = false;
     private async Task InitializeManager()
     {

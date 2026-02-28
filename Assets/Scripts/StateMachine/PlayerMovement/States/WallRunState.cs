@@ -14,9 +14,11 @@ public class WallRunState : PlayerMovementState
     public float barrierCheckDepth = 0.4f;
     public float maxTransitionAngle; // Cuts off a wall run if the angle between two surfaces are too great
     public float wallRunAdditiveSpeed; // The speed to add to a valid wall run
+    public AnimationCurve wallRunAdditiveForceOverSpeed; // The speed to add to a valid wall run
     public float maxMovementInputAngleDifference;
     public Vector2 lookAngleDifferenceRange; // The range of angles by which the player can be looking relative to the wall they are running on.
     public ApplyAngleProportional camAngle;
+    public LayerMask wallRunMask;
 
 
     [Header("Live Properties")]
@@ -49,6 +51,8 @@ public class WallRunState : PlayerMovementState
         // Vector3 closestPoint = storedCollision.collider.ClosestPoint(transform.position);
         // Vector3 raycastDir = (closestPoint - transform.position).normalized;
         
+        movement.armAnimator.SetBool("OnWall", true);   
+
         camAngle.SetAngle(15 * (isRight ? 1 : -1));
         if (Physics.Raycast(transform.position, initRaycastDir, out RaycastHit hit, Mathf.Infinity))
         {
@@ -81,7 +85,7 @@ public class WallRunState : PlayerMovementState
         movement.CalculateLookRotation();
         lookAngleDifference = Vector3.Angle(transform.forward, wallRunDirection);
 
-        if(Physics.Raycast(transform.position, raycastCheckVector.normalized, out RaycastHit hitInfo, movement.maxWallCheckDist))
+        if(Physics.Raycast(transform.position, raycastCheckVector.normalized, out RaycastHit hitInfo, movement.maxWallCheckDist, wallRunMask, QueryTriggerInteraction.Ignore))
         {
             lastWallRunDirection = wallRunDirection;
 
@@ -92,6 +96,7 @@ public class WallRunState : PlayerMovementState
 
             // Check for valid wall roll angle 
             if(angleRoll < movement.minWallTangentSlope){ 
+                Debug.Log("Ended by roll. " + angleRoll);
                 movement.SetState(movement.airborneState);
             }
             
@@ -102,7 +107,7 @@ public class WallRunState : PlayerMovementState
 
             // Ends run if transition angle between wall planes is invalid
             if(Vector3.Angle(wallRunDirection, lastWallRunDirection) > maxTransitionAngle){
-                Debug.Log("Ended it.");
+                Debug.Log("Ended by transition angle.");
                 movement.SetState(movement.airborneState);
                 return;
             }
@@ -116,8 +121,9 @@ public class WallRunState : PlayerMovementState
                 return;
             }
 
-            if(Physics.Raycast(hitInfo.point + hitInfo.normal * barrierCheckDepth, wallRunDirection, out RaycastHit forwardHitInfo, 1))
+            if(Physics.Raycast(hitInfo.point + hitInfo.normal * barrierCheckDepth, wallRunDirection, out RaycastHit forwardHitInfo, 1, wallRunMask, QueryTriggerInteraction.Ignore))
             {
+                Debug.Log("Ended by barrier check system. ");
                 movement.SetState(movement.airborneState);
             }
             Debug.DrawRay(transform.position, wallRunDirection, Color.red);
@@ -142,6 +148,7 @@ public class WallRunState : PlayerMovementState
         }
         else
         {
+            Debug.Log("Ended by lack of wall surface.");
             movement.SetState(movement.airborneState);
         }
         
@@ -163,7 +170,7 @@ public class WallRunState : PlayerMovementState
 
         rigidbody.linearVelocity = 
             ( (transform.forward * jumpZStrength) + (transform.up * jumpYStrength) + (transform.right * xJumpDirection)  ).normalized *
-            (currentWallRunSpeed + wallRunAdditiveSpeed) * Time.fixedDeltaTime;
+            (currentWallRunSpeed + wallRunAdditiveSpeed * wallRunAdditiveForceOverSpeed.Evaluate(currentWallRunSpeed)) * Time.fixedDeltaTime;
 
         movement.SetState(movement.airborneState);
     }
@@ -171,6 +178,7 @@ public class WallRunState : PlayerMovementState
     public override void End(bool interrupted = false)
     {
         camAngle.SetAngle(0);
+        movement.armAnimator.SetBool("OnWall", false);
         currentWallRunSleepTimer = wallRunSleepInterval;
         base.End(interrupted);
     }

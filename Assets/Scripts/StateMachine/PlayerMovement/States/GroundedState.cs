@@ -42,7 +42,7 @@ public class GroundedState : PlayerMovementState
         if(movement.movementInput.magnitude > 1){movement.movementInput.Normalize();}
 
 
-        desiredSpeed = Mathf.Lerp(movement.current2DVelocity, movement.liveMaxSpeed * Time.fixedDeltaTime, movement.currentVelocity > movement.liveMaxSpeed ? overshootKp : rampupKp);
+        desiredSpeed = Mathf.Lerp(movement.current2DVelocity, movement.liveMaxSpeed * Time.fixedDeltaTime, movement.currentVelocity > movement.liveMaxSpeed * Time.fixedDeltaTime ? overshootKp : rampupKp);
         desiredVelocity =             
             (
                 (transform.right * movement.movementInput.x) +
