@@ -18573,6 +18573,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6175379885568709908, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
+      propertyPath: feds
+      value: 
+      objectReference: {fileID: 1272435006}
+    - target: {fileID: 6175379885568709908, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: currentLevel
       value: 3
       objectReference: {fileID: 0}
@@ -25019,6 +25023,56 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2952888336027308728, guid: d53d7db1075d94a72bacdf064b8c7bbe, type: 3}
   m_PrefabInstance: {fileID: 1266751380}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1272435005
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1272435007}
+  - component: {fileID: 1272435006}
+  m_Layer: 0
+  m_Name: FEDS
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1272435006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272435005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 762a61c11e213f2449706f828e8f462b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1792645459}
+  knife: {fileID: 1345952034}
+  cinematics: {fileID: 626483692}
+  deadzone: 60
+  turnSpeed: 44.5
+  blacklistedEnemies: 03000000
+--- !u!4 &1272435007
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272435005}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.611, y: -3.609, z: -32.948}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1275183994
 GameObject:
   m_ObjectHideFlags: 0
@@ -26292,6 +26346,11 @@ Transform:
   - {fileID: 153390823}
   m_Father: {fileID: 847067552}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1345952034 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6713920502105754854, guid: c489f38eb752e83448adf30f23c025f9, type: 3}
+  m_PrefabInstance: {fileID: 5673086411956948640}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1354863533
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38390,3 +38449,4 @@ SceneRoots:
   - {fileID: 2026835870}
   - {fileID: 682727922}
   - {fileID: 7802715466735228790}
+  - {fileID: 1272435007}

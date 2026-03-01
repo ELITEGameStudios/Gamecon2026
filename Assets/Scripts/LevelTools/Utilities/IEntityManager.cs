@@ -7,7 +7,7 @@ public interface IEntityManager
      bool spawnEnemies { set; get; }
      event Action allEnemiesDefeated;
 
-    void Initialize();
+    void Initialize(List<EnemyBase> sceneEnemies);
 
     void OnEnemyDefeated(EnemyBase enemy);
 
@@ -26,12 +26,9 @@ public class WaveManager : IEntityManager
     public event Action allEnemiesDefeated;
     bool IEntityManager.spawnEnemies { get => spawnEnemies; set => spawnEnemies = value; }
 
+
     bool spawnEnemies;
 
-    /// <summary>
-    /// Key: Wave data, Value: time to spawn wave at
-    /// </summary>
-    /// 
     List<WaveBase> waveData;
     WaveBase currentWave;
     public List<SpawnProfile> activeProfiles;
@@ -40,6 +37,7 @@ public class WaveManager : IEntityManager
 
 
     public List<EnemyBase> enemiesInWaveRemaining;
+
 
     public float GetTimeUntilNextWave()
     {
@@ -149,14 +147,24 @@ public class WaveManager : IEntityManager
         }
     }
 
-    public void Initialize()
+    public void Initialize(List<EnemyBase> sceneEnemies)
     {
         if(Instance == null){Instance = this;}
         else if(Instance != this){Debug.Log("idk rn");}
 
         Debug.Log("Initializing Wave System...");
+      
         waveIndex = 1;
         InitWave(waveData[0]);
+
+        foreach (var enemy in sceneEnemies)
+        {
+            if (!enemiesInWaveRemaining.Contains(enemy))
+            {
+                enemy.entityKilled.AddListener((entity) => OnEnemyDefeated(enemy));
+                enemiesInWaveRemaining.Add(enemy);
+            }
+        }
     }
 
     public void TimerLogic(float timer)
@@ -203,7 +211,7 @@ public class WaveManager : IEntityManager
             //for example:
             //a = 100
             //b = 1000
-            //spending time doing sqr root is unessary. sqrt(b) == 100 > sqrt(a) == 10 
+            //spending time doing sqr root is unnecessary sqrt(b) == 100 > sqrt(a) == 10 
 
             if (blacklist.Contains(enemy.enemyType)) continue;
 

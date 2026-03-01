@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -12,7 +13,7 @@ public class GameManager : MonoBehaviour
 
     event Action<float> gameEnding;
 
-    [SerializeField] Player player;
+    [SerializeField] EntityDetectionSystem feds;
     [Header("Managers")]
     [SerializeField] TimerManager timerManager;
     [SerializeField] HUDManager hudManager;
@@ -26,7 +27,6 @@ public class GameManager : MonoBehaviour
     bool gameOver = false;
     private async Task InitializeManager()
     {
-        Debug.Log("Starting game manager init");
         var handle = Addressables.LoadAssetAsync<LevelData>(currentLevel.ToString());
         var levelObject = await handle.Task;
         if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Failed)
@@ -34,25 +34,31 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Couldn't find current level " + currentLevel.ToString() + ": " + handle.OperationException);
             return;
         }
-
         if (hudManager == null)
         {
             hudManager = FindFirstObjectByType<HUDManager>();
         }
+        var preExistingEnemies = FindObjectsByType<EnemyBase>(FindObjectsSortMode.InstanceID).ToList();
         switch (levelObject.levelType)
         {
             case LevelData.LevelType.KillTargets:
                 victoryCondition = new KillTargets(levelObject.levelDuration);
                 
                 entityManager = new WaveManager(levelObject);
-                entityManager.Initialize();
+                entityManager.Initialize(preExistingEnemies);
                 if (hudManager != null) hudManager.InitManager(entityManager, victoryCondition);
                 entityManager.allEnemiesDefeated += victoryCondition.OnEnemiesDefeated;
+                Debug.Log("Kill targets set up");
                 break;
         }
+        if (feds != null) feds.InitDetectionSystem(entityManager);
+        else Debug.Log("Could not find FEDS");
+
         victoryCondition?.Initialize();
         victoryCondition.victoryAchieved += OnVictory;
         victoryCondition.defeatAchieved += OnDefeat;
+
+        Debug.Log("level data set up");
         if (leaderboardManager != null)
         {
             gameEnding += leaderboardManager.OnLevelOver;
@@ -62,11 +68,6 @@ public class GameManager : MonoBehaviour
         {
             gameEnding += settingsScreen.OnGameOver;
         }
-        if (player == null)
-        {
-            player = FindFirstObjectByType<Player>();
-        }
-        player.entityDetectionSystem.InitDetectionSystem(entityManager);
         Debug.Log("Finished game manager init");
 
     }
