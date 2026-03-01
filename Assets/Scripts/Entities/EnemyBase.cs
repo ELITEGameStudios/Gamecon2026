@@ -1,3 +1,5 @@
+using NaughtyAttributes;
+using UnityEditor.Build.Pipeline;
 using UnityEngine;
 
 public class EnemyBase : EntityBase
@@ -9,11 +11,13 @@ public class EnemyBase : EntityBase
     public int contactDamage = 0;
 
     public Collider collider;
-    [SerializeField] ShieldEntity enemyShield;
+    [SerializeField, ShowIf(nameof(IsBulwark))] ShieldEntity enemyShield;
 
 
     public EnemyType enemyType { private set; get; } = EnemyType.Dummy;
     [SerializeField] EnemyType type = EnemyType.Grunt;
+
+     bool IsBulwark() => enemyType == EnemyType.Bulwark;
 
     /* ---------------------------Template Inherited function documentation------------------------- */
     // Feel free to copy paste these into any new enemy you implement so you can have documentation comments at hand
