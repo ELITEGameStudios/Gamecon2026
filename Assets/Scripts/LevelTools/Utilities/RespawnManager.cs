@@ -1,9 +1,12 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class RespawnManager : MonoBehaviour
 {
+    UnityEvent playerRespawned = new();
+
     [SerializeField] Transform respawnPoint;
     [SerializeField] Transform checkpointHolder;
 
@@ -11,11 +14,12 @@ public class RespawnManager : MonoBehaviour
     bool playerDead = false;
 
     public InputActionReference respawn;
-    private void Start()
+
+    public void InitManager(IVictoryCondition victoryCondition, IEntityManager entityManager)
     {
-        StartCoroutine(InitializeRespawnManager());
+        StartCoroutine(InitializeRespawnManager(victoryCondition, entityManager));
     }
-    IEnumerator InitializeRespawnManager()
+    IEnumerator InitializeRespawnManager(IVictoryCondition victoryCondition, IEntityManager entityManager)
     {
         deathNotifier.SetActive(false);
         yield return new WaitUntil(() => Player.instance != null);
@@ -27,6 +31,15 @@ public class RespawnManager : MonoBehaviour
         {
             checkpoint.checkpointReached.AddListener(OnCheckpointReached);
         }
+        if (entityManager is WaveManager waveManager)
+        {
+           // ConfigureWavePausingOnDeath(waveManager);
+        }
+    }
+
+    void ConfigureWavePausingOnDeath(WaveManager waveManager)
+    {
+        playerRespawned.AddListener(waveManager.RestartWave);
     }
 
 
@@ -44,7 +57,6 @@ public class RespawnManager : MonoBehaviour
         Player.instance.SpawnAtPosition(respawnPoint.position);
         deathNotifier.SetActive(false);
         playerDead = false;
-        Debug.Log("Respawned player at " + respawnPoint.position);
     }
 
     public bool IsPlayerDead()
@@ -55,11 +67,6 @@ public class RespawnManager : MonoBehaviour
     protected void OnCheckpointReached(PlayerCheckpoint checkpoint)
     {
         respawnPoint.position = checkpoint.transform.position;
-    }
-
-    private void Update()
-    {
-
     }
 }
 

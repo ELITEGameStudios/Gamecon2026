@@ -54,7 +54,7 @@ public class WaveManager : IEntityManager
 
     public void UpdateWaves()
     {
-        if(!GameManager.Instance.initialized){return;}
+        if(!GameManager.Instance.Initialized){return;}
 
         if (currentWave == null) return;
         currentWave.InternalWaveUpdate();
@@ -89,6 +89,11 @@ public class WaveManager : IEntityManager
         // spawnedFirstGate = false;
         // gateIndex = 0;
         waveStarted?.Invoke(waveIndex);
+    }
+
+    public void RestartWave()
+    {
+        InitWave(currentWave);
     }
 
     // public void InitGate(GateData data)

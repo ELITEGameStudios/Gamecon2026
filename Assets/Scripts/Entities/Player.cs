@@ -1,6 +1,4 @@
-using Autodesk.Fbx;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Player : EntityBase
 {

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EntityDetectionSystem : MonoBehaviour
 {
-    [SerializeField] Projectile knife;
+    [SerializeField, Range(0,1)] Projectile knife;
     [SerializeField] CinematicManager cinematics;
     /// <summary>
     /// Limitation of the degrees that the knife will rotate on the z axis to prevent the knife pointing directly up or down. For example, a deadzone of 60
@@ -19,7 +19,6 @@ public class EntityDetectionSystem : MonoBehaviour
     {
         entityManager = manager;
         init = true;
-        Debug.Log("init FEDS");
     }
 
     private void Update()
@@ -34,18 +33,9 @@ public class EntityDetectionSystem : MonoBehaviour
             var prev = knife.transform.rotation;
             var target = Quaternion.LookRotation(enemy.collider.bounds.center - knife.transform.position);
             target = Quaternion.Euler(target.x + 90, target.y, target.z);
-
             //Knife will point straight up when looking at target, rotating by 90 makes it point
-            knife.transform.rotation = target;
-
-            Debug.Log("Changing knife rotation from " + prev + " to " + knife.transform.rotation + " to point at enemy " + enemy.transform.name);
-            
+            knife.transform.rotation = target;   
         }
-        else
-        {
-            Debug.Log("No enemies present");
-        }
-
 
     }
 }

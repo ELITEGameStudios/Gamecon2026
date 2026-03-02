@@ -67,7 +67,6 @@ public class EnemyProjectile : MonoBehaviour
             mod.UpdateModifier();
         }
         rb.linearVelocity = projectileSpeed;
-        if (projectileCollider.enabled) Debug.Log("Active = " + active);
     }
 
     public void Activate(Transform target, Vector3 spawnPos)

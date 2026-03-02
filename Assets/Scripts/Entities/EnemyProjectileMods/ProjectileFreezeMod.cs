@@ -17,7 +17,7 @@ public class ProjectileFreezeMod : ProjectileModifier
     /// </summary>
     [SerializeField, ShowIf(nameof(FreezesWhilePlayerDead))] int freezeDurationWhenPlayerDies = 300;
 
-   [SerializeField] FreezeType freezeType;
+    [SerializeField] FreezeType freezeType;
 
     bool FreezesWhilePlayerDead() => freezeType == FreezeType.FreezeWhenPlayerDead;
 
@@ -45,7 +45,7 @@ public class ProjectileFreezeMod : ProjectileModifier
                 {
                     Debug.LogWarning("Could not find contact mod but using on player struck which has a dependacy on it");
                 }
-                    respawnManager = FindFirstObjectByType<RespawnManager>();
+                respawnManager = FindFirstObjectByType<RespawnManager>();
                 break;
                 
         }
@@ -57,7 +57,6 @@ public class ProjectileFreezeMod : ProjectileModifier
         playerDead = true;
         previousVelocity = projectile.projectileSpeed;
         duration = freezeDurationWhenPlayerDies;
-        Debug.Log("Killed player " + player + " with projectile " + projectile.name);
         if (respawnManager != null)
         {
             respawnManager.respawn.action.performed += OnPlayerRespawned;
@@ -66,7 +65,6 @@ public class ProjectileFreezeMod : ProjectileModifier
 
     public override void UpdateModifier()
     {
-        Debug.Log("Updating freeze mod for projectile " + projectile.name + " with duration " + duration);
         base.UpdateModifier();
         if (duration > 0)
         {
@@ -89,13 +87,11 @@ public class ProjectileFreezeMod : ProjectileModifier
         if (!playerDead) duration--;
         if (duration == 0) projectile.projectileSpeed = previousVelocity;
         else projectile.projectileSpeed = Vector3.zero;
-        Debug.Log("Freezing projectile " + projectile.name + " for duration " + duration + " because player is dead");
     }
 
     void OnPlayerRespawned(UnityEngine.InputSystem.InputAction.CallbackContext ctx)
     {
         playerDead = false;
         respawnManager.respawn.action.performed -= OnPlayerRespawned;
-        Debug.Log("Player respawned");
     }
 }

@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance {get; private set;}
     public IVictoryCondition victoryCondition;
     public IEntityManager entityManager;
-    public bool initialized;
+    public bool Initialized { get; private set;}
 
     event Action<float> gameEnding;
 
@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] HUDManager hudManager;
     [SerializeField] LeaderboardManager leaderboardManager;
     [SerializeField] SettingsMenu settingsScreen;
+    [SerializeField] RespawnManager respawnManager;
 
     [Header("Temporary Level Picker")]
     [SerializeField] LevelDatabase.LevelNames currentLevel;
@@ -34,10 +35,8 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Couldn't find current level " + currentLevel.ToString() + ": " + handle.OperationException);
             return;
         }
-        if (hudManager == null)
-        {
-            hudManager = FindFirstObjectByType<HUDManager>();
-        }
+        if (hudManager == null) hudManager = FindFirstObjectByType<HUDManager>();
+        
         var preExistingEnemies = FindObjectsByType<EnemyBase>(FindObjectsSortMode.InstanceID).ToList();
         switch (levelObject.levelType)
         {
@@ -48,17 +47,18 @@ public class GameManager : MonoBehaviour
                 entityManager.Initialize(preExistingEnemies);
                 if (hudManager != null) hudManager.InitManager(entityManager, victoryCondition);
                 entityManager.allEnemiesDefeated += victoryCondition.OnEnemiesDefeated;
-                Debug.Log("Kill targets set up");
                 break;
         }
+        if (respawnManager != null)
+        {
+            respawnManager.InitManager(victoryCondition, entityManager);
+        }
         if (feds != null) feds.InitDetectionSystem(entityManager);
-        else Debug.Log("Could not find FEDS");
 
         victoryCondition?.Initialize();
         victoryCondition.victoryAchieved += OnVictory;
         victoryCondition.defeatAchieved += OnDefeat;
 
-        Debug.Log("level data set up");
         if (leaderboardManager != null)
         {
             gameEnding += leaderboardManager.OnLevelOver;
@@ -68,8 +68,6 @@ public class GameManager : MonoBehaviour
         {
             gameEnding += settingsScreen.OnGameOver;
         }
-        Debug.Log("Finished game manager init");
-
     }
 
     private void Awake()
@@ -83,10 +81,9 @@ public class GameManager : MonoBehaviour
 
     public void Initialize()
     {
-        if (initialized) return;
-        Debug.Log("Attempting initialization of game manager");
+        if (Initialized) return;
         _ = InitializeManager();
-        initialized = true;
+        Initialized = true;
     }
 
 
@@ -114,8 +111,7 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
-        if(!initialized) return;
-
+        if(!Initialized) return;
         OnTimerUpdated();
         if(entityManager is WaveManager){(entityManager as WaveManager).UpdateWaves();}
     }

@@ -1,4 +1,4 @@
-using NUnit.Framework;
+
 using System;
 using UnityEngine;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ public class LeaderboardManager : MonoBehaviour
 
     private void Awake()
     {
-        leaderboardDisplay.SetActive(false);
+        if (leaderboardDisplay != null)  leaderboardDisplay.SetActive(false);
         saveSystem = new ();
         leaderboardService = new();
     }
@@ -41,16 +41,14 @@ public class LeaderboardManager : MonoBehaviour
         foreach (var save in saveDirectory)
         {
             var saveData = saveSystem.Read(save);
-            Debug.Log("Save data == " + saveData);
             levelCompletions.Add(saveSystem.ParseFromJson<LevelAttempt>(saveData));
         }
         if (levelCompletions.Count == 0) return;
         levelCompletions = leaderboardService.SortAttemptsByTime(levelCompletions);
         foreach (var data in levelCompletions)
         {
-            string formattedTime = leaderboardService.GetFormattedTime(data.time);
             LeaderboardEntry newEntry = Instantiate(entryPrefab, entriesHolder.transform);
-            newEntry.InitEntry(data.name, formattedTime);
+            newEntry.InitEntry(data.name, leaderboardService.GetFormattedTime(data.time));
         }
     }
 

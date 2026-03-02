@@ -25054,8 +25054,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   knife: {fileID: 1793250404}
   cinematics: {fileID: 626483692}
-  xAxisDeadzone: {x: 15, y: 180}
-  turnSpeed: 44.5
   blacklistedEnemies: 03000000
 --- !u!4 &1272435007
 Transform:
@@ -37976,6 +37974,10 @@ PrefabInstance:
     - target: {fileID: 4355874264954563870, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 4557573513580818196, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
+      propertyPath: m_Convex
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5217330970048569504, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
       propertyPath: m_Name

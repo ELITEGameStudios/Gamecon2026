@@ -82,7 +82,7 @@ public class ProjectileClampModifier : ProjectileModifier
                     if (warpTracker != 0) warpTracker = timeUntilWarp;
                     else
                     {
-                        warpTracker -= 1;
+                        warpTracker--;
                         if (warpTracker <= 0)
                         {
                             WarpCloserToTarget();
@@ -93,7 +93,7 @@ public class ProjectileClampModifier : ProjectileModifier
 
             }
             if (distanceToTarget > maxDistanceToTryClamp)
-             {
+            {
                 WarpCloserToTarget();
             }
 
@@ -106,7 +106,5 @@ public class ProjectileClampModifier : ProjectileModifier
         Vector3 targetDirectionToProjectile = (projectile.transform.position - target.position).normalized;
         projectile.rb.MovePosition(target.position + targetDirectionToProjectile * maxDistanceBeforeClampAttempt);
         warpTracker = 0;
-
-        Debug.Log("Warping projectile " + projectile.name + " closer to target " + target.name + " with desired distance of " + maxDistanceBeforeClampAttempt);
     }
 }
