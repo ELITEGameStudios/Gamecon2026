@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using static LevelData;
 
 public class EnemyProjectile : MonoBehaviour
 {
@@ -104,5 +103,3 @@ public class ProjectileFireInformation
     [HideIf(nameof(RequiresTransformOffset))] public Vector3 offset;
     bool RequiresTransformOffset() => useTransformForOffset == true;
 }
-
-

@@ -25052,9 +25052,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 762a61c11e213f2449706f828e8f462b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  knife: {fileID: 1793250403}
+  knife: {fileID: 1793250404}
   cinematics: {fileID: 626483692}
-  deadzone: 60
+  xAxisDeadzone: {x: 15, y: 180}
   turnSpeed: 44.5
   blacklistedEnemies: 03000000
 --- !u!4 &1272435007
@@ -32489,11 +32489,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3749b04179102b249baceeeaca02c885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &1793250403 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1103607397295038244, guid: c489f38eb752e83448adf30f23c025f9, type: 3}
+--- !u!114 &1793250404 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6373491937540632380, guid: c489f38eb752e83448adf30f23c025f9, type: 3}
   m_PrefabInstance: {fileID: 5673086411956948640}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b79602ba93482347ac43ec1f96ed3e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1796100676
 GameObject:
   m_ObjectHideFlags: 0
@@ -37645,15 +37651,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4207800976764531243, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -22.980839
+      value: -22.93
       objectReference: {fileID: 0}
     - target: {fileID: 4207800976764531243, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.920029
+      value: -46.59
       objectReference: {fileID: 0}
     - target: {fileID: 4207800976764531243, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -23.851934
+      value: -23.87
       objectReference: {fileID: 0}
     - target: {fileID: 4207800976764531243, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
       propertyPath: m_LocalRotation.w

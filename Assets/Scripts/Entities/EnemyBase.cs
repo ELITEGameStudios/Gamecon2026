@@ -17,7 +17,7 @@ public class EnemyBase : EntityBase
     public EnemyType enemyType { private set; get; } = EnemyType.Dummy;
     [SerializeField] EnemyType type = EnemyType.Grunt;
 
-     bool IsBulwark() => enemyType == EnemyType.Bulwark;
+     public bool IsBulwark() => type == EnemyType.Bulwark;
 
     /* ---------------------------Template Inherited function documentation------------------------- */
     // Feel free to copy paste these into any new enemy you implement so you can have documentation comments at hand

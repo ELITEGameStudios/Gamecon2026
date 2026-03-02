@@ -1,4 +1,3 @@
-using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,7 +36,6 @@ public class RangedEnemy : EnemyBase
             projectilePools[projectileInfo[i]] = new ();
             for (int x = 0; x < projectilePoolSize; x++)
             {
-
                 var prefab = projectileInfo[i].projectilePrefab;
                 var projectile = Instantiate(prefab);
                 projectile.InitProjectile(transform);
@@ -76,7 +74,6 @@ public class RangedEnemy : EnemyBase
     {
         if (projectileInfo == null) yield break;
         firing = true;
-        int fireCount = 0;
         yield return new WaitForSeconds(delayBeforeFiring);
         foreach (var info in projectileInfo)
         {
@@ -88,10 +85,8 @@ public class RangedEnemy : EnemyBase
             projectile.Activate(player.transform, transform.position + info.offset);
             projectilePools[info].Enqueue(projectile);
            if (info != projectileInfo[^1]) yield return new WaitForSeconds(info.delayAfterShot);
-            fireCount++;
         }
         cooldownTracker = cooldown;
         firing = false;
-        Debug.Log("Fired " + fireCount + " projectiles from " + name);
     }
 }
