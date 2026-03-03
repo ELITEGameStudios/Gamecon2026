@@ -1045,6 +1045,7 @@ MonoBehaviour:
   minWallTangentSlope: 65
   wallRunLinearVelocityMaxAngleDif: 50
   maxWallCheckDist: 1.5
+  blinkWallCheckDistance: 3
   groundedCheckDist: 0.15
   speedMultiplier: 1
   bodyRadius: 0.5
@@ -1127,7 +1128,7 @@ MonoBehaviour:
     wallRunContactNormal: {x: 0, y: 0, z: 0}
     lastContactPosition: {x: 0, y: 0, z: 0}
     initRaycastDir: {x: 0, y: 0, z: 0}
-    wallRunSleepInterval: 0.2
+    wallRunSleepInterval: 0.1
   airborneState:
     name: Airborne
     rigidbody: {fileID: 0}
