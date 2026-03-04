@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: VertexColoPaintedDefault_A
-  m_Shader: {fileID: -6465566751694194690, guid: 58f77a5b5b5fdf0439bb3d7045541cbc, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: c4e3599a112fb834b916947104dde6c6, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -28,6 +28,18 @@ Material:
         m_Texture: {fileID: 2800000, guid: 0bce7fa699c318f498811e77ec7941ce, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture3D_8ce9119cd2e84160b4692c9fac71854e_Texture_1_Texture3D:
+        m_Texture: {fileID: 11700000, guid: f61fbde6c70c5e44d88829ded35749b6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Triplanar_6077e9fe34754d77b3f41233c04ef4b8_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 2917b4c45d942734cb6c01ebb25f0575, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -42,11 +54,24 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _BrushStrokeContribution: 0.5
     - _Gloss: 0
     - _Metallic: 0
+    - _MetallicStrength: 0.1
+    - _NoiseIntensity: 0.25
+    - _NoiseScale: 2.42
+    - _NormalStrength: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    m_Colors: []
+    - _SmoothnessStrength: 0.23
+    - _TriPlaneNormal: 0
+    - _TriplanarTile: 0.11
+    - _VoronoiScale: 1
+    - _max: 1
+    - _min: 0
+    m_Colors:
+    - _BlendingNoiseTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _BrushStrokeColor: {r: 0.41549316, g: 0.6132076, b: 0.39627093, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &2552000301005509447
