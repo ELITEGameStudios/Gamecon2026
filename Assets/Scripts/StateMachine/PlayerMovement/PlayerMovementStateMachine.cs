@@ -16,7 +16,7 @@ public class PlayerMovementStateMachine : StateMachine
     public float movingConsiderationDeadzone = 0.1f;
     public float minWallTangentSlope = 80;
     public float wallRunLinearVelocityMaxAngleDif = 60;
-    public float maxWallCheckDist = 5;
+    public float maxWallCheckDist = 5, blinkWallCheckDistance = 2;
     public float groundedCheckDist = 0.15f;
     public float speedMultiplier = 1f;
     public float bodyRadius = 0.5f;
@@ -187,19 +187,19 @@ public class PlayerMovementStateMachine : StateMachine
     public void Blink(){
         
         SetState(airborneState);
-        Vector3 targetPos = featherKnife.transform.position;
+        Vector3 targetPos = featherKnife.GetBlinkPosition();
         Quaternion rot = featherKnife.transform.rotation;
-        for (float i = 0; i < 0.5f; i += 0.1f)
-        {
-            targetPos = featherKnife.transform.position - featherKnife.throwDirection * i;
-            if(Physics.OverlapBox(targetPos, blinkBoxSize, Quaternion.identity, blinkBoxLayerMask).Length > 0){
-                continue;
-            }
-            break;
-        }
+        // for (float i = 0; i < 0.5f; i += 0.1f)
+        // {
+        //     targetPos = featherKnife.transform.position - featherKnife.throwDirection * i;
+        //     if(Physics.OverlapBox(targetPos, blinkBoxSize, Quaternion.identity, blinkBoxLayerMask).Length > 0){
+        //         continue;
+        //     }
+        //     break;
+        // }
 
         transform.position = targetPos;
-        CheckWallViaRay(ignoreWallRunTimer: true);
+        CheckWallViaRay(ignoreWallRunTimer: true, fromBlink: true);
     }
 
     public void CalculateLookRotation()
@@ -243,15 +243,15 @@ public class PlayerMovementStateMachine : StateMachine
         return null;
     }
 
-    void CheckWallViaRay(Collision collision = null, bool ignoreWallRunTimer = false)
+    void CheckWallViaRay(Collision collision = null, bool ignoreWallRunTimer = false, bool fromBlink = false)
     {
         if(!wallRunState.canWallRun && !ignoreWallRunTimer ){return;}
 
         RaycastHit hit;
 
         // Checks if there is a potential wall to run on and the general direction it is relative to the player
-        if(Physics.Raycast(transform.position, transform.right * -1, out hit, maxWallCheckDist)){ wallRunState.isRight = false;  }
-        else if(Physics.Raycast(transform.position, transform.right, out hit, maxWallCheckDist)){ wallRunState.isRight = true;  }
+        if(Physics.Raycast(transform.position, transform.right * -1, out hit, fromBlink ? blinkWallCheckDistance : maxWallCheckDist)){ wallRunState.isRight = false;  }
+        else if(Physics.Raycast(transform.position, transform.right, out hit, fromBlink ? blinkWallCheckDistance : maxWallCheckDist)){ wallRunState.isRight = true;  }
         else{return;}
         
         // Checks if the wall running collider is the same as the grounding collider for the player
@@ -277,7 +277,7 @@ public class PlayerMovementStateMachine : StateMachine
 
         Vector3 movementRelativeInput = (transform.forward * movementInput.y) + (transform.right * movementInput.x);
 
-        if(currentState != dashState){
+        if(currentState != dashState && !fromBlink){
             if(
                 Vector3.Angle(movementRelativeInput, testWallRunDir) > wallRunState.maxMovementInputAngleDifference && currentState != dashState
                 || !hasMovementInput

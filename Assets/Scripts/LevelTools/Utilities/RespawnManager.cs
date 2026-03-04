@@ -41,8 +41,6 @@ public class RespawnManager : MonoBehaviour
     {
         playerRespawned.AddListener(waveManager.RestartWave);
     }
-
-
     protected void OnPlayerKilled()
     {
         deathNotifier.SetActive(true);

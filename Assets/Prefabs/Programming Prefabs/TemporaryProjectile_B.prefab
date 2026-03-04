@@ -1,5 +1,187 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6805347702398328683
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4590244222290488884}
+  - component: {fileID: 8528103503705562027}
+  m_Layer: 8
+  m_Name: ParticleManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4590244222290488884
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6805347702398328683}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6543844609879577816}
+  - {fileID: 5467181065949914721}
+  m_Father: {fileID: 2961036286376670713}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8528103503705562027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6805347702398328683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 945e82dde22dfe942b7994abd502ec0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  terrainCollision: {fileID: 1348300598130934400}
+  enemyCollision: {fileID: 268276949856497721}
+--- !u!1001 &235173832660087008
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4590244222290488884}
+    m_Modifications:
+    - target: {fileID: 5232291528449480321, guid: 420c442e75b6bd647979eae50e3ccb21, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: 420c442e75b6bd647979eae50e3ccb21, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 37.78
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: 420c442e75b6bd647979eae50e3ccb21, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: 420c442e75b6bd647979eae50e3ccb21, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: 420c442e75b6bd647979eae50e3ccb21, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: 420c442e75b6bd647979eae50e3ccb21, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: 420c442e75b6bd647979eae50e3ccb21, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: 420c442e75b6bd647979eae50e3ccb21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: 420c442e75b6bd647979eae50e3ccb21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: 420c442e75b6bd647979eae50e3ccb21, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6899704405298323028, guid: 420c442e75b6bd647979eae50e3ccb21, type: 3}
+      propertyPath: m_Name
+      value: EnemyCollisionOne
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 420c442e75b6bd647979eae50e3ccb21, type: 3}
+--- !u!198 &268276949856497721 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 70541557517041881, guid: 420c442e75b6bd647979eae50e3ccb21, type: 3}
+  m_PrefabInstance: {fileID: 235173832660087008}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5467181065949914721 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5232291528449480321, guid: 420c442e75b6bd647979eae50e3ccb21, type: 3}
+  m_PrefabInstance: {fileID: 235173832660087008}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1318637063133610585
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4590244222290488884}
+    m_Modifications:
+    - target: {fileID: 5232291528449480321, guid: c06bbea2ccaa09b48a2f4a7b3ea07c00, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: c06bbea2ccaa09b48a2f4a7b3ea07c00, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 37.78
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: c06bbea2ccaa09b48a2f4a7b3ea07c00, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: c06bbea2ccaa09b48a2f4a7b3ea07c00, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: c06bbea2ccaa09b48a2f4a7b3ea07c00, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: c06bbea2ccaa09b48a2f4a7b3ea07c00, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: c06bbea2ccaa09b48a2f4a7b3ea07c00, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: c06bbea2ccaa09b48a2f4a7b3ea07c00, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: c06bbea2ccaa09b48a2f4a7b3ea07c00, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232291528449480321, guid: c06bbea2ccaa09b48a2f4a7b3ea07c00, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6899704405298323028, guid: c06bbea2ccaa09b48a2f4a7b3ea07c00, type: 3}
+      propertyPath: m_Name
+      value: TerrainCollisionOne
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c06bbea2ccaa09b48a2f4a7b3ea07c00, type: 3}
+--- !u!198 &1348300598130934400 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 70541557517041881, guid: c06bbea2ccaa09b48a2f4a7b3ea07c00, type: 3}
+  m_PrefabInstance: {fileID: 1318637063133610585}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6543844609879577816 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5232291528449480321, guid: c06bbea2ccaa09b48a2f4a7b3ea07c00, type: 3}
+  m_PrefabInstance: {fileID: 1318637063133610585}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3358858133030605330
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -102,7 +284,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1c84657f13f2ec8458b2ba16fcf9ddbc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4590244222290488884}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1c84657f13f2ec8458b2ba16fcf9ddbc, type: 3}
       insertIndex: -1
@@ -188,7 +373,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b79602ba93482347ac43ec1f96ed3e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  terrainCollision:
+    m_PersistentCalls:
+      m_Calls: []
+  enemyCollision:
+    m_PersistentCalls:
+      m_Calls: []
   targetLocalScale: {x: 500, y: 500, z: 500}
+  knifeParticleManager: {fileID: 8528103503705562027}
   speed: 80
   lifetime: 5
   pickUpRadius: 2
@@ -441,3 +633,8 @@ MonoBehaviour:
   secondaryGlow: {fileID: 2100000, guid: f17286c9ea1bdcd40b5ca1fdd72fa49f, type: 2}
   emissionPrimary: {r: 91.77356, g: 975.1923, b: 1024, a: 1}
   emissionSecondary: {r: 36.79308, g: 222.86098, b: 220.41272, a: 1}
+--- !u!4 &2961036286376670713 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1c84657f13f2ec8458b2ba16fcf9ddbc, type: 3}
+  m_PrefabInstance: {fileID: 3358858133030605330}
+  m_PrefabAsset: {fileID: 0}

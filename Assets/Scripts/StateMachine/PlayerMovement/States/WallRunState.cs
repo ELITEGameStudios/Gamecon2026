@@ -175,11 +175,16 @@ public class WallRunState : PlayerMovementState
         movement.SetState(movement.airborneState);
     }
 
+    public void StartWallrunCooldown()
+    {
+        currentWallRunSleepTimer = wallRunSleepInterval;
+    }
+
     public override void End(bool interrupted = false)
     {
         camAngle.SetAngle(0);
         movement.armAnimator.SetBool("OnWall", false);
-        currentWallRunSleepTimer = wallRunSleepInterval;
+        StartWallrunCooldown();
         base.End(interrupted);
     }
 }

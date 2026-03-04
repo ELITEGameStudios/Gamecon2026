@@ -28,6 +28,8 @@ public class AirborneState : PlayerMovementState
             rigidbody.linearVelocity.x,
             rigidbody.linearVelocity.z
         );
+
+        movement.wallRunState.StartWallrunCooldown();
         // initialRelativeVelocity = transform.worldToLocalMatrix.MultiplyPoint(transform.position + rigidbody.linearVelocity);
         // Debug.Log
     }
