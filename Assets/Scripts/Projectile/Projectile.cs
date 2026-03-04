@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.ProBuilder.MeshOperations;
 
@@ -44,6 +45,23 @@ public class Projectile : MonoBehaviour
 
     public float totalRecallDistance;
     private float recallProgress;
+    private Collider recallTime;
+    
+
+    [Header("Blink Data")]
+    public List<SpaceSample> spaceRecordingData;
+    public int maxRecordingSlots;
+    public SpaceSample blinkSample;
+    public List<Collider> triggerList;
+    public bool inTriggerCollision =>  triggerList == null || triggerList.Count == 0;
+
+    
+    [Serializable]
+    public struct SpaceSample
+    {
+        public Vector3 position, direction, velocity;
+    };
+
     
     private Rigidbody rb;
     private Collider col;
@@ -54,11 +72,26 @@ public class Projectile : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
+
+        spaceRecordingData = new List<SpaceSample>();
+        triggerList = new List<Collider>();
         ReturnToIdle();
+    }
+
+    public Vector3 GetBlinkPosition()
+    {
+        if(
+            currentState == ProjectileState.Flying || 
+            (currentState == ProjectileState.Recalling && !inTriggerCollision)
+        )
+            return transform.position;
+
+        else{return blinkSample.position;}
     }
     
     void Update()
     {
+
         if (playerTransform != null && currentState == ProjectileState.Embedded)
         {   
             float distance = Vector3.Distance(playerTransform.position, transform.position);
@@ -86,6 +119,22 @@ public class Projectile : MonoBehaviour
                 }
             }
         }
+    }
+
+    void FixedUpdate()
+    {
+
+        // Preserving position data
+        if(currentState == ProjectileState.Idle || currentState == ProjectileState.Embedded){return;}
+        
+        SpaceSample spaceSample;
+        
+        spaceSample.position = transform.position;
+        spaceSample.direction = transform.forward;
+        spaceSample.velocity= rb.linearVelocity;
+
+        spaceRecordingData.Add(spaceSample);
+        if(spaceRecordingData.Count > maxRecordingSlots) spaceRecordingData.RemoveAt(0);
     }
 
     public void SetState(ProjectileState newState)
@@ -238,59 +287,10 @@ public class Projectile : MonoBehaviour
 
     public void SetEmbeddedPos(){
         embeddedPos = transform.position;
+        blinkSample = spaceRecordingData[spaceRecordingData.Count - 1];
     }
 
-    void OnCollisionEnter(Collision collision) //needs fixing. embedding doesn't work properly
-    {
-        if (currentState != ProjectileState.Flying || currentState == ProjectileState.Recalling)
-            return;
 
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            if (projectileAbilities != null)
-            {
-                projectileAbilities.ResetRecallCooldown();
-            }
-
-        }
-
-        if(collision.transform.GetComponent<EnemyBase>() == null)
-        {
-            if(collision.transform.parent != null)
-            {
-                if(collision.transform.parent.GetComponent<EnemyBase>() == null)
-                {
-                    Debug.Log("Null");
-                }
-                else
-                {
-                    collision.transform.parent.GetComponent<EnemyBase>().Damage();
-                }
-            }
-        }
-        else
-        {
-            collision.transform.GetComponent<EnemyBase>().Damage();
-        }
-        
-        if (hitEffect)
-            Instantiate(hitEffect, transform.position, Quaternion.identity);
-        
-        Quaternion incomingRotation = transform.rotation;
-        Vector3 travelDirection = rb.linearVelocity.normalized; 
-
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-
-        transform.position += travelDirection * (embedDepth * 0.1f);
-
-        // Restore the original rotation to maintain impact angle
-        transform.rotation = incomingRotation;
-
-        SetState(ProjectileState.Embedded);
-
-        CancelInvoke(nameof(ReturnToIdle));
-    }
     
     public void CastProjectile(Vector3 direction)
     {
@@ -347,5 +347,82 @@ public class Projectile : MonoBehaviour
         gameObject.SetActive(true);
         SetState(ProjectileState.Idle);
         if(HUDManager.Instance != null) HUDManager.Instance.recallElement.Deactivate();
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.isTrigger) return;
+        
+        triggerList.Add(other);
+        if(triggerList.Count != 1) return;
+        
+        int recordedPositionOffset = 3;
+        if(currentState == ProjectileState.Recalling)
+        {
+            blinkSample = spaceRecordingData[maxRecordingSlots - recordedPositionOffset - 1];
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if(other.isTrigger)return;
+        if(currentState == ProjectileState.Recalling)
+        {
+            blinkSample = spaceRecordingData[maxRecordingSlots-1];
+        }
+
+        triggerList.Remove(other);
+    }
+
+    void OnCollisionEnter(Collision collision) //needs fixing. embedding doesn't work properly
+    {
+        if (currentState != ProjectileState.Flying || currentState == ProjectileState.Recalling)
+            return;
+
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            if (projectileAbilities != null)
+            {
+                projectileAbilities.ResetRecallCooldown();
+            }
+
+        }
+
+        if(collision.transform.GetComponent<EnemyBase>() == null)
+        {
+            if(collision.transform.parent != null)
+            {
+                if(collision.transform.parent.GetComponent<EnemyBase>() == null)
+                {
+                    Debug.Log("Null");
+                }
+                else
+                {
+                    collision.transform.parent.GetComponent<EnemyBase>().Damage();
+                }
+            }
+        }
+        else
+        {
+            collision.transform.GetComponent<EnemyBase>().Damage();
+        }
+        
+        if (hitEffect)
+            Instantiate(hitEffect, transform.position, Quaternion.identity);
+        
+        Quaternion incomingRotation = transform.rotation;
+        Vector3 travelDirection = rb.linearVelocity.normalized; 
+
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        transform.position += travelDirection * (embedDepth * 0.1f);
+
+        // Restore the original rotation to maintain impact angle
+        transform.rotation = incomingRotation;
+
+        SetState(ProjectileState.Embedded);
+
+        CancelInvoke(nameof(ReturnToIdle));
     }
 }
