@@ -41,16 +41,16 @@ public class EntityDetectionSystem : MonoBehaviour
         if (enemy != null)
         {
             var enemyPosition = enemy.collider.bounds.center;
-            var handPos = knifeHolder.position;
+            
 
-            var handLookingAtEnemy = Quaternion.FromToRotation(knife.transform.forward, (handPos - enemyPosition));
+            var enemyProjected = Vector3.ProjectOnPlane(enemyPosition, knifeHolder.transform.up);
+            var knifeProjected = Vector3.ProjectOnPlane(knife.transform.position, knifeHolder.transform.up);
 
-            var knifeEuler = knife.transform.rotation.eulerAngles;
-            //knifeEuler.y = handLookingAtEnemy.eulerAngles.y;
-            knifeEuler.y = 0;
-            knifeEuler.z = 0;
-            knifeEuler.x = 90 + knifeHolder.eulerAngles.x;
-            knife.transform.eulerAngles = knifeEuler;
+            var knifeProjectedLookingAtEnemyProjected = Quaternion.LookRotation(enemyProjected - knifeProjected, knifeHolder.transform.up);
+            var knifeProjectedLookingAtEnemyProjectedEulerAngles = knifeProjectedLookingAtEnemyProjected.eulerAngles;
+            knifeProjectedLookingAtEnemyProjectedEulerAngles.x += 90;
+            knifeProjectedLookingAtEnemyProjected.eulerAngles = knifeProjectedLookingAtEnemyProjectedEulerAngles;
+            knife.transform.rotation = knifeProjectedLookingAtEnemyProjected;
         }
     }
 }
