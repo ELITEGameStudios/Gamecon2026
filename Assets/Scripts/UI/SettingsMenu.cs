@@ -65,6 +65,7 @@ public class SettingsMenu : MonoBehaviour
         else
         {
             Debug.LogWarning("Could not find settings files at location " + PlayerSettings.GetPlayerSettingsDirectory());
+            saveSystem.EnsureSave(PlayerSettings.GetPlayerSettingsDirectory(), "playerSettings", currentSettings);
         }
         InitVideoSettings();
         InitAudioSettings();
