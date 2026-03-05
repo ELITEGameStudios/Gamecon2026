@@ -1,15 +1,21 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.ProBuilder.MeshOperations;
 
 [RequireComponent(typeof(Collider))]
 public class Projectile : MonoBehaviour
 {
+
+    public UnityEvent<Collision> enemyStruck = new();
+    public UnityEvent<Collision> terrainStruck = new();
     public enum ProjectileState {Idle, Flying, Embedded, Recalling}//, PickedUp}
     public ProjectileState currentState { get; private set; } = ProjectileState.Idle;
     public Vector3 targetLocalScale;
-    
+
+    [Header("Managers")]
+    [SerializeField] KnifeParticleManager knifeParticleManager;
     [Header("Flying Settings")]
     public float speed = 30f;
     public float lifetime = 5f;
@@ -68,14 +74,19 @@ public class Projectile : MonoBehaviour
     
     // [SerializeField] private Animator animator;
     private Transform embedParent;
+
+
+    LayerMask terrainMask;
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
 
+        if (knifeParticleManager != null) knifeParticleManager.InitParticleManager(this);
         spaceRecordingData = new List<SpaceSample>();
         triggerList = new List<Collider>();
         ReturnToIdle();
+        terrainMask = LayerMask.GetMask("Wall", "Ground");
     }
 
     public Vector3 GetBlinkPosition()
@@ -385,7 +396,7 @@ public class Projectile : MonoBehaviour
             {
                 projectileAbilities.ResetRecallCooldown();
             }
-
+            enemyStruck.Invoke(collision);
         }
 
         if(collision.transform.GetComponent<EnemyBase>() == null)
@@ -406,7 +417,12 @@ public class Projectile : MonoBehaviour
         {
             collision.transform.GetComponent<EnemyBase>().Damage();
         }
-        
+
+        if ((terrainMask & (collision.gameObject.layer >> 1)) != 0)
+        {
+            terrainStruck.Invoke(collision);
+        }
+
         if (hitEffect)
             Instantiate(hitEffect, transform.position, Quaternion.identity);
         
