@@ -52,6 +52,7 @@ public class WallRunState : PlayerMovementState
         // Vector3 raycastDir = (closestPoint - transform.position).normalized;
         
         movement.armAnimator.SetBool("OnWall", true);   
+        movement.armAnimator.SetBool("IsRight", isRight);   
 
         camAngle.SetAngle(15 * (isRight ? 1 : -1));
         if (Physics.Raycast(transform.position, initRaycastDir, out RaycastHit hit, Mathf.Infinity))
