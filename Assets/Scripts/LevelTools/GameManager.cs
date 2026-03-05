@@ -49,12 +49,11 @@ public class GameManager : MonoBehaviour
                 entityManager.allEnemiesDefeated += victoryCondition.OnEnemiesDefeated;
                 break;
         }
+        if (feds != null) feds.InitDetectionSystem(entityManager);
         if (respawnManager != null)
         {
             respawnManager.InitManager(victoryCondition, entityManager);
         }
-        if (feds != null) feds.InitDetectionSystem(entityManager);
-
         victoryCondition?.Initialize();
         victoryCondition.victoryAchieved += OnVictory;
         victoryCondition.defeatAchieved += OnDefeat;

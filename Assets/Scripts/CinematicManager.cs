@@ -7,7 +7,12 @@ public class CinematicManager : MonoBehaviour
     public Canvas uiCanvas;
     public ProjectileGlowManager cinematicGlowManager, externalGlowManager;
 
-    public bool inCinematic { get; private set; } = true;
+    public bool inCinematic { get; private set; } = false;
+
+    public void PreCutscene()
+    {
+        inCinematic = true;
+    }
     public void PostCutscene()
     {
         uiCanvas.enabled = true;
