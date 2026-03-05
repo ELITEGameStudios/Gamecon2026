@@ -20,12 +20,36 @@ Material:
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
-  m_LockedProperties: 
+  m_LockedProperties: _min
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_823abd90d5874b0e802ad3c08ad6dc96_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 2917b4c45d942734cb6c01ebb25f0575, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_a24a0b20ea7648cd8ec7814c6ef8f97f_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 2917b4c45d942734cb6c01ebb25f0575, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_cfe7e5eef0524d1c88b5bbf4d722dfdb_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 2917b4c45d942734cb6c01ebb25f0575, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture3D_8ce9119cd2e84160b4692c9fac71854e_Texture_1_Texture3D:
         m_Texture: {fileID: 11700000, guid: f61fbde6c70c5e44d88829ded35749b6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Triplanar_6077e9fe34754d77b3f41233c04ef4b8_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 2917b4c45d942734cb6c01ebb25f0575, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -42,11 +66,22 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _BrushStrokeContribution: 1
+    - _MetallicStrength: 0.29
+    - _NoiseIntensity: 0.62
+    - _NoiseScale: 13.82
+    - _NormalStrength: 0
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _SmoothnessStrength: -0.7
+    - _TriPlaneNormal: 0.592
+    - _TriplanarTile: 0.27
+    - _VoronoiScale: 2.07
     - _max: 1
     - _min: 0.04
-    m_Colors: []
+    m_Colors:
+    - _BlendingNoiseTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _BrushStrokeColor: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &1342261084459060189

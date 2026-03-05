@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
 // handles shooting, recalling, and parrying
 public class ProjectileAbilities : MonoBehaviour
 {
+    public UnityEvent knifeParried = new();
+
     [Header("References")]
     [SerializeField] private Projectile featherKnife;
     [SerializeField] private Transform projectileFirePoint;
@@ -130,6 +133,7 @@ public class ProjectileAbilities : MonoBehaviour
             if(progress > parryTiming)
             {
                 Debug.Log("Parried!");
+                knifeParried.Invoke();
                 TryShoot(true);
             }
             else if(progress > parryTiming - 0.25f)
