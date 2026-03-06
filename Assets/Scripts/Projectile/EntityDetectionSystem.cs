@@ -8,10 +8,7 @@ public class EntityDetectionSystem : MonoBehaviour
     [SerializeField] Projectile knife;
     [SerializeField] CinematicManager cinematics;
     [SerializeField] Transform knifeHolder;
-    /// <summary>
-    /// Limitation of the degrees that the knife will rotate on the z axis to prevent the knife pointing directly up or down. For example, a deadzone of 60
-    /// will give you 300 degrees of rotation, preventing degrees from 330 to 30;
-    /// </summary>
+    [SerializeField] float rotationSpeed = 10.0f;
     IEntityManager entityManager;
 
     bool init = false;
@@ -41,16 +38,16 @@ public class EntityDetectionSystem : MonoBehaviour
         if (enemy != null)
         {
             var enemyPosition = enemy.collider.bounds.center;
-            var handPos = knifeHolder.position;
+            
 
-            var handLookingAtEnemy = Quaternion.FromToRotation(knife.transform.forward, (handPos - enemyPosition));
+            var enemyProjected = Vector3.ProjectOnPlane(enemyPosition, knifeHolder.transform.up);
+            var knifeProjected = Vector3.ProjectOnPlane(knife.transform.position, knifeHolder.transform.up);
 
-            var knifeEuler = knife.transform.rotation.eulerAngles;
-            //knifeEuler.y = handLookingAtEnemy.eulerAngles.y;
-            knifeEuler.y = 0;
-            knifeEuler.z = 0;
-            knifeEuler.x = 90 + knifeHolder.eulerAngles.x;
-            knife.transform.eulerAngles = knifeEuler;
+            var knifeProjectedLookingAtEnemyProjected = Quaternion.LookRotation(enemyProjected - knifeProjected, knifeHolder.transform.up);
+            var knifeProjectedLookingAtEnemyProjectedEulerAngles = knifeProjectedLookingAtEnemyProjected.eulerAngles;
+            knifeProjectedLookingAtEnemyProjectedEulerAngles.x += 90;
+            knifeProjectedLookingAtEnemyProjected.eulerAngles = knifeProjectedLookingAtEnemyProjectedEulerAngles;
+            knife.transform.rotation = Quaternion.RotateTowards(knife.transform.rotation, knifeProjectedLookingAtEnemyProjected, rotationSpeed);
         }
     }
 }
