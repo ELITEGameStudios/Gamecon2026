@@ -3455,7 +3455,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    maxMovementInputAngleDifference: 50
+    maxMovementInputAngleDifference: 85
     lookAngleDifferenceRange: {x: 0, y: 60}
     camAngle: {fileID: 5135691818557011457}
     wallRunMask:
@@ -3560,6 +3560,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3641decfe5b1dd8418f05a98b42bb1b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  knifeParried:
+    m_PersistentCalls:
+      m_Calls: []
   featherKnife: {fileID: 6373491937540632380}
   projectileFirePoint: {fileID: 6713920502105754854}
   playerMovement: {fileID: 3750233208252415097}
