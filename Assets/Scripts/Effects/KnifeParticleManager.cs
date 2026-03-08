@@ -34,12 +34,13 @@ public class KnifeParticleManager : MonoBehaviour
 
     void PlayParryFireEffects()
     {
+        parryWindSpiral.transform.position = transform.position;
         parryWindSpiral.Play();
     }
 
     void PlayStandardFireEffects()
     {
-        throwTrailEffect.Play();
+       if (throwTrailEffect != null) throwTrailEffect.Play();
     }
 
      void OnEnemyCollision(KnifeCollisionInfo collision)

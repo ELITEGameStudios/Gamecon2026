@@ -54,6 +54,7 @@ MonoBehaviour:
   windExplosion: {fileID: 6255368783750112301}
   parryWindSpiral: {fileID: 4623520801389791309}
   shockwaveExplosion: {fileID: 6660158107283623418}
+  throwTrailEffect: {fileID: 0}
 --- !u!1001 &235173832660087008
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -772,11 +773,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5950786846910023151, guid: efe41b0b835ba1e43b483b8cf516646d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.00573
+      value: -0.0057
       objectReference: {fileID: 0}
     - target: {fileID: 5950786846910023151, guid: efe41b0b835ba1e43b483b8cf516646d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0
+      value: 0.0482
       objectReference: {fileID: 0}
     - target: {fileID: 5950786846910023151, guid: efe41b0b835ba1e43b483b8cf516646d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -840,6 +841,30 @@ PrefabInstance:
     - target: {fileID: 2146007422842436664, guid: 0c264ff72dd78064da67e00dbfe04b9f, type: 3}
       propertyPath: moveWithTransform
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146007422842436664, guid: 0c264ff72dd78064da67e00dbfe04b9f, type: 3}
+      propertyPath: EmissionModule.m_BurstCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146007422842436664, guid: 0c264ff72dd78064da67e00dbfe04b9f, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146007422842436664, guid: 0c264ff72dd78064da67e00dbfe04b9f, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].time
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146007422842436664, guid: 0c264ff72dd78064da67e00dbfe04b9f, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[1].time
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146007422842436664, guid: 0c264ff72dd78064da67e00dbfe04b9f, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146007422842436664, guid: 0c264ff72dd78064da67e00dbfe04b9f, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[1].countCurve.scalar
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3582727469171138016, guid: 0c264ff72dd78064da67e00dbfe04b9f, type: 3}
       propertyPath: m_LocalPosition.x
