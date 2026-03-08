@@ -28,27 +28,25 @@ public class KnifeParticleManager : MonoBehaviour
     void OnKnifeParried(Projectile knife)
     {
         parryWindSpiral.Play();
-        parryWindSpiral.transform.position = knife.transform.position;
+   //     parryWindSpiral.transform.position = knife.transform.position;
     }
 
-     void OnEnemyCollision(Collision collision)
+     void OnEnemyCollision(KnifeCollisionInfo collision)
     {
-        var contact = collision.GetContact(0);
-        PlayParticleAtCollisionPoint(contact, enemyCollision);
-        PlayParticleAtCollisionPoint(contact, windExplosion);
-        PlayParticleAtCollisionPoint(contact, shockwaveExplosion);
+        PlayParticleAtCollisionPoint(collision, enemyCollision);
+        PlayParticleAtCollisionPoint(collision, windExplosion);
+        PlayParticleAtCollisionPoint(collision, shockwaveExplosion);
     }
-     void OnTerrainCollision(Collision collision)
+     void OnTerrainCollision(KnifeCollisionInfo collision)
     {
-        var contact = collision.GetContact(0);
-        PlayParticleAtCollisionPoint(contact, terrainCollision);
-        PlayParticleAtCollisionPoint(contact, shockwaveExplosion, true);
+        PlayParticleAtCollisionPoint(collision, terrainCollision);
+        PlayParticleAtCollisionPoint(collision, shockwaveExplosion, true);
     }
-    void PlayParticleAtCollisionPoint(ContactPoint contactPoint, ParticleSystem particle, bool flipAlongNormal = false)
+    void PlayParticleAtCollisionPoint(KnifeCollisionInfo collision, ParticleSystem particle, bool flipAlongNormal = false)
     {
         int flip = flipAlongNormal ? 1 : -1;
-        particle.transform.position = contactPoint.point;
-        particle.transform.LookAt(contactPoint.normal * flip);
+        particle.transform.position = collision.point;
+        particle.transform.LookAt(collision.normal * flip);
         particle.Play();
     }
 }

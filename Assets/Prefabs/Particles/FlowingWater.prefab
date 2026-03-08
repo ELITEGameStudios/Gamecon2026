@@ -1,0 +1,167 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8575886698078147735
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 213437296229501335}
+  - component: {fileID: 7323315154693083866}
+  - component: {fileID: 1527019940933286731}
+  m_Layer: 1
+  m_Name: FlowingWater
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &213437296229501335
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8575886698078147735}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -10.83, y: 399, z: 118.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!2083052967 &7323315154693083866
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8575886698078147735}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: 88a6c2f34a93df846a943da9d6329c9f, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_AllowInstancing: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 800
+        m_Name: SpawnRate
+        m_Overridden: 1
+      - m_Value: 0.6
+        m_Name: Drag
+        m_Overridden: 1
+      - m_Value: 60
+        m_Name: Lifetime
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: BaseColorChance
+        m_Overridden: 1
+      - m_Value: 1.14
+        m_Name: WaveColorChance
+        m_Overridden: 1
+      - m_Value: 4.25
+        m_Name: WaterWaveAmount
+        m_Overridden: 1
+      - m_Value: 11.85
+        m_Name: ParticleSizeRandomness
+        m_Overridden: 1
+      - m_Value: 2.33
+        m_Name: ParticleWidth
+        m_Overridden: 1
+      - m_Value: 0.8
+        m_Name: TurbulenceIntensity
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: BounceAmount
+        m_Overridden: 1
+      - m_Value: 0.05
+        m_Name: WaterOpacity
+        m_Overridden: 1
+      - m_Value: 0.075
+        m_Name: WaterAlpha
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array: []
+    m_Vector3f:
+      m_Array:
+      - m_Value: {x: -2, y: -10, z: -2}
+        m_Name: MinVelocityStart
+        m_Overridden: 1
+      - m_Value: {x: 2, y: -10, z: 2}
+        m_Name: MaxVelocityStart
+        m_Overridden: 1
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 0.04799571, y: 0.16774124, z: 0.4037736, w: 0}
+        m_Name: BaseColor
+        m_Overridden: 1
+      - m_Value: {x: 0.38823527, y: 0.81960785, z: 0.4556349, w: 1}
+        m_Name: WaveColor
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array: []
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array: []
+    m_Gradient:
+      m_Array: []
+    m_NamedObject:
+      m_Array:
+      - m_Value: {fileID: 2800000, guid: 2d9895c1ff176a541b0f59c45585779c, type: 3}
+        m_Name: WaterTexture
+        m_Overridden: 1
+    m_Bool:
+      m_Array: []
+--- !u!73398921 &1527019940933286731
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8575886698078147735}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
