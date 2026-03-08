@@ -8,7 +8,7 @@ using UnityEngine.Rendering;
 // handles shooting, recalling, and parrying
 public class ProjectileAbilities : MonoBehaviour
 {
-    public UnityEvent knifeParried = new();
+    public UnityEvent<KnifeThrowInfo> firedKnife = new();
 
     [Header("References")]
     [SerializeField] private Projectile featherKnife;
@@ -127,13 +127,11 @@ public class ProjectileAbilities : MonoBehaviour
             float totalDistance = featherKnife.totalRecallDistance;
             float progress = 1f - (currentDistance / totalDistance);
             
-            
-        
+          
             // Parry when close to the player (last 20% of journey)
             if(progress > parryTiming)
             {
                 Debug.Log("Parried!");
-                knifeParried.Invoke();
                 TryShoot(true);
             }
             else if(progress > parryTiming - 0.25f)
@@ -275,8 +273,16 @@ public class ProjectileAbilities : MonoBehaviour
             if(armAnimator != null){armAnimator.SetTrigger("Shoot");}
             shootSFX.start();
         }
+
+        KnifeThrowInfo throwInfo = new ()
+        {
+            parried = parry,
+            direction = direction,
+        };
+        firedKnife.Invoke(throwInfo);
+
     }
-    
+
     private IEnumerator ParryCoroutine()
     {
 

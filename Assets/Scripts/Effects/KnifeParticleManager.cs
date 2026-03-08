@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class KnifeParticleManager : MonoBehaviour
 {
@@ -7,12 +8,12 @@ public class KnifeParticleManager : MonoBehaviour
     [SerializeField] ParticleSystem windExplosion;
     [SerializeField] ParticleSystem parryWindSpiral;
     [SerializeField] ParticleSystem shockwaveExplosion;
-    public void InitParticleManager(Projectile knife)
+    [SerializeField] VisualEffect throwTrailEffect;
+    public void InitParticleManager(Projectile knife, Transform player)
     {
         knife.enemyStruck.AddListener(OnEnemyCollision);
         knife.terrainStruck.AddListener(OnTerrainCollision);
-        knife.projectileAbilities.knifeParried.AddListener(() => OnKnifeParried(knife));
-
+        knife.projectileAbilities.firedKnife.AddListener(OnKnifeFired);
         terrainCollision.Stop();
         enemyCollision.Stop();
 
@@ -25,10 +26,20 @@ public class KnifeParticleManager : MonoBehaviour
         }
     }
      
-    void OnKnifeParried(Projectile knife)
+    void OnKnifeFired(KnifeThrowInfo throwInfo)
+    {
+        if (throwInfo.parried) PlayParryFireEffects();
+        else PlayStandardFireEffects(); 
+    }
+
+    void PlayParryFireEffects()
     {
         parryWindSpiral.Play();
-   //     parryWindSpiral.transform.position = knife.transform.position;
+    }
+
+    void PlayStandardFireEffects()
+    {
+        throwTrailEffect.Play();
     }
 
      void OnEnemyCollision(KnifeCollisionInfo collision)

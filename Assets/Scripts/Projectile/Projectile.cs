@@ -8,8 +8,8 @@ using UnityEngine.ProBuilder.MeshOperations;
 public class Projectile : MonoBehaviour
 {
 
-    public UnityEvent<Collision> enemyStruck = new();
-    public UnityEvent<Collision> terrainStruck = new();
+    public UnityEvent<KnifeCollisionInfo> enemyStruck = new();
+    public UnityEvent<KnifeCollisionInfo> terrainStruck = new();
     public enum ProjectileState {Idle, Flying, Embedded, Recalling}//, PickedUp}
     public ProjectileState currentState { get; private set; } = ProjectileState.Idle;
     public Vector3 targetLocalScale;
@@ -82,7 +82,7 @@ public class Projectile : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
 
-        if (knifeParticleManager != null) knifeParticleManager.InitParticleManager(this);
+        if (knifeParticleManager != null) knifeParticleManager.InitParticleManager(this, playerTransform);
         spaceRecordingData = new List<SpaceSample>();
         triggerList = new List<Collider>();
         ReturnToIdle();
@@ -281,7 +281,7 @@ public class Projectile : MonoBehaviour
 
         return estimatedTime;
     }
-    
+
     private float CalculateDistanceBoost(float currentDistance)
     {
         if (currentDistance > maxBoostDistance)
@@ -390,37 +390,49 @@ public class Projectile : MonoBehaviour
         if (currentState != ProjectileState.Flying || currentState == ProjectileState.Recalling)
             return;
 
+
+        KnifeCollisionInfo collisionInfo = new()
+        {
+            normal = -rb.linearVelocity,
+            point = rb.position,
+            struckEnemy = false
+        };
+        
         if (collision.gameObject.CompareTag("Enemy"))
         {
             if (projectileAbilities != null)
             {
                 projectileAbilities.ResetRecallCooldown();
             }
-            enemyStruck.Invoke(collision);
+            enemyStruck.Invoke(collisionInfo);
+            var enemy = collision.transform.GetComponent<EnemyBase>();
+            if (enemy == null && collision.transform.parent != null) enemy = collision.transform.parent.GetComponent<EnemyBase>();
+            enemy.Damage();
+            collisionInfo.struckEnemy = true;
         }
 
-        if(collision.transform.GetComponent<EnemyBase>() == null)
-        {
-            if(collision.transform.parent != null)
-            {
-                if(collision.transform.parent.GetComponent<EnemyBase>() == null)
-                {
-                    Debug.Log("Null");
-                }
-                else
-                {
-                    collision.transform.parent.GetComponent<EnemyBase>().Damage();
-                }
-            }
-        }
-        else
-        {
-            collision.transform.GetComponent<EnemyBase>().Damage();
-        }
+        //if(collision.transform.GetComponent<EnemyBase>() == null)
+        //{
+        //    if(collision.transform.parent != null)
+        //    {
+        //        if(collision.transform.parent.GetComponent<EnemyBase>() == null)
+        //        {
+        //            Debug.Log("Null");
+        //        }
+        //        else
+        //        {
+        //            collision.transform.parent.GetComponent<EnemyBase>().Damage();
+        //        }
+        //    }
+        //}
+        //else
+        //{
+        //    collision.transform.GetComponent<EnemyBase>().Damage();
+        //}
 
         if ((terrainMask & (collision.gameObject.layer >> 1)) != 0)
         {
-            terrainStruck.Invoke(collision);
+            terrainStruck.Invoke(collisionInfo);
         }
 
         if (hitEffect)
@@ -441,4 +453,18 @@ public class Projectile : MonoBehaviour
 
         CancelInvoke(nameof(ReturnToIdle));
     }
+}
+
+
+public struct KnifeCollisionInfo
+{
+    public Vector3 normal;
+    public Vector3 point;
+    public bool struckEnemy;
+}
+
+public struct KnifeThrowInfo
+{
+    public bool parried;
+    public Vector3 direction;
 }
