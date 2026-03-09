@@ -52,7 +52,8 @@ public class Projectile : MonoBehaviour
 
     public float totalRecallDistance;
     private float recallProgress;
-    private Collider recallTime;
+    [SerializeField] private Collider thisCol;
+    [SerializeField] private Transform centerTf;
     
 
     [Header("Blink Data")]
@@ -60,7 +61,7 @@ public class Projectile : MonoBehaviour
     public int maxRecordingSlots;
     public SpaceSample blinkSample;
     public List<Collider> triggerList;
-    public bool inTriggerCollision =>  triggerList == null || triggerList.Count == 0;
+    public bool inTriggerCollision =>  triggerList == null || triggerList.Count != 0;
 
     
     [Serializable]
@@ -92,9 +93,22 @@ public class Projectile : MonoBehaviour
 
     public Vector3 GetBlinkPosition()
     {
+
+        bool inCollision = false;
+        Collider[] colliders = Physics.OverlapBox(centerTf.position, col.bounds.extents, transform.rotation);
+        
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if(!colliders[i].isTrigger){
+                inCollision = true;
+                break;
+            }
+        }
+
+        Debug.Log(inCollision);
         if(
             currentState == ProjectileState.Flying || 
-            (currentState == ProjectileState.Recalling && !inTriggerCollision)
+            (currentState == ProjectileState.Recalling && !inCollision)
         )
             return transform.position;
 
@@ -145,8 +159,13 @@ public class Projectile : MonoBehaviour
         spaceSample.direction = transform.forward;
         spaceSample.velocity= rb.linearVelocity;
 
-        spaceRecordingData.Add(spaceSample);
-        if(spaceRecordingData.Count > maxRecordingSlots) spaceRecordingData.RemoveAt(0);
+        // debugObj.transform.position = transform.position;
+
+        if(currentState != ProjectileState.Embedded || spaceRecordingData.Count < maxRecordingSlots)
+        {
+            spaceRecordingData.Add(spaceSample);
+            if(spaceRecordingData.Count > maxRecordingSlots) spaceRecordingData.RemoveAt(0);
+        }
     }
 
     public void SetState(ProjectileState newState)
@@ -367,24 +386,38 @@ public class Projectile : MonoBehaviour
         if(other.isTrigger) return;
         
         triggerList.Add(other);
-        if(triggerList.Count != 1) return;
+        if(triggerList.Count > 1) return;
         
         int recordedPositionOffset = 3;
         if(currentState == ProjectileState.Recalling)
         {
-            blinkSample = spaceRecordingData[maxRecordingSlots - recordedPositionOffset - 1];
+            // blinkSample = spaceRecordingData[maxRecordingSlots - recordedPositionOffset - 1];
+            blinkSample = spaceRecordingData[0];
         }
     }
 
     void OnTriggerExit(Collider other)
     {
         if(other.isTrigger)return;
-        if(currentState == ProjectileState.Recalling)
+        triggerList.Remove(other);
+
+        bool inCollision = false;
+        Collider[] colliders = Physics.OverlapBox(centerTf.position, col.bounds.extents, transform.rotation);
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if(!colliders[i].isTrigger){
+                inCollision = true;
+                break;
+            }
+        }
+
+        if(!inCollision){triggerList = new();}
+
+        if(currentState == ProjectileState.Recalling && !inCollision )
         {
             blinkSample = spaceRecordingData[maxRecordingSlots-1];
         }
 
-        triggerList.Remove(other);
     }
 
     void OnCollisionEnter(Collision collision) //needs fixing. embedding doesn't work properly
