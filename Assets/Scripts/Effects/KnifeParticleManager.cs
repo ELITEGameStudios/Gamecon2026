@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.VFX;
 
 public class KnifeParticleManager : MonoBehaviour
@@ -9,11 +10,21 @@ public class KnifeParticleManager : MonoBehaviour
     [SerializeField] ParticleSystem parryWindSpiral;
     [SerializeField] ParticleSystem shockwaveExplosion;
     [SerializeField] VisualEffect throwTrailEffect;
+
+    [Header("Impact Decal")]
+    [SerializeField] DecalProjector impactDecal;
+    [SerializeField] AnimationCurve impactDecalTransparencyOverTime;
+    [SerializeField] int numberOfDecals = 8;
+
+
+    float impactDecalLifetimeTracker = 0.0f;
+    Color impactDecalColor;
     public void InitParticleManager(Projectile knife, Transform player)
     {
         knife.enemyStruck.AddListener(OnEnemyCollision);
         knife.terrainStruck.AddListener(OnTerrainCollision);
         knife.projectileAbilities.firedKnife.AddListener(OnKnifeFired);
+        knife.knifeRetrieved.AddListener(OnKnifeRetrieved);
         terrainCollision.Stop();
         enemyCollision.Stop();
 
@@ -24,8 +35,15 @@ public class KnifeParticleManager : MonoBehaviour
             main.loop = false;
             particle.Stop();
         }
+
+        impactDecalColor = impactDecal.material.GetColor("_ImpactColor");
+        impactDecal.enabled = false;
     }
      
+    void OnKnifeRetrieved()
+    {
+        impactDecal.enabled = false;
+    }
     void OnKnifeFired(KnifeThrowInfo throwInfo)
     {
         if (throwInfo.parried) PlayParryFireEffects();
@@ -52,7 +70,15 @@ public class KnifeParticleManager : MonoBehaviour
      void OnTerrainCollision(KnifeCollisionInfo collision)
     {
         PlayParticleAtCollisionPoint(collision, terrainCollision);
-        PlayParticleAtCollisionPoint(collision, shockwaveExplosion, true);
+
+        impactDecal.enabled = true;
+        int rand = Random.Range(0, numberOfDecals);
+        impactDecal.material.SetFloat("_TextureIndex", rand);
+        //impactDecal.transform.position = collision.point;
+        impactDecalLifetimeTracker = 0.0f;
+
+        Debug.Log("Setting decal to index " + rand);
+
     }
     void PlayParticleAtCollisionPoint(KnifeCollisionInfo collision, ParticleSystem particle, bool flipAlongNormal = false)
     {
@@ -61,4 +87,17 @@ public class KnifeParticleManager : MonoBehaviour
         particle.transform.LookAt(collision.normal * flip);
         particle.Play();
     }
+
+    private void Update()
+    {
+        if (impactDecalLifetimeTracker < 1.0f)
+        {
+            impactDecalLifetimeTracker += Time.deltaTime;
+            float val = impactDecalTransparencyOverTime.Evaluate(impactDecalLifetimeTracker);
+            impactDecalColor.a = val;
+            impactDecal.material.SetColor("_ImpactColor", impactDecalColor);
+        }
+    }
+
+
 }

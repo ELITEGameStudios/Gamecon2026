@@ -10,6 +10,7 @@ public class Projectile : MonoBehaviour
 
     public UnityEvent<KnifeCollisionInfo> enemyStruck = new();
     public UnityEvent<KnifeCollisionInfo> terrainStruck = new();
+    public UnityEvent knifeRetrieved = new();
     public enum ProjectileState {Idle, Flying, Embedded, Recalling}//, PickedUp}
     public ProjectileState currentState { get; private set; } = ProjectileState.Idle;
     public Vector3 targetLocalScale;
@@ -86,7 +87,7 @@ public class Projectile : MonoBehaviour
         spaceRecordingData = new List<SpaceSample>();
         triggerList = new List<Collider>();
         ReturnToIdle();
-        terrainMask = LayerMask.GetMask("Wall", "Ground");
+        terrainMask = LayerMask.GetMask("Wall", "Ground", "Default");
     }
 
     public Vector3 GetBlinkPosition()
@@ -156,6 +157,7 @@ public class Projectile : MonoBehaviour
         switch (currentState)
         {
             case ProjectileState.Idle:
+                knifeRetrieved.Invoke();
                 rb.isKinematic = true;
                 col.enabled = true;
                 col.isTrigger = false;
@@ -430,8 +432,9 @@ public class Projectile : MonoBehaviour
         //    collision.transform.GetComponent<EnemyBase>().Damage();
         //}
 
-        if ((terrainMask & (collision.gameObject.layer >> 1)) != 0)
+        if ((terrainMask & (1 << collision.gameObject.layer)) != 0)
         {
+            Debug.Log("Hit terrain");
             terrainStruck.Invoke(collisionInfo);
         }
 
