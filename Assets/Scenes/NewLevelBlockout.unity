@@ -15705,7 +15705,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &626483686
 Transform:
   m_ObjectHideFlags: 0
@@ -17779,7 +17779,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 20
-  field of view: 66.3
+  field of view: 80
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -19947,8 +19947,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1519383852197518122, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -12851.46
+      objectReference: {fileID: 0}
+    - target: {fileID: 1519383852197518122, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 260
+      value: 3233.3535
       objectReference: {fileID: 0}
     - target: {fileID: 1648708937653568327, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: m_AnchorMax.y
@@ -20285,7 +20289,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5176133700282592783, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5377674067610318971, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: m_AnchorMax.y
@@ -28122,7 +28126,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 20
-  field of view: 66.3
+  field of view: 80
   orthographic: 0
   orthographic size: 5
   m_Depth: 10
@@ -41634,6 +41638,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerChad
       objectReference: {fileID: 0}
+    - target: {fileID: 5674642158650720747, guid: c489f38eb752e83448adf30f23c025f9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6107651678097154898, guid: c489f38eb752e83448adf30f23c025f9, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -41698,6 +41706,10 @@ PrefabInstance:
       propertyPath: cinematics
       value: 
       objectReference: {fileID: 626483692}
+    - target: {fileID: 7754705399134372923, guid: c489f38eb752e83448adf30f23c025f9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7779883433154233212, guid: c489f38eb752e83448adf30f23c025f9, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
