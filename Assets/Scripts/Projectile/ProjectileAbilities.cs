@@ -196,7 +196,6 @@ public class ProjectileAbilities : MonoBehaviour
         {
             pickupType = KnifeRetrievalType.Blink
         };
-        featherKnife.knifeRetrieved.Invoke(info);
     }
 
     public void OnPickup()

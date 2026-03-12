@@ -12,10 +12,11 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] PageManager pageManager;
     [SerializeField] InputActionReference pauseInput;
     [SerializeField] Button saveButton;
-
+    [SerializeField] GameObject fpsDisplay;
     [Header("Video")]
     [SerializeField] TMP_Dropdown resolutionOptions;
     [SerializeField] Toggle fullscreenToggle;
+    [SerializeField] Toggle FPSToggle;
 
     [Header("Volume")]
     [SerializeField] Slider BGMSlider;
@@ -58,11 +59,11 @@ public class SettingsMenu : MonoBehaviour
     {
         if (saveSystem == null) saveSystem = new SaveSystem();
         var settingsAsString = saveSystem.Read( PlayerSettings.GetPlayerSettingsFilePath() );
-        if (settingsAsString != string.Empty)
+        if (settingsAsString != string.Empty )
         {
             currentSettings = saveSystem.ParseFromJson<PlayerSettings>(settingsAsString);
         }
-        else
+        if (currentSettings == null || settingsAsString == string.Empty)
         {
             Debug.LogWarning("Could not find settings files at location " + PlayerSettings.GetPlayerSettingsDirectory());
             saveSystem.EnsureSave(PlayerSettings.GetPlayerSettingsDirectory(), "playerSettings", currentSettings);
@@ -80,6 +81,10 @@ public class SettingsMenu : MonoBehaviour
         requestedResolution = currentSettings.resolution;
 
         fullscreenToggle.isOn = currentSettings.fullscreen;
+
+        FPSToggle.isOn = currentSettings.showFPS;
+
+        fpsDisplay.SetActive(currentSettings.showFPS);
 
         for (int i = 0; i < resolutionOptions.options.Count; i++) 
         {
@@ -124,6 +129,7 @@ public class SettingsMenu : MonoBehaviour
     void ApplyVideoSettings()
     {
         Screen.SetResolution(requestedResolution.x, requestedResolution.y, currentSettings.fullscreen);
+        fpsDisplay.SetActive(currentSettings.showFPS);
     }
 
     IEnumerator ApplyInputSettings()
@@ -155,6 +161,13 @@ public class SettingsMenu : MonoBehaviour
         fullscreenToggle.isOn = isOn;
         newSettings.fullscreen = isOn;
         OnChangeMade();
+    }
+
+    public void OnFPSToggled(bool isOn)
+    {
+        FPSToggle.isOn = isOn;
+        newSettings.showFPS = isOn;
+        OnChangeMade() ;
     }
 
     public void OnResolutionChanged(int index)

@@ -20,6 +20,12 @@ public class TrackerDisplay : MonoBehaviour
     [SerializeField] TMP_Text dashCounter;
     private void Start()
     {
+        if (tracker == null)
+        {
+            //no use if there's no tracker
+            Destroy(gameObject);
+            return;
+        }
         display.SetActive(false);
         toggleDisplay.action.performed += OnTogglePressed;
     }
