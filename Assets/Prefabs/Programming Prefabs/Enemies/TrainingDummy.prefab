@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1926706498492485364}
   - component: {fileID: 1253868104106164243}
   - component: {fileID: 5653698817793326410}
-  - component: {fileID: 7011007403227758196}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Enemy
@@ -87,28 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7011007403227758196
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3238659415127343889}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -462981019419857548, guid: c48edf97c2f83c64fbe403bcd75ab01f, type: 3}
 --- !u!1 &4355874264954563870
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,6 +99,7 @@ GameObject:
   - component: {fileID: 1138389539029935431}
   - component: {fileID: 4557573513580818196}
   - component: {fileID: 8689294665075528295}
+  - component: {fileID: 675799845533285726}
   m_Layer: 0
   m_Name: Cylinder.003
   m_TagString: Enemy
@@ -217,7 +195,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 6239881831769578202, guid: c48edf97c2f83c64fbe403bcd75ab01f, type: 3}
 --- !u!114 &8689294665075528295
@@ -233,6 +211,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetEntity: {fileID: 1114984338368975778}
+--- !u!65 &675799845533285726
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355874264954563870}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.008955177, y: 0.0069924765, z: 0.021491544}
+  m_Center: {x: -0.00047111942, y: 2.3426134e-17, z: -0.0023444875}
 --- !u!1 &5217330970048569504
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,8 +259,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6517799546662672232}
   - {fileID: 2658241698787831760}
@@ -294,6 +293,7 @@ MonoBehaviour:
   contactDamage: 0
   collider: {fileID: 4557573513580818196}
   enemyShield: {fileID: 0}
+  type: 0
 --- !u!1 &6313635825784396129
 GameObject:
   m_ObjectHideFlags: 0

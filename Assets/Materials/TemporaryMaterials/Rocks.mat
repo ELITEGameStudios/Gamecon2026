@@ -39,6 +39,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _AOMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: c82b0f8deef07ff46acc4c8092d7a8d7, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -71,6 +75,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 332276fcf5075764995c23f01f64f966, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Normal_Map:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -80,19 +88,23 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture3D_8ce9119cd2e84160b4692c9fac71854e_Texture_1_Texture3D:
-        m_Texture: {fileID: 11700000, guid: f61fbde6c70c5e44d88829ded35749b6, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Triplanar_124a5482c7a343bfacd658622f6f5fbc_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 398a788671c9a94499aca5f81cf1a984, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Triplanar_6077e9fe34754d77b3f41233c04ef4b8_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 2917b4c45d942734cb6c01ebb25f0575, type: 3}
+        m_Texture: {fileID: 2800000, guid: 398a788671c9a94499aca5f81cf1a984, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Triplanar_682745178a934d3399e75e003e803330_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 2917b4c45d942734cb6c01ebb25f0575, type: 3}
+        m_Texture: {fileID: 2800000, guid: 398a788671c9a94499aca5f81cf1a984, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -114,6 +126,7 @@ Material:
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
+    - _BrushEffectStrength: 1
     - _BrushStrokeContribution: 0.5
     - _BumpScale: 1
     - _ClearCoatMask: 0
@@ -132,9 +145,12 @@ Material:
     - _MetallicStrength: 0
     - _NoiseIntensity: 0.25
     - _NoiseScale: 50
+    - _NormalMapStrength: 0
+    - _NormalStackBlend: 0
     - _NormalStrength: 0.01
     - _OcclusionStrength: 1
     - _Parallax: 0.005
+    - _ProceduralNoiseNormalStrength: 0.01
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
@@ -145,6 +161,9 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _TestMapOffset: 0.5
+    - _TotalBrushEffectStrength: 1
+    - _TotalBrushEffectWeight: 0
     - _TriPlaneNormal: 0
     - _TriplanarTile: 0.47
     - _VoronoiScale: 4.54
@@ -159,6 +178,11 @@ Material:
     - _BrushStrokeColor: {r: 1, g: 1, b: 1, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _NormalMapOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _NormalMapTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _OverallColor: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _Tiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
