@@ -82,9 +82,9 @@ public class SettingsMenu : MonoBehaviour
 
         fullscreenToggle.isOn = currentSettings.fullscreen;
 
-        if (FPSToggle != null) FPSToggle.isOn = currentSettings.showFPS;
+        FPSToggle.isOn = currentSettings.showFPS;
 
-        if (fpsDisplay != null) fpsDisplay.SetActive(currentSettings.showFPS);
+        fpsDisplay.SetActive(currentSettings.showFPS);
 
         for (int i = 0; i < resolutionOptions.options.Count; i++) 
         {
@@ -166,7 +166,8 @@ public class SettingsMenu : MonoBehaviour
     public void OnFPSToggled(bool isOn)
     {
         FPSToggle.isOn = isOn;
-
+        newSettings.showFPS = isOn;
+        OnChangeMade() ;
     }
 
     public void OnResolutionChanged(int index)

@@ -33,6 +33,7 @@ public class PlayerSettings
         this.horizontalSensitivity = other.horizontalSensitivity;
         this.verticalSensitivity = other.verticalSensitivity;
         this.showTutorialPrompts = other.showTutorialPrompts;
+        this.showFPS = other.showFPS;
     }
 
     public static string GetPlayerSettingsDirectory()
