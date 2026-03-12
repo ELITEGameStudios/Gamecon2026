@@ -19,7 +19,6 @@ public class EntityDetectionSystem : MonoBehaviour
     {
         entityManager = manager;
         init = true;
-        Debug.Log("Init FEDS");
     }
 
     private void Update()
@@ -46,7 +45,6 @@ public class EntityDetectionSystem : MonoBehaviour
             var knifeProjectedLookingAtEnemyProjected = Quaternion.LookRotation(enemyProjected - knifeProjected, knifeHolder.transform.up);
             var knifeProjectedLookingAtEnemyProjectedEulerAngles = knifeProjectedLookingAtEnemyProjected.eulerAngles;
             knifeProjectedLookingAtEnemyProjectedEulerAngles.x += 90;
-           // knifeProjectedLookingAtEnemyProjectedEulerAngles.y = 0;
             knifeProjectedLookingAtEnemyProjectedEulerAngles.z = 0;
             knifeProjectedLookingAtEnemyProjected.eulerAngles = knifeProjectedLookingAtEnemyProjectedEulerAngles;
             knife.transform.rotation = Quaternion.RotateTowards(knife.transform.rotation, knifeProjectedLookingAtEnemyProjected, rotationSpeed);

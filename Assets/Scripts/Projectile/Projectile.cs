@@ -10,7 +10,11 @@ public class Projectile : MonoBehaviour
 
     public UnityEvent<KnifeCollisionInfo> enemyStruck = new();
     public UnityEvent<KnifeCollisionInfo> terrainStruck = new();
-    public UnityEvent knifeRetrieved = new();
+    public UnityEvent<KnifeRetrievalInfo> knifeRetrieved = new();
+    /// <summary>
+    /// Float parameter is distance travelled.
+    /// </summary>
+
     public enum ProjectileState {Idle, Flying, Embedded, Recalling}//, PickedUp}
     public ProjectileState currentState { get; private set; } = ProjectileState.Idle;
     public Vector3 targetLocalScale;
@@ -52,7 +56,8 @@ public class Projectile : MonoBehaviour
 
     public float totalRecallDistance;
     private float recallProgress;
-    private Collider recallTime;
+    [SerializeField] private Collider thisCol;
+    [SerializeField] private Transform centerTf;
     
 
     [Header("Blink Data")]
@@ -60,7 +65,7 @@ public class Projectile : MonoBehaviour
     public int maxRecordingSlots;
     public SpaceSample blinkSample;
     public List<Collider> triggerList;
-    public bool inTriggerCollision =>  triggerList == null || triggerList.Count == 0;
+    public bool inTriggerCollision =>  triggerList == null || triggerList.Count != 0;
 
     
     [Serializable]
@@ -92,9 +97,22 @@ public class Projectile : MonoBehaviour
 
     public Vector3 GetBlinkPosition()
     {
+
+        bool inCollision = false;
+        Collider[] colliders = Physics.OverlapBox(centerTf.position, col.bounds.extents, transform.rotation);
+        
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if(!colliders[i].isTrigger){
+                inCollision = true;
+                break;
+            }
+        }
+
+        Debug.Log(inCollision);
         if(
             currentState == ProjectileState.Flying || 
-            (currentState == ProjectileState.Recalling && !inTriggerCollision)
+            (currentState == ProjectileState.Recalling && !inCollision)
         )
             return transform.position;
 
@@ -107,7 +125,12 @@ public class Projectile : MonoBehaviour
         if (playerTransform != null && currentState == ProjectileState.Embedded)
         {   
             float distance = Vector3.Distance(playerTransform.position, transform.position);
-            if (distance <= pickUpRadius){ 
+            if (distance <= pickUpRadius){
+                KnifeRetrievalInfo info = new ()
+                {
+                    pickupType = KnifeRetrievalType.Pickup,
+                };
+                knifeRetrieved.Invoke(info);
                 Pickup(); 
             }
         }
@@ -145,8 +168,13 @@ public class Projectile : MonoBehaviour
         spaceSample.direction = transform.forward;
         spaceSample.velocity= rb.linearVelocity;
 
-        spaceRecordingData.Add(spaceSample);
-        if(spaceRecordingData.Count > maxRecordingSlots) spaceRecordingData.RemoveAt(0);
+        // debugObj.transform.position = transform.position;
+
+        if(currentState != ProjectileState.Embedded || spaceRecordingData.Count < maxRecordingSlots)
+        {
+            spaceRecordingData.Add(spaceSample);
+            if(spaceRecordingData.Count > maxRecordingSlots) spaceRecordingData.RemoveAt(0);
+        }
     }
 
     public void SetState(ProjectileState newState)
@@ -157,7 +185,6 @@ public class Projectile : MonoBehaviour
         switch (currentState)
         {
             case ProjectileState.Idle:
-                knifeRetrieved.Invoke();
                 rb.isKinematic = true;
                 col.enabled = true;
                 col.isTrigger = false;
@@ -257,8 +284,12 @@ public class Projectile : MonoBehaviour
     
         if (currentDistance < 0.1f)
         {
+            KnifeRetrievalInfo info = new()
+            {
+                pickupType = KnifeRetrievalType.Recall
+            };
+            knifeRetrieved.Invoke(info);
             ReturnToIdle();
-            
         }
     }
 
@@ -367,24 +398,38 @@ public class Projectile : MonoBehaviour
         if(other.isTrigger) return;
         
         triggerList.Add(other);
-        if(triggerList.Count != 1) return;
+        if(triggerList.Count > 1) return;
         
         int recordedPositionOffset = 3;
         if(currentState == ProjectileState.Recalling)
         {
-            blinkSample = spaceRecordingData[maxRecordingSlots - recordedPositionOffset - 1];
+            // blinkSample = spaceRecordingData[maxRecordingSlots - recordedPositionOffset - 1];
+            blinkSample = spaceRecordingData[0];
         }
     }
 
     void OnTriggerExit(Collider other)
     {
         if(other.isTrigger)return;
-        if(currentState == ProjectileState.Recalling)
+        triggerList.Remove(other);
+
+        bool inCollision = false;
+        Collider[] colliders = Physics.OverlapBox(centerTf.position, col.bounds.extents, transform.rotation);
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if(!colliders[i].isTrigger){
+                inCollision = true;
+                break;
+            }
+        }
+
+        if(!inCollision){triggerList = new();}
+
+        if(currentState == ProjectileState.Recalling && !inCollision )
         {
             blinkSample = spaceRecordingData[maxRecordingSlots-1];
         }
 
-        triggerList.Remove(other);
     }
 
     void OnCollisionEnter(Collision collision) //needs fixing. embedding doesn't work properly
@@ -471,3 +516,16 @@ public struct KnifeThrowInfo
     public bool parried;
     public Vector3 direction;
 }
+
+public struct KnifeRetrievalInfo
+{
+    public KnifeRetrievalType pickupType;
+    public float blinkDistance;
+}
+public enum KnifeRetrievalType
+{
+    Recall,
+    Pickup,
+    Blink
+}
+

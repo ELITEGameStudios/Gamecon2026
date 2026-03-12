@@ -182,12 +182,19 @@ public class PlayerMovementStateMachine : StateMachine
 
     public void Dash(){
         SetState(dashState);
+        featherKnife.projectileAbilities.dashPerformed.Invoke();
     }
 
     public void Blink(){
         
         SetState(airborneState);
         Vector3 targetPos = featherKnife.GetBlinkPosition();
+        KnifeRetrievalInfo info = new ()
+        {
+            pickupType = KnifeRetrievalType.Blink,
+            blinkDistance = Vector3.Distance(transform.position, targetPos),
+        };
+        featherKnife.knifeRetrieved.Invoke(info);
         Quaternion rot = featherKnife.transform.rotation;
         // for (float i = 0; i < 0.5f; i += 0.1f)
         // {
@@ -199,6 +206,7 @@ public class PlayerMovementStateMachine : StateMachine
         // }
 
         transform.position = targetPos;
+        
         CheckWallViaRay(ignoreWallRunTimer: true, fromBlink: true);
     }
 

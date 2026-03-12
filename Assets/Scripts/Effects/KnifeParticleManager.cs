@@ -23,8 +23,8 @@ public class KnifeParticleManager : MonoBehaviour
     {
         knife.enemyStruck.AddListener(OnEnemyCollision);
         knife.terrainStruck.AddListener(OnTerrainCollision);
-        knife.projectileAbilities.firedKnife.AddListener(OnKnifeFired);
-        knife.knifeRetrieved.AddListener(OnKnifeRetrieved);
+        knife.projectileAbilities.knifeThrown.AddListener(OnKnifeFired);
+        knife.knifeRetrieved.AddListener((retrieveType)=> OnKnifeRetrieved());
         terrainCollision.Stop();
         enemyCollision.Stop();
 

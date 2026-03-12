@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public IEntityManager entityManager;
     public bool Initialized { get; private set;}
 
-    event Action<float> gameEnding;
+    public event Action<float> gameEnding;
 
     [SerializeField] EntityDetectionSystem feds;
     [Header("Managers")]
@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Temporary Level Picker")]
     [SerializeField] LevelDatabase.LevelNames currentLevel;
+
+    public LevelDatabase.LevelNames CurrentLevel { get; private set; }
 
     public SettingsMenu GetSettingsMenu(){return settingsScreen;}
     bool gameOver = false;
