@@ -363,7 +363,7 @@ public class Projectile : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
         
         transform.SetParent(heldParent);
-        transform.localPosition = Vector3.zero;
+        transform.localPosition = Vector3.up * -0.65f;
         transform.localRotation = Quaternion.identity;
         transform.localScale = targetLocalScale;
         
@@ -384,7 +384,7 @@ public class Projectile : MonoBehaviour
         
         // Instantly return to hand + idle state
         transform.SetParent(heldParent);
-        transform.localPosition = Vector3.zero;
+        transform.localPosition = Vector3.up * -0.65f;
         transform.localRotation = Quaternion.identity;
         transform.localScale = targetLocalScale;
     

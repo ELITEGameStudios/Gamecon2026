@@ -133,6 +133,7 @@ public class PlayerMovementStateMachine : StateMachine
         if(currentState != groundedState){
             if (CheckGrounded() && currentState != dashState)
             {
+                if(rigidbody.linearVelocity.y < groundedState.bigFallThreshold){armAnimator.SetTrigger("BigFall");}
                 SetState(groundedState);
                 playerLand.start();
             } 

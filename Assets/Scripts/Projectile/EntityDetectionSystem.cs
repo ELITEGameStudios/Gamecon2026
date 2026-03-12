@@ -7,8 +7,9 @@ public class EntityDetectionSystem : MonoBehaviour
 {
     [SerializeField] Projectile knife;
     [SerializeField] CinematicManager cinematics;
-    [SerializeField] Transform knifeHolder;
+    [SerializeField] Transform knifeHolder, knifeTf;
     [SerializeField] float rotationSpeed = 10.0f;
+    [SerializeField] float Kp = 0.01f;
     IEntityManager entityManager;
 
     bool init = false;
@@ -47,7 +48,14 @@ public class EntityDetectionSystem : MonoBehaviour
             knifeProjectedLookingAtEnemyProjectedEulerAngles.x += 90;
             knifeProjectedLookingAtEnemyProjectedEulerAngles.z = 0;
             knifeProjectedLookingAtEnemyProjected.eulerAngles = knifeProjectedLookingAtEnemyProjectedEulerAngles;
-            knife.transform.rotation = Quaternion.RotateTowards(knife.transform.rotation, knifeProjectedLookingAtEnemyProjected, rotationSpeed);
+            // knife.transform.rotation = Quaternion.RotateTowards(knife.transform.rotation, knifeProjectedLookingAtEnemyProjected, rotationSpeed);
+            knifeTf.transform.rotation = Quaternion.Slerp(knifeTf.transform.rotation, knifeProjectedLookingAtEnemyProjected, Kp);
         }
+    }
+
+    void OnDisable()
+    {
+        // knifeTf.transform.rotation = initRotation;
+        knifeTf.transform.localEulerAngles = Vector3.zero;
     }
 }
