@@ -210,6 +210,12 @@ public class WaveManager : IEntityManager
         if (enemiesInWaveRemaining.Count == 1) return enemiesInWaveRemaining[0];
         float distanceToBeat = float.MaxValue;
         EnemyBase closest = null;
+        
+        // if(closest == null)
+        // {
+        //     GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        // }
+
         foreach (var enemy in enemiesInWaveRemaining)
         {
             //Use sqr magnitude because the relative sizes between each element is what matters, not absolute
@@ -227,6 +233,8 @@ public class WaveManager : IEntityManager
                 closest = enemy;
             }
         }
+
+
         return closest;
     }
 
