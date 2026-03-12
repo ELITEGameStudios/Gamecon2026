@@ -2,11 +2,13 @@ using UnityEngine;
 
 public class PlayerSettings 
 {
+
+ 
     //Video
     public Vector2Int resolution = new Vector2Int(1920, 1080);
     public bool fullscreen = true;
     public bool showTutorialPrompts = true;
-
+    public bool showFPS = false;
     //Audio
     public float bgmVolume = 1.0f;
     public float sfxVolume = 1.0f;

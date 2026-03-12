@@ -9,19 +9,18 @@ public class PlayerTracker : MonoBehaviour
     [HideInInspector] public TrackerData trackerData;
     Rigidbody playerRb;
 
-    bool checkedAvgVel = false;
-
     SaveSystem saveSystem = new();
 
     List<Vector3> velocitiesWhileShooting = new();
     List<float> elapsedUntilKnifeRetrieved = new();
-
 
     float elapsedMissingKnifeTime = 0;
 
     float totalBlinkDistance = 0;
     public void Start()
     {
+
+        
         trackerData = new();
         playerRb = player.GetComponent<Rigidbody>();
         knife.enemyStruck.AddListener((data) => OnKnifeCollision(true));
@@ -149,6 +148,7 @@ public class PlayerTracker : MonoBehaviour
         if (numberOfSaves < 0) numberOfSaves = 0;
         saveSystem.EnsureSave(TrackerService.GetDataFolderPathForLevel(gameManager.CurrentLevel), (numberOfSaves + 1).ToString(), trackerData);
         Debug.Log("Saving data to " + TrackerService.GetDataFolderPathForLevel(gameManager.CurrentLevel));
+        trackerData.beatGame = true;
     }
 }
 
@@ -169,6 +169,7 @@ public struct TrackerData
     public int successfulParries;
     //Misc
     public float timeElapsed;
+    public bool beatGame;
 }
 
 
