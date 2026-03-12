@@ -38,6 +38,7 @@ public class EntityDetectionSystem : MonoBehaviour
         if (enemy != null)
         {
             var enemyPosition = enemy.collider.bounds.center;
+            Debug.Log("Not null");
             
 
             var enemyProjected = Vector3.ProjectOnPlane(enemyPosition, knifeHolder.transform.up);
@@ -49,6 +50,7 @@ public class EntityDetectionSystem : MonoBehaviour
             knifeProjectedLookingAtEnemyProjectedEulerAngles.z = 0;
             knifeProjectedLookingAtEnemyProjected.eulerAngles = knifeProjectedLookingAtEnemyProjectedEulerAngles;
             // knife.transform.rotation = Quaternion.RotateTowards(knife.transform.rotation, knifeProjectedLookingAtEnemyProjected, rotationSpeed);
+
             knifeTf.transform.rotation = Quaternion.Slerp(knifeTf.transform.rotation, knifeProjectedLookingAtEnemyProjected, Kp);
         }
     }
