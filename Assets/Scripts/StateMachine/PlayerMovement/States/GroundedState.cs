@@ -11,6 +11,7 @@ public class GroundedState : PlayerMovementState
     public float rampupKp;
     public float desiredSpeed;
     public float turnThresholdAngle;
+    public float bigFallThreshold;
     public Vector3 desiredVelocity;
     
     // [FMODUnity.EventRef(MigrateTo ="EventReference")]
@@ -31,6 +32,7 @@ public class GroundedState : PlayerMovementState
 
     public override void Update()
     {
+        UnityEngine.Debug.Log(rigidbody.linearVelocity.y);
         RuntimeManager.AttachInstanceToGameObject(playerWalkState, movement.gameObject);
     }
 

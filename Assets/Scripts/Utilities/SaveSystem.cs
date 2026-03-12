@@ -13,9 +13,24 @@ public class SaveSystem : IFileManager
         }
         return null;
     }
+
+    public int GetNumberOfFilesInDirectory(string path)
+    {
+        if (!Directory.Exists(path)) return -1;
+
+        return Directory.GetFiles(path).Length;
+    }
     public T ParseFromJson<T>(string contents) where T : class
     {
-        return JsonUtility.FromJson<T>(contents);
+        try
+        {
+            return JsonUtility.FromJson<T>(contents);
+        } 
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+        return null;
     }
     public string Read(string path)
     {
@@ -59,11 +74,6 @@ public class SaveSystem : IFileManager
             return c.AvailableFreeSpace > size;
         }
         return false;
-    }
-
-    public string GetAsJson(object contents)
-    {
-        return JsonUtility.ToJson(contents);
     }
 
     public bool EnsureSave(string path, string name, object contents)

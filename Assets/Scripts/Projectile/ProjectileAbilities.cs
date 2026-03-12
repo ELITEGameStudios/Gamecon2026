@@ -8,7 +8,12 @@ using UnityEngine.Rendering;
 // handles shooting, recalling, and parrying
 public class ProjectileAbilities : MonoBehaviour
 {
-    public UnityEvent<KnifeThrowInfo> firedKnife = new();
+    public UnityEvent<KnifeThrowInfo> knifeThrown = new();
+    /// <summary>
+    /// Bool represents whether parry was successful
+    /// </summary>
+    public UnityEvent<bool> attemptedParry = new();
+    public UnityEvent dashPerformed = new();
 
     [Header("References")]
     [SerializeField] private Projectile featherKnife;
@@ -133,10 +138,12 @@ public class ProjectileAbilities : MonoBehaviour
             {
                 Debug.Log("Parried!");
                 TryShoot(true);
+                attemptedParry.Invoke(true);
             }
             else if(progress > parryTiming - 0.25f)
             {
                 parryFailSFX.start();
+                attemptedParry.Invoke(false);
             }
         }
         else
@@ -185,6 +192,11 @@ public class ProjectileAbilities : MonoBehaviour
         parryActive = false;
         HUDManager.Instance.blinkElement.Activate();
         HUDManager.Instance.TriggerBlinkPrompt();
+        KnifeRetrievalInfo info = new ()
+        {
+            pickupType = KnifeRetrievalType.Blink
+        };
+        featherKnife.knifeRetrieved.Invoke(info);
     }
 
     public void OnPickup()
@@ -279,7 +291,7 @@ public class ProjectileAbilities : MonoBehaviour
             parried = parry,
             direction = direction,
         };
-        firedKnife.Invoke(throwInfo);
+        knifeThrown.Invoke(throwInfo);
 
     }
 

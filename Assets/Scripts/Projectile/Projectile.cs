@@ -10,7 +10,11 @@ public class Projectile : MonoBehaviour
 
     public UnityEvent<KnifeCollisionInfo> enemyStruck = new();
     public UnityEvent<KnifeCollisionInfo> terrainStruck = new();
-    public UnityEvent knifeRetrieved = new();
+    public UnityEvent<KnifeRetrievalInfo> knifeRetrieved = new();
+    /// <summary>
+    /// Float parameter is distance travelled.
+    /// </summary>
+
     public enum ProjectileState {Idle, Flying, Embedded, Recalling}//, PickedUp}
     public ProjectileState currentState { get; private set; } = ProjectileState.Idle;
     public Vector3 targetLocalScale;
@@ -121,7 +125,12 @@ public class Projectile : MonoBehaviour
         if (playerTransform != null && currentState == ProjectileState.Embedded)
         {   
             float distance = Vector3.Distance(playerTransform.position, transform.position);
-            if (distance <= pickUpRadius){ 
+            if (distance <= pickUpRadius){
+                KnifeRetrievalInfo info = new ()
+                {
+                    pickupType = KnifeRetrievalType.Pickup,
+                };
+                knifeRetrieved.Invoke(info);
                 Pickup(); 
             }
         }
@@ -176,7 +185,6 @@ public class Projectile : MonoBehaviour
         switch (currentState)
         {
             case ProjectileState.Idle:
-                knifeRetrieved.Invoke();
                 rb.isKinematic = true;
                 col.enabled = true;
                 col.isTrigger = false;
@@ -276,8 +284,12 @@ public class Projectile : MonoBehaviour
     
         if (currentDistance < 0.1f)
         {
+            KnifeRetrievalInfo info = new()
+            {
+                pickupType = KnifeRetrievalType.Recall
+            };
+            knifeRetrieved.Invoke(info);
             ReturnToIdle();
-            
         }
     }
 
@@ -351,7 +363,7 @@ public class Projectile : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
         
         transform.SetParent(heldParent);
-        transform.localPosition = Vector3.zero;
+        transform.localPosition = Vector3.up * -0.65f;
         transform.localRotation = Quaternion.identity;
         transform.localScale = targetLocalScale;
         
@@ -372,7 +384,7 @@ public class Projectile : MonoBehaviour
         
         // Instantly return to hand + idle state
         transform.SetParent(heldParent);
-        transform.localPosition = Vector3.zero;
+        transform.localPosition = Vector3.up * -0.65f;
         transform.localRotation = Quaternion.identity;
         transform.localScale = targetLocalScale;
     
@@ -504,3 +516,16 @@ public struct KnifeThrowInfo
     public bool parried;
     public Vector3 direction;
 }
+
+public struct KnifeRetrievalInfo
+{
+    public KnifeRetrievalType pickupType;
+    public float blinkDistance;
+}
+public enum KnifeRetrievalType
+{
+    Recall,
+    Pickup,
+    Blink
+}
+
