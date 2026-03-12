@@ -51,7 +51,7 @@ public class ProjectileAbilities : MonoBehaviour
     public float blinkCooldownTime;
     public float blinkEffectTime = 0.33f;
     public float currentBlinkTimer;
-    public bool canBlink => currentBlinkTimer <= 0 && featherKnife.currentState != Projectile.ProjectileState.Idle;
+    public bool canBlink => currentBlinkTimer <= 0 && featherKnife.currentState != Projectile.ProjectileState.Idle && featherKnife.currentState != Projectile.ProjectileState.Recalling;
 
     public PlayerVFXManager playerVFXManager;
 

@@ -157,10 +157,10 @@ public class WaveManager : IEntityManager
         if(Instance == null){Instance = this;}
         else if(Instance != this){Debug.Log("idk rn");}
 
-        Debug.Log("Initializing Wave System...");
+        //Debug.Log("Initializing Wave System...");
       
-        waveIndex = 1;
-        InitWave(waveData[0]);
+        //waveIndex = 1;
+        //InitWave(waveData[0]);
 
         foreach (var enemy in sceneEnemies)
         {
