@@ -32,7 +32,7 @@ public class GroundedState : PlayerMovementState
 
     public override void Update()
     {
-        UnityEngine.Debug.Log(rigidbody.linearVelocity.y);
+    //    UnityEngine.Debug.Log(rigidbody.linearVelocity.y);
         RuntimeManager.AttachInstanceToGameObject(playerWalkState, movement.gameObject);
     }
 

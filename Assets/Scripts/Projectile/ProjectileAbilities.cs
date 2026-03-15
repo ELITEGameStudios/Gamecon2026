@@ -8,12 +8,13 @@ using UnityEngine.Rendering;
 // handles shooting, recalling, and parrying
 public class ProjectileAbilities : MonoBehaviour
 {
-    public UnityEvent<KnifeThrowInfo> knifeThrown = new();
+    [HideInInspector] public UnityEvent<KnifeThrowInfo> knifeThrown = new();
     /// <summary>
     /// Bool represents whether parry was successful
     /// </summary>
-    public UnityEvent<bool> attemptedParry = new();
-    public UnityEvent dashPerformed = new();
+    [HideInInspector] public UnityEvent<bool> attemptedParry = new();
+    [HideInInspector] public UnityEvent dashPerformed = new();
+    [HideInInspector] public UnityEvent recallStarted = new();
 
     [Header("References")]
     [SerializeField] private Projectile featherKnife;
@@ -124,6 +125,16 @@ public class ProjectileAbilities : MonoBehaviour
         }
     }
 
+    public bool IsParryable()
+    {
+        if (featherKnife.currentState != Projectile.ProjectileState.Recalling) return false;
+        // use distance parry timing instead of time-based
+        float currentDistance = Vector3.Distance(featherKnife.transform.position, transform.position);
+        float totalDistance = featherKnife.totalRecallDistance;
+        float progress = 1f - (currentDistance / totalDistance);
+
+        return progress > parryTiming;
+    }
     private void OnFirePressed(InputAction.CallbackContext ctx)
     {
         if(featherKnife.currentState == Projectile.ProjectileState.Recalling){
@@ -132,7 +143,6 @@ public class ProjectileAbilities : MonoBehaviour
             float totalDistance = featherKnife.totalRecallDistance;
             float progress = 1f - (currentDistance / totalDistance);
             
-          
             // Parry when close to the player (last 20% of journey)
             if(progress > parryTiming)
             {
@@ -159,6 +169,8 @@ public class ProjectileAbilities : MonoBehaviour
         {
             parryActive = false;
             if (featherKnife.currentState == Projectile.ProjectileState.Flying) { featherKnife.SetEmbeddedPos(); }
+
+            recallStarted.Invoke();
             featherKnife.SetState(Projectile.ProjectileState.Recalling);
             currentRecallCooldown = recallCooldown;
             
