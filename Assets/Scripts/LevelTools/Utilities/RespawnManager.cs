@@ -9,6 +9,7 @@ public class RespawnManager : MonoBehaviour
 
     [SerializeField] Transform respawnPoint;
     [SerializeField] Transform checkpointHolder;
+    [SerializeField] Player player;
 
     [SerializeField] GameObject deathNotifier;
     bool playerDead = false;
@@ -17,13 +18,9 @@ public class RespawnManager : MonoBehaviour
 
     public void InitManager(IVictoryCondition victoryCondition, IEntityManager entityManager)
     {
-        StartCoroutine(InitializeRespawnManager(victoryCondition, entityManager));
-    }
-    IEnumerator InitializeRespawnManager(IVictoryCondition victoryCondition, IEntityManager entityManager)
-    {
+        if (player == null) player = FindFirstObjectByType<Player>();
+        player.entityKilled.AddListener(OnPlayerKilled);
         deathNotifier.SetActive(false);
-        yield return new WaitUntil(() => Player.instance != null);
-        Player.instance.entityKilled.AddListener((runner) => OnPlayerKilled());
         respawnPoint.position = Player.instance.transform.position;
 
         var checkpoints = checkpointHolder.GetComponentsInChildren<PlayerCheckpoint>();
@@ -35,14 +32,17 @@ public class RespawnManager : MonoBehaviour
         {
            // ConfigureWavePausingOnDeath(waveManager);
         }
+
+        Debug.Log("init respawn system");
     }
 
     void ConfigureWavePausingOnDeath(WaveManager waveManager)
     {
         playerRespawned.AddListener(waveManager.RestartWave);
     }
-    protected void OnPlayerKilled()
+    protected void OnPlayerKilled(EntityBase player)
     {
+        Debug.Log("Player died");
         deathNotifier.SetActive(true);
         playerDead = true;
         respawn.action.performed += OnRespawnRequest;

@@ -33,16 +33,26 @@ public class LeaderboardManager : MonoBehaviour
     }
     public void InitManager(LevelDatabase.LevelNames currentLevel)
     {
+        Debug.Log("Starting leaderboard manager init");
         this.currentLevel = currentLevel;
         ClearExistingEntryGameObjects();//clear placeholders
 
-        var saveDirectory = saveSystem.GetDirectory(LeaderboardService.GetDataFolderPath(currentLevel));
+        string[] saveDirectory = saveSystem.GetDirectory(LeaderboardService.GetDataFolderPath(currentLevel));
+
+
+        Debug.Log("Looking at path " + LeaderboardService.GetDataFolderPath(currentLevel));
+        if (saveDirectory == null)
+        {
+            Debug.Log("No directory found, leaving early");
+            return;
+        }
         levelCompletions.Clear();
         foreach (var save in saveDirectory)
         {
             var saveData = saveSystem.Read(save);
             levelCompletions.Add(saveSystem.ParseFromJson<LevelAttempt>(saveData));
         }
+        Debug.Log("Loaded previous attempts");
         if (levelCompletions.Count == 0) return;
         levelCompletions = leaderboardService.SortAttemptsByTime(levelCompletions);
         foreach (var data in levelCompletions)
@@ -50,6 +60,7 @@ public class LeaderboardManager : MonoBehaviour
             LeaderboardEntry newEntry = Instantiate(entryPrefab, entriesHolder.transform);
             newEntry.InitEntry(data.name, leaderboardService.GetFormattedTime(data.time));
         }
+        Debug.Log("Finished leaderboard manager init");
     }
 
     void ClearExistingEntryGameObjects()

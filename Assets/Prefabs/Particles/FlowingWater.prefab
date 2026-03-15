@@ -51,7 +51,7 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 400
+      - m_Value: 80
         m_Name: SpawnRate
         m_Overridden: 1
       - m_Value: 0.6
@@ -87,8 +87,14 @@ VisualEffect:
       - m_Value: 0.075
         m_Name: WaterAlpha
         m_Overridden: 1
-      - m_Value: 27.5
+      - m_Value: 63
         m_Name: ParticleSize
+        m_Overridden: 1
+      - m_Value: 3.05
+        m_Name: WaveWaterChance
+        m_Overridden: 1
+      - m_Value: 2.7
+        m_Name: Turbulence
         m_Overridden: 1
     m_Vector2f:
       m_Array: []
@@ -102,7 +108,7 @@ VisualEffect:
         m_Overridden: 1
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 0.04799571, y: 0.16774124, z: 0.4037736, w: 0}
+      - m_Value: {x: 0.023997854, y: 0.08387062, z: 0.2018868, w: 0}
         m_Name: BaseColor
         m_Overridden: 1
       - m_Value: {x: 0.38823527, y: 0.81960785, z: 0.4556349, w: 1}
@@ -115,7 +121,33 @@ VisualEffect:
     m_Matrix4x4f:
       m_Array: []
     m_AnimationCurve:
-      m_Array: []
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 80
+            inSlope: 2
+            outSlope: 2
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 150
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: ScaleYOverTime
+        m_Overridden: 1
     m_Gradient:
       m_Array: []
     m_NamedObject:

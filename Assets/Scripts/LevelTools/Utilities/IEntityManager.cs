@@ -157,11 +157,12 @@ public class WaveManager : IEntityManager
         if(Instance == null){Instance = this;}
         else if(Instance != this){Debug.Log("idk rn");}
 
-        //Debug.Log("Initializing Wave System...");
-      
+        Debug.Log("Initializing Wave System...");
+
         //waveIndex = 1;
         //InitWave(waveData[0]);
 
+        if (sceneEnemies == null) return;
         foreach (var enemy in sceneEnemies)
         {
             if (!enemiesInWaveRemaining.Contains(enemy))
@@ -170,6 +171,7 @@ public class WaveManager : IEntityManager
                 enemiesInWaveRemaining.Add(enemy);
             }
         }
+        Debug.Log("entity manager init");
     }
 
     public void TimerLogic(float timer)
@@ -207,6 +209,7 @@ public class WaveManager : IEntityManager
 
     public EnemyBase GetClosestEnemyToPosition(Vector3 position, List<EnemyType> blacklist)
     {
+        if (enemiesInWaveRemaining == null) return null;
         if (enemiesInWaveRemaining.Count == 1) return enemiesInWaveRemaining[0];
         float distanceToBeat = float.MaxValue;
         EnemyBase closest = null;

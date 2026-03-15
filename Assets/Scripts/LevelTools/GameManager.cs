@@ -36,30 +36,24 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Couldn't find current level " + currentLevel.ToString() + ": " + handle.OperationException);
             return;
-        }
-        if (hudManager == null) hudManager = FindFirstObjectByType<HUDManager>();
-        
-        var preExistingEnemies = FindObjectsByType<EnemyBase>(FindObjectsSortMode.InstanceID).ToList();
+        }        
+       // var preExistingEnemies = FindObjectsByType<EnemyBase>(FindObjectsSortMode.InstanceID).ToList();
         switch (levelObject.levelType)
         {
             case LevelData.LevelType.KillTargets:
                 victoryCondition = new KillTargets(levelObject.levelDuration);
-                
                 entityManager = new WaveManager(levelObject);
-                entityManager.Initialize(preExistingEnemies);
+                entityManager.Initialize(null);
                 if (hudManager != null) hudManager.InitManager(entityManager, victoryCondition);
                 entityManager.allEnemiesDefeated += victoryCondition.OnEnemiesDefeated;
                 break;
         }
+        if (respawnManager != null) respawnManager.InitManager(victoryCondition, entityManager);
         if (feds != null) feds.InitDetectionSystem(entityManager);
-        if (respawnManager != null)
-        {
-            respawnManager.InitManager(victoryCondition, entityManager);
-        }
+        
         victoryCondition?.Initialize();
         victoryCondition.victoryAchieved += OnVictory;
         victoryCondition.defeatAchieved += OnDefeat;
-
         if (leaderboardManager != null)
         {
             gameEnding += leaderboardManager.OnLevelOver;
@@ -76,16 +70,17 @@ public class GameManager : MonoBehaviour
         if(Instance == null){Instance = this;}
         else if(Instance != this){Destroy(this);}
 
-        Initialize();
+        try
+        {
+            _ = InitializeManager();
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
 
     }
 
-    public void Initialize()
-    {
-        if (Initialized) return;
-        _ = InitializeManager();
-        Initialized = true;
-    }
 
 
     void OnVictory()
