@@ -37,9 +37,7 @@ public class EntityDetectionSystem : MonoBehaviour
         var enemy = entityManager.GetClosestEnemyToPosition(knife.transform.position, blacklistedEnemies);
         if (enemy != null)
         {
-            var enemyPosition = enemy.collider.bounds.center;
-            Debug.Log("Not null");
-            
+            var enemyPosition = enemy.collider.bounds.center;            
 
             var enemyProjected = Vector3.ProjectOnPlane(enemyPosition, knifeHolder.transform.up);
             var knifeProjected = Vector3.ProjectOnPlane(knife.transform.position, knifeHolder.transform.up);
@@ -52,6 +50,10 @@ public class EntityDetectionSystem : MonoBehaviour
             // knife.transform.rotation = Quaternion.RotateTowards(knife.transform.rotation, knifeProjectedLookingAtEnemyProjected, rotationSpeed);
 
             knifeTf.transform.rotation = Quaternion.Slerp(knifeTf.transform.rotation, knifeProjectedLookingAtEnemyProjected, Kp);
+        }
+        else
+        {
+            Debug.Log("Could not find enemy");
         }
     }
 

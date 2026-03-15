@@ -21,4 +21,6 @@ public class LevelData : ScriptableObject
     [SerializeField, ShowIf(nameof(RequiresTimer))] public float levelDuration = -1.0f; // negative numbers make the level infinite duration
 
     bool RequiresTimer() => levelType == LevelType.KillTargets;
+
+
 }

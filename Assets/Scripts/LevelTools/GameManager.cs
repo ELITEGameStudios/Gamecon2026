@@ -44,10 +44,18 @@ public class GameManager : MonoBehaviour
                 victoryCondition = new KillTargets(levelObject.levelDuration);
                 entityManager = new WaveManager(levelObject);
                 entityManager.Initialize(null);
-                if (hudManager != null) hudManager.InitManager(entityManager, victoryCondition);
+                entityManager.allEnemiesDefeated += victoryCondition.OnEnemiesDefeated;
+                break;
+            case LevelData.LevelType.Survive:
+                victoryCondition = new KillTargets(levelObject.levelDuration);
+                entityManager = new ArenaManager();
+                var enemies = FindObjectsByType<EnemyBase>(FindObjectsSortMode.InstanceID).ToList();
+                entityManager.Initialize(enemies);
                 entityManager.allEnemiesDefeated += victoryCondition.OnEnemiesDefeated;
                 break;
         }
+        if (hudManager != null) hudManager.InitManager(entityManager, victoryCondition);
+
         if (respawnManager != null) respawnManager.InitManager(victoryCondition, entityManager);
         if (feds != null) feds.InitDetectionSystem(entityManager);
         

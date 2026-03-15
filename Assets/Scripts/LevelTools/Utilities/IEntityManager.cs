@@ -15,8 +15,65 @@ public interface IEntityManager
 
     EnemyBase GetClosestEnemyToPosition(Vector3 position, List<EnemyType> blacklist);
 }
+/// <summary>
+/// Class for preset enemies in the scene instead of wave based combat
+/// </summary>
+public class ArenaManager : IEntityManager
+{
 
-[System.Serializable]
+    
+    public bool spawnEnemies { get => false; set { } }
+
+    public event Action allEnemiesDefeated;
+
+   
+
+    List<EnemyBase> arenaEnemies = new();
+    public EnemyBase GetClosestEnemyToPosition(Vector3 position, List<EnemyType> blacklist)
+    {
+        float distanceToBeat = float.MaxValue;
+        EnemyBase closest = null;
+
+
+        foreach (var enemy in arenaEnemies)
+        {
+            //Use sqr magnitude because the relative sizes between each element is what matters, not absolute
+            //for example:
+            //a = 100
+            //b = 1000
+            //spending time doing sqr root is unnecessary sqrt(b) == 100 > sqrt(a) == 10 
+
+            if (blacklist.Contains(enemy.enemyType)) continue;
+
+            float distance = (position - enemy.transform.position).sqrMagnitude;
+            if (distance < distanceToBeat)
+            {
+                distanceToBeat = distance;
+                closest = enemy;
+            }
+        }
+        return closest;
+    }
+
+    public void Initialize(List<EnemyBase> sceneEnemies)
+    {
+        arenaEnemies = sceneEnemies;
+    }
+
+    public void OnEnemyDefeated(EnemyBase defeatedEnemy)
+    {
+        if (arenaEnemies.Contains(defeatedEnemy))
+        {
+            arenaEnemies.Remove(defeatedEnemy);
+            defeatedEnemy.entityKilled.RemoveListener((entity) => OnEnemyDefeated(defeatedEnemy));
+        }
+    }
+
+    public void TimerLogic(float tracker)
+    {
+        //doesn't need a timer
+    }
+}
 public class WaveManager : IEntityManager
 {
     public static WaveManager Instance {get; private set;}
@@ -214,10 +271,6 @@ public class WaveManager : IEntityManager
         float distanceToBeat = float.MaxValue;
         EnemyBase closest = null;
         
-        // if(closest == null)
-        // {
-        //     GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        // }
 
         foreach (var enemy in enemiesInWaveRemaining)
         {
