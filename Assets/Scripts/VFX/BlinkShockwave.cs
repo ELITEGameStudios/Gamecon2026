@@ -31,8 +31,10 @@ public class BlinkShockwave : MonoBehaviour
         elaspedTime = 0.0f;
         shockwave.gameObject.SetActive(true);
         animate = true;
-        //shockwave.transform.position = knife.transform.position;
-        //shockwave.transform.LookAt(playerCamera.transform.forward);
+        shockwave.transform.position = playerTransform.transform.position;
+        var rotation = playerTransform.rotation.eulerAngles;
+        rotation.y += 180;
+        shockwave.transform.rotation = Quaternion.Euler(rotation);
     }
 
     void EndAnimation()
@@ -60,10 +62,7 @@ public class BlinkShockwave : MonoBehaviour
 
             shockwave.material.SetColor("_ShockwaveColor", shockwaveColor);
 
-            shockwave.transform.position = playerTransform.transform.position;
-            var rotation = playerTransform.rotation.eulerAngles;
-            rotation.y += 180;
-            shockwave.transform.rotation = Quaternion.Euler(rotation);
+
         }
     }
 }
