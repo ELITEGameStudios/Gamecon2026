@@ -8,6 +8,7 @@ public class RespawnManager : MonoBehaviour
     UnityEvent playerRespawned = new();
 
     [SerializeField] Transform respawnPoint;
+    [SerializeField] Transform[] respawnPoints;
     [SerializeField] Transform checkpointHolder;
     [SerializeField] Player player;
     [SerializeField] Projectile knife;
@@ -50,7 +51,7 @@ public class RespawnManager : MonoBehaviour
     {
         if (!playerDead) return;
         respawn.action.performed -= OnRespawnRequest;
-        player.SpawnAtPosition(respawnPoint.position);
+        Player.instance.SpawnAtPosition(GetRespawnLocation(PlayerMovementStateMachine.instance.lastGroundedPos).position);
         deathNotifier.SetActive(false);
         playerDead = false;
 
@@ -68,6 +69,24 @@ public class RespawnManager : MonoBehaviour
     protected void OnCheckpointReached(PlayerCheckpoint checkpoint)
     {
         respawnPoint.position = checkpoint.transform.position;
+    }
+
+    private Transform GetRespawnLocation(Vector3 worldPos)
+    {
+        if(respawnPoints.Length == 0){return respawnPoint;}
+        int winningIndex = 0;
+        float winningDist = Vector3.Distance(worldPos, respawnPoints[0].position);
+        for (int i = 1; i < respawnPoints.Length; i++)
+        {
+            float dist = Vector3.Distance(worldPos,respawnPoints[i].position);
+            if(dist < winningDist)
+            {
+                winningIndex = i;
+                winningDist = dist;
+            }
+        }
+
+        return respawnPoints[winningIndex];
     }
 }
 

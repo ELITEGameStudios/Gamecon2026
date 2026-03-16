@@ -34,6 +34,8 @@ public class PlayerMovementStateMachine : StateMachine
             ).magnitude; 
         }
     }
+
+    public Vector3 lastGroundedPos;
     
     public PlayerMovementState currentState => base.currentState as PlayerMovementState;
     
@@ -88,6 +90,7 @@ public class PlayerMovementStateMachine : StateMachine
         groundedState.OnReset();
         wallRunState.OnReset();
         dashState.OnReset();
+        lastGroundedPos = transform.position;
 
         playerJump = FMODUnity.RuntimeManager.CreateInstance(FMODJumpEvent);
         playerLand = FMODUnity.RuntimeManager.CreateInstance(FMODLandEvent);

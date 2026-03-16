@@ -27,6 +27,7 @@ public class GroundedState : PlayerMovementState
     public override void Start()
     {
         movement.hasDash = true;
+        movement.lastGroundedPos = transform.position;
         if(movement.isConsideredMoving){OnStartWalking();}
     }
 
