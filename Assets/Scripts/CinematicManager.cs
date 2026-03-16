@@ -11,7 +11,6 @@ public class CinematicManager : MonoBehaviour
 
     public void PreCutscene()
     {
-        Debug.Log("Cutscene starting");
         inCinematic = true;
     }
     public void PostCutscene()
