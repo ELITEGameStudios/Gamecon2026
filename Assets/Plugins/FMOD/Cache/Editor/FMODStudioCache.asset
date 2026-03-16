@@ -570,7 +570,7 @@ MonoBehaviour:
   - {fileID: 1405720437415962997}
   StringsBanks:
   - {fileID: 9114747985906268585}
-  cacheTime: 639089372428182040
+  cacheTime: 639091969536147868
   cacheVersion: 131634
 --- !u!114 &10998266041711469
 MonoBehaviour:
@@ -614,10 +614,10 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639089372428182040
+  lastModified: 639091969536097254
   FileSizes:
   - Name: Desktop
-    Value: 1968864
+    Value: 2514560
   Exists: 1
 --- !u!114 &2423527646633715673
 MonoBehaviour:
@@ -673,6 +673,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2886
+--- !u!114 &2946366726044564769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/TutorialMusic/Change Tracks
+  m_EditorClassIdentifier: 
+  Name: Change Tracks
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3100524195
+    data2: 2913464224
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &3833374353044651801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -774,7 +798,7 @@ MonoBehaviour:
     Data4: -1343939860
   Banks:
   - {fileID: 1405720437415962997}
-  IsStream: 1
+  IsStream: 0
   Is3D: 0
   IsOneShot: 0
   Parameters: []
@@ -1032,10 +1056,10 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639074719075607836
+  lastModified: 639091969536147868
   FileSizes:
   - Name: Desktop
-    Value: 1470
+    Value: 1526
   Exists: 1
 --- !u!114 &9167691374996464057
 MonoBehaviour:
@@ -1060,7 +1084,8 @@ MonoBehaviour:
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
-  Parameters: []
+  Parameters:
+  - {fileID: 2946366726044564769}
   MinDistance: 1
   MaxDistance: 20
-  Length: 44000
+  Length: 36500
