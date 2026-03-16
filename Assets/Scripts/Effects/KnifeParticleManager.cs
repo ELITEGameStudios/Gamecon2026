@@ -76,9 +76,6 @@ public class KnifeParticleManager : MonoBehaviour
         impactDecal.material.SetFloat("_TextureIndex", rand);
         //impactDecal.transform.position = collision.point;
         impactDecalLifetimeTracker = 0.0f;
-
-        Debug.Log("Setting decal to index " + rand);
-
     }
     void PlayParticleAtCollisionPoint(KnifeCollisionInfo collision, ParticleSystem particle, bool flipAlongNormal = false)
     {

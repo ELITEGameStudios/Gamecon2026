@@ -4,7 +4,7 @@ public class BlinkShockwave : MonoBehaviour
 {
 
     [SerializeField] Projectile knife;
-    [SerializeField] Transform playerCamera;
+    [SerializeField] Transform playerTransform;
     [SerializeField] MeshRenderer shockwave;
     [SerializeField] Color shockwaveColor;
     [SerializeField] float timeToScale = 0.7f;
@@ -15,6 +15,7 @@ public class BlinkShockwave : MonoBehaviour
     float elaspedTime = 0.0f;
 
     bool animate = false;
+
 
     private void Start()
     {
@@ -30,8 +31,8 @@ public class BlinkShockwave : MonoBehaviour
         elaspedTime = 0.0f;
         shockwave.gameObject.SetActive(true);
         animate = true;
-        shockwave.transform.position = knife.transform.position;
-        shockwave.transform.LookAt(playerCamera.transform.forward);
+        //shockwave.transform.position = knife.transform.position;
+        //shockwave.transform.LookAt(playerCamera.transform.forward);
     }
 
     void EndAnimation()
@@ -58,6 +59,11 @@ public class BlinkShockwave : MonoBehaviour
             shockwaveColor.a = alphaOverTime.Evaluate(animationProgress);
 
             shockwave.material.SetColor("_ShockwaveColor", shockwaveColor);
+
+            shockwave.transform.position = playerTransform.transform.position;
+            var rotation = playerTransform.rotation.eulerAngles;
+            rotation.y += 180;
+            shockwave.transform.rotation = Quaternion.Euler(rotation);
         }
     }
 }
