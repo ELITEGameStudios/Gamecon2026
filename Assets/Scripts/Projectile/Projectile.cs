@@ -458,28 +458,9 @@ public class Projectile : MonoBehaviour
             collisionInfo.struckEnemy = true;
         }
 
-        //if(collision.transform.GetComponent<EnemyBase>() == null)
-        //{
-        //    if(collision.transform.parent != null)
-        //    {
-        //        if(collision.transform.parent.GetComponent<EnemyBase>() == null)
-        //        {
-        //            Debug.Log("Null");
-        //        }
-        //        else
-        //        {
-        //            collision.transform.parent.GetComponent<EnemyBase>().Damage();
-        //        }
-        //    }
-        //}
-        //else
-        //{
-        //    collision.transform.GetComponent<EnemyBase>().Damage();
-        //}
 
         if ((terrainMask & (1 << collision.gameObject.layer)) != 0)
         {
-            Debug.Log("Hit terrain");
             terrainStruck.Invoke(collisionInfo);
         }
 
