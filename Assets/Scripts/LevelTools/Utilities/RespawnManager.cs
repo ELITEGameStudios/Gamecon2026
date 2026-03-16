@@ -10,6 +10,7 @@ public class RespawnManager : MonoBehaviour
     [SerializeField] Transform respawnPoint;
     [SerializeField] Transform checkpointHolder;
     [SerializeField] Player player;
+    [SerializeField] Projectile knife;
 
     [SerializeField] GameObject deathNotifier;
     bool playerDead = false;
@@ -21,7 +22,7 @@ public class RespawnManager : MonoBehaviour
         if (player == null) player = FindFirstObjectByType<Player>();
         player.entityKilled.AddListener(OnPlayerKilled);
         deathNotifier.SetActive(false);
-        respawnPoint.position = Player.instance.transform.position;
+        respawnPoint.position = player.transform.position;
 
         var checkpoints = checkpointHolder.GetComponentsInChildren<PlayerCheckpoint>();
         foreach (PlayerCheckpoint checkpoint in checkpoints)
@@ -32,8 +33,6 @@ public class RespawnManager : MonoBehaviour
         {
            // ConfigureWavePausingOnDeath(waveManager);
         }
-
-        Debug.Log("init respawn system");
     }
 
     void ConfigureWavePausingOnDeath(WaveManager waveManager)
@@ -42,7 +41,6 @@ public class RespawnManager : MonoBehaviour
     }
     protected void OnPlayerKilled(EntityBase player)
     {
-        Debug.Log("Player died");
         deathNotifier.SetActive(true);
         playerDead = true;
         respawn.action.performed += OnRespawnRequest;
@@ -52,9 +50,14 @@ public class RespawnManager : MonoBehaviour
     {
         if (!playerDead) return;
         respawn.action.performed -= OnRespawnRequest;
-        Player.instance.SpawnAtPosition(respawnPoint.position);
+        player.SpawnAtPosition(respawnPoint.position);
         deathNotifier.SetActive(false);
         playerDead = false;
+
+        if (knife != null)
+        {
+            knife.Pickup();
+        }
     }
 
     public bool IsPlayerDead()
