@@ -61,13 +61,13 @@ VisualEffect:
       - m_Value: 35
         m_Name: Lifetime
         m_Overridden: 1
-      - m_Value: 155
+      - m_Value: 45
         m_Name: MinSize
         m_Overridden: 1
-      - m_Value: 315
+      - m_Value: 90
         m_Name: MaxSize
         m_Overridden: 1
-      - m_Value: 145
+      - m_Value: 400
         m_Name: StarSpawnRate
         m_Overridden: 1
       - m_Value: 5
@@ -85,13 +85,13 @@ VisualEffect:
       - m_Value: 32
         m_Name: StarLifetime
         m_Overridden: 1
-      - m_Value: 20
+      - m_Value: 10
         m_Name: CometMinSize
         m_Overridden: 1
-      - m_Value: 35
+      - m_Value: 18.5
         m_Name: CometMaxSize
         m_Overridden: 1
-      - m_Value: 150
+      - m_Value: 65
         m_Name: CometMinSpeed
         m_Overridden: 1
       - m_Value: 200
@@ -104,7 +104,7 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: SpawnShape_center
         m_Overridden: 1
-      - m_Value: {x: 8000, y: 100, z: 8000}
+      - m_Value: {x: 5000, y: 100, z: 5000}
         m_Name: SpawnShape_size
         m_Overridden: 1
       - m_Value: {x: 0, y: 0, z: 0}
@@ -119,8 +119,14 @@ VisualEffect:
       - m_Value: {x: 5, y: 0, z: 5}
         m_Name: MaxSpeed
         m_Overridden: 1
-      - m_Value: {x: 2, y: 0, z: 0}
+      - m_Value: {x: 1, y: 0, z: 0}
         m_Name: CometDirection
+        m_Overridden: 1
+      - m_Value: {x: 3, y: 0.3, z: 3}
+        m_Name: StarMaxSpeed
+        m_Overridden: 1
+      - m_Value: {x: -3.5, y: -0.3, z: -3.5}
+        m_Name: StarMinSpeed
         m_Overridden: 1
     m_Vector4f:
       m_Array:

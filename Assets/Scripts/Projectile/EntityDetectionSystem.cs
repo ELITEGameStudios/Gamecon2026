@@ -27,22 +27,18 @@ public class EntityDetectionSystem : MonoBehaviour
 
         if (!init)
         {
-            Debug.Log("not initialized, no FEDS");
             return;
         }
 
         if (cinematics.inCinematic)
         {
-            Debug.Log("In cinematic, no FEDS");
             return;
         }
 
         if (knife.currentState != Projectile.ProjectileState.Idle)
         {
-            Debug.Log("Wrong knife state, no FEDS");
             return;
         }
-        Debug.Log("YO! FEDS IS WORKING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         var enemy = entityManager.GetClosestEnemyToPosition(knife.transform.position, blacklistedEnemies);
         if (enemy != null)
         {
