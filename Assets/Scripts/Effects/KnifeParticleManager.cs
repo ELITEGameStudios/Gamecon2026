@@ -14,11 +14,11 @@ public class KnifeParticleManager : MonoBehaviour
     [Header("Impact Decal")]
     [SerializeField] DecalProjector impactDecal;
     [SerializeField] AnimationCurve impactDecalTransparencyOverTime;
+    [SerializeField] Color impactDecalColor;
     [SerializeField] int numberOfDecals = 8;
 
 
     float impactDecalLifetimeTracker = 0.0f;
-    Color impactDecalColor;
     public void InitParticleManager(Projectile knife, Transform player)
     {
         knife.enemyStruck.AddListener(OnEnemyCollision);
@@ -36,7 +36,6 @@ public class KnifeParticleManager : MonoBehaviour
             particle.Stop();
         }
 
-        impactDecalColor = impactDecal.material.GetColor("_ImpactColor");
         impactDecal.enabled = false;
     }
      
