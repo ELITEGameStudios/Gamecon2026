@@ -11511,6 +11511,7 @@ GameObject:
   m_Component:
   - component: {fileID: 312578035}
   - component: {fileID: 312578034}
+  - component: {fileID: 312578036}
   m_Layer: 0
   m_Name: Music
   m_TagString: Untagged
@@ -11564,6 +11565,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &312578036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 312578033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c0bb8872f654a84696636d8227dcd7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventEmitter: {fileID: 312578034}
 --- !u!1001 &316619125
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33890,7 +33904,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1519383852197518122, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 259.99942
+      value: 260
       objectReference: {fileID: 0}
     - target: {fileID: 1648708937653568327, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: m_AnchorMax.y
