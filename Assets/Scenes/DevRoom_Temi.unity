@@ -11115,6 +11115,67 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!1001 &620362106
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4207800976764531243, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5.6696815
+      objectReference: {fileID: 0}
+    - target: {fileID: 4207800976764531243, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 57.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 4207800976764531243, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -12.8126745
+      objectReference: {fileID: 0}
+    - target: {fileID: 4207800976764531243, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4207800976764531243, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4207800976764531243, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4207800976764531243, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4207800976764531243, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4207800976764531243, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4207800976764531243, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5217330970048569504, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
+      propertyPath: m_Name
+      value: TrainingDummy
+      objectReference: {fileID: 0}
+    - target: {fileID: 8830492672248594715, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a104912ea018fc34fa4475b98bfcb1c9, type: 3}
 --- !u!1 &623945198
 GameObject:
   m_ObjectHideFlags: 0
@@ -12704,6 +12765,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1233106090748857482, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: knife
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2475966581838294851, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: m_Name
       value: FeatherDaggerRefinedV2 (2)
@@ -12767,6 +12832,10 @@ PrefabInstance:
     - target: {fileID: 3961294738787416915, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4066078816941134138, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: knife
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: mainCam
@@ -13410,7 +13479,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1519383852197518122, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 259.99582
+      value: 260
       objectReference: {fileID: 0}
     - target: {fileID: 1648708937653568327, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: m_AnchorMax.y
@@ -34933,3 +35002,4 @@ SceneRoots:
   - {fileID: 1213119542}
   - {fileID: 1803365972}
   - {fileID: 1594510168}
+  - {fileID: 620362106}

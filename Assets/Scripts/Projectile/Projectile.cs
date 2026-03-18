@@ -11,9 +11,7 @@ public class Projectile : MonoBehaviour
     public UnityEvent<KnifeCollisionInfo> enemyStruck = new();
     public UnityEvent<KnifeCollisionInfo> terrainStruck = new();
     public UnityEvent<KnifeRetrievalInfo> knifeRetrieved = new();
-    /// <summary>
-    /// Float parameter is distance travelled.
-    /// </summary>
+   [HideInInspector] public UnityEvent<ProjectileState> stateChanged = new();
 
     public enum ProjectileState {Idle, Flying, Embedded, Recalling}//, PickedUp}
     public ProjectileState currentState { get; private set; } = ProjectileState.Idle;
@@ -240,6 +238,7 @@ public class Projectile : MonoBehaviour
             //     gameObject.SetActive(false);
             //     break;
         }
+        stateChanged.Invoke(newState);
     }
     
     void RecallUpdate()
@@ -432,43 +431,47 @@ public class Projectile : MonoBehaviour
 
     }
 
-    void OnCollisionEnter(Collision collision) //needs fixing. embedding doesn't work properly
+    public void OnEnemyStruck()
     {
-        if (currentState != ProjectileState.Flying || currentState == ProjectileState.Recalling)
-            return;
+        EmitKnifeCollisionSignal(true);
+        if (projectileAbilities != null)
+        {
+            projectileAbilities.ResetRecallCooldown();
+        }
 
+        if (!projectileAbilities.ProjectileInParryState())
+        {
+            EmbedKnife();
+        }
+    }
 
+  /// <summary>
+  /// 
+  /// </summary>
+  /// <param name="emitTerrainCollision">Disabled if the object struck was an enemy, since there's a seperate signal for that.</param>
+    public void OnObjectStruck()
+    {
+        EmitKnifeCollisionSignal(false);
+        EmbedKnife();
+    }
+
+    void EmitKnifeCollisionSignal(bool hitEnemy)
+    {
         KnifeCollisionInfo collisionInfo = new()
         {
             normal = -rb.linearVelocity,
             point = rb.position,
-            struckEnemy = false
+            struckEnemy = hitEnemy
         };
-        
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            if (projectileAbilities != null)
-            {
-                projectileAbilities.ResetRecallCooldown();
-            }
-            enemyStruck.Invoke(collisionInfo);
-            var enemy = collision.transform.GetComponent<EnemyBase>();
-            if (enemy == null && collision.transform.parent != null) enemy = collision.transform.parent.GetComponent<EnemyBase>();
-            enemy.Damage();
-            collisionInfo.struckEnemy = true;
-        }
 
+        if (hitEnemy) enemyStruck.Invoke(collisionInfo);
+        else terrainStruck.Invoke(collisionInfo);
+    }
 
-        if ((terrainMask & (1 << collision.gameObject.layer)) != 0)
-        {
-            terrainStruck.Invoke(collisionInfo);
-        }
-
-        if (hitEffect)
-            Instantiate(hitEffect, transform.position, Quaternion.identity);
-        
+    void EmbedKnife()
+    {
         Quaternion incomingRotation = transform.rotation;
-        Vector3 travelDirection = rb.linearVelocity.normalized; 
+        Vector3 travelDirection = rb.linearVelocity.normalized;
 
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -481,6 +484,11 @@ public class Projectile : MonoBehaviour
         SetState(ProjectileState.Embedded);
 
         CancelInvoke(nameof(ReturnToIdle));
+    }
+    void OnCollisionEnter(Collision collision) //needs fixing. embedding doesn't work properly
+    {
+        if (currentState != ProjectileState.Flying || currentState == ProjectileState.Recalling) return;
+        OnObjectStruck();
     }
 }
 
