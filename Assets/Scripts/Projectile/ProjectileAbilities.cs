@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -60,8 +60,21 @@ public class ProjectileAbilities : MonoBehaviour
     public string FMODParryEvent = "", FMODShootEvent = "", FMODBlinkEvent = "", FMODParryFailEvent = "";
     public FMOD.Studio.EventInstance parrySFX, parryFailSFX, shootSFX, blinkSFX;
 
+    [Header("Homing")]
+    [SerializeField] AnimationCurve homingPowerCurve;
+    [SerializeField] float baseHomingPower;
+    /// <summary>
+    /// Maximum distance to consider trying to home towards the target. If exceeded, just treated as a straight shot
+    /// </summary>
+    [SerializeField] float maxHomingRange = 50.0f; 
+
     bool parryActive = false;
     bool blinkedThisFrame; // just used for the animator
+
+    List<EnemyType> enemiesToNotHomeTowards = new()
+    {
+        EnemyType.Banshee
+    };
 
     void Start()
     {
@@ -125,6 +138,31 @@ public class ProjectileAbilities : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        var manager = GameManager.Instance;
+        if (manager != null && featherKnife.currentState == Projectile.ProjectileState.Flying)
+        {
+            
+            var newTarget = manager.entityManager.GetClosestEnemyToPosition(featherKnife.rb.position, enemiesToNotHomeTowards);
+            var targetDistance = Vector3.Distance(newTarget.transform.position, transform.position);
+            if (targetDistance <= maxHomingRange)
+            {
+                HomeTowardsPosition(newTarget.transform.position, targetDistance);
+            }
+        }
+    }
+
+    void HomeTowardsPosition(Vector3 target, float distance)
+    {
+        var current = featherKnife.rb.linearVelocity;
+        var desired = featherKnife.rb.linearVelocity.magnitude * (target - featherKnife.rb.position);
+        float curveEvaluated = homingPowerCurve.Evaluate(1 - (distance / maxHomingRange));
+        float homePower = curveEvaluated * baseHomingPower;
+        Debug.Log("Evaluating curve at point " + (1 - (distance / maxHomingRange)));
+        Debug.Log("Applying " + curveEvaluated + " multiplier to home power, resulting in new rotation" + homePower);
+        featherKnife.rb.linearVelocity = Vector3.RotateTowards(current, desired, homePower, 0.1f);
+    }
     public bool IsParryable()
     {
         if (featherKnife.currentState != Projectile.ProjectileState.Recalling) return false;
@@ -235,7 +273,6 @@ public class ProjectileAbilities : MonoBehaviour
         
         if (cam == null) 
             return;
-        
         HUDManager.Instance.TriggerShootPrompt();
         
         Shoot(parry);

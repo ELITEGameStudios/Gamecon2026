@@ -75,7 +75,7 @@ public class Projectile : MonoBehaviour
     };
 
     
-    private Rigidbody rb;
+    public Rigidbody rb { get; private set; }
     private Collider col;
     
     // [SerializeField] private Animator animator;
