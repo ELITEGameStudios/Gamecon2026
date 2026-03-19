@@ -485,7 +485,7 @@ public class Projectile : MonoBehaviour
 
         CancelInvoke(nameof(ReturnToIdle));
     }
-    void OnCollisionEnter(Collision collision) //needs fixing. embedding doesn't work properly
+    void OnCollisionEnter(Collision collision) 
     {
         if (currentState != ProjectileState.Flying || currentState == ProjectileState.Recalling) return;
         OnObjectStruck();

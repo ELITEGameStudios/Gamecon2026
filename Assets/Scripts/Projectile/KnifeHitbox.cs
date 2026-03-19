@@ -39,8 +39,11 @@ public class KnifeHitbox : MonoBehaviour
         var overlap = Physics.OverlapBox(hitbox.bounds.center, hitbox.bounds.extents, hitbox.transform.rotation, enemyMask, QueryTriggerInteraction.Collide);
         foreach (var obj in overlap)
         {
+            Debug.Log("Hit object " + obj.name);
+            Debug.Log("Parent of obj is " + obj.transform.parent.name);
             if (obj.transform.parent.TryGetComponent(out EnemyBase enemy))
             {
+                Debug.Log("obj " + obj.name + "'s parent contains enemy component");
                 if (struckEnemies.Contains(enemy)) continue; //only hit each enemy once
                 enemy.Damage(damage);
                 struckEnemies.Add(enemy);
