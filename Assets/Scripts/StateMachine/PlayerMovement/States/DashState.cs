@@ -1,8 +1,14 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [System.Serializable]
 public class DashState : PlayerMovementState
 {
+    const float EMPOWERED_DASH_WIND_DRAIN_RATE = 120.0f;
+
+
+    InputActionReference dashButton;
+    WindManager windManager;
     public Vector3 dashVelocity;
     public float dashTime;
     public float additiveForceThreshold = 75;
@@ -12,9 +18,18 @@ public class DashState : PlayerMovementState
     public AnimationCurve dashPowerOverSpeed;
     public bool additive, canAirJump;
 
+
+    bool empowered = false;
+    float initialSpeedWhenEmpowered;
     public DashState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
     {
         name = "Dash State";
+    }
+
+    public void Initialize(InputActionReference button, WindManager wind)
+    {
+        dashButton = button;
+        windManager = wind;
     }
 
     public override void OnReset()
@@ -25,6 +40,7 @@ public class DashState : PlayerMovementState
 
     public override void Start()
     {
+        empowered = false;
         movement.hasDash = false;
         currentDashTimer = dashTime;
         Debug.Log("Started dash");
@@ -38,7 +54,7 @@ public class DashState : PlayerMovementState
     {
 
         Vector2 input = movement.movementInput;
-        if(input == Vector2.zero){input = Vector2.up;}
+        if (input == Vector2.zero) { input = Vector2.up; }
 
         Vector2 currentVelocity = new Vector2(
             rigidbody.linearVelocity.x,
@@ -54,11 +70,20 @@ public class DashState : PlayerMovementState
         float angle = Vector2.Angle(currentVelocity, movementVector);
         additive = angle < additiveForceThreshold && currentVelocity.magnitude > minimumAdditiveVelocity;
 
-        dashVelocity = new Vector3(
-            movementVector.x,
-            0,
-            movementVector.y
-        ) * ( dashPower * dashPowerOverSpeed.Evaluate(currentVelocity.magnitude) + (additive ? currentVelocity.magnitude : 0));
+        if (!empowered)
+        {
+            dashVelocity = new Vector3(
+                movementVector.x,
+                0,
+                movementVector.y
+            ) * (dashPower * dashPowerOverSpeed.Evaluate(currentVelocity.magnitude) + (additive ? currentVelocity.magnitude : 0));
+        }
+        else
+        {
+            dashVelocity =
+               movement.headTf.transform.forward
+            * (dashPower * dashPowerOverSpeed.Evaluate(currentVelocity.magnitude) + initialSpeedWhenEmpowered);
+        }
 
         // Debug.Log(dashPowerOverSpeed.Evaluate(currentVelocity.magnitude));
         PlayerVFXManager.instance.DashEffect(input);
@@ -68,14 +93,41 @@ public class DashState : PlayerMovementState
     {
         movement.CalculateLookRotation();
 
-        rigidbody.linearVelocity = dashVelocity;        
+        rigidbody.linearVelocity = dashVelocity;
         currentDashTimer -= Time.deltaTime;
-        
-        if (currentDashTimer > 0){ currentDashTimer -= Time.fixedDeltaTime; }
-        else{ End(); }
 
+        if (currentDashTimer > 0) { currentDashTimer -= Time.fixedDeltaTime; }
+        else
+        {
+            if (windManager.CurrentWind > 0 && dashButton.action.IsPressed())
+            {
+                EmpowerDash();
+            }
+            else
+            {
+                End();
+            }
+        }
+        EmpowerLogic();
     }
 
+    void EmpowerLogic()
+    {
+        if (!empowered) return;
+        windManager.CurrentWind -= (EMPOWERED_DASH_WIND_DRAIN_RATE * Time.fixedDeltaTime);
+        if (windManager.CurrentWind <= 0.001f || !dashButton.action.IsPressed())
+        {
+            End();
+        }
+        SetDashVelocity();
+    }
+    void EmpowerDash()
+    {
+        if (empowered) return;
+        empowered = true;
+        windManager.pauseWindGeneration = true;
+        initialSpeedWhenEmpowered = rigidbody.linearVelocity.magnitude;
+    }
     public override void Jump()
     {
         if(canAirJump || movement.CheckGrounded())
@@ -88,5 +140,6 @@ public class DashState : PlayerMovementState
     public override void End(bool interrupted = false)
     {
         base.End(interrupted);
+        windManager.pauseWindGeneration = false;
     }
 }

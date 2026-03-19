@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovementStateMachine : StateMachine
 {
     public static PlayerMovementStateMachine instance {get; private set;}
-
+    [SerializeField] WindManager windManager;
 
     [Header("Base Properties")]
     public float baseSpeed = 5f;
@@ -84,8 +84,9 @@ public class PlayerMovementStateMachine : StateMachine
         if(instance == null) {instance = this;}
         else if(instance != this){Destroy(this);}
         
-        defaultState = airborneState; 
+        defaultState = airborneState;
 
+        dashState.Initialize(dash, windManager);
         airborneState.OnReset();
         groundedState.OnReset();
         wallRunState.OnReset();
@@ -167,7 +168,6 @@ public class PlayerMovementStateMachine : StateMachine
             Debug.Log("Caught an error");
         }
     }
-
     protected override void OnSetState()
     {
         stateName = currentState.name;

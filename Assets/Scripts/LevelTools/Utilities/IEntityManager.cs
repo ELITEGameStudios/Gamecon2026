@@ -58,6 +58,10 @@ public class ArenaManager : IEntityManager
     public void Initialize(List<EnemyBase> sceneEnemies)
     {
         arenaEnemies = sceneEnemies;
+        foreach (var enemy in arenaEnemies)
+        {
+            enemy.entityKilled.AddListener((entity) => OnEnemyDefeated(enemy));
+        }
     }
 
     public void OnEnemyDefeated(EnemyBase defeatedEnemy)

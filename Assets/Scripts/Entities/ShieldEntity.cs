@@ -19,7 +19,7 @@ public class ShieldEntity : EntityBase
         {
             if (col.TryGetComponent(out Projectile knife))
             {
-                if (knife.projectileAbilities.ProjectileInParryState())
+                if (knife.projectileAbilities.ProjectileInParryState() && knife.currentState == Projectile.ProjectileState.Flying)
                 {
                     OnDeath();
                 }

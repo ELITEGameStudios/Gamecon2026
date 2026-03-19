@@ -67,8 +67,11 @@ public class Projectile : MonoBehaviour
     public List<Collider> triggerList;
     public bool inTriggerCollision =>  triggerList == null || triggerList.Count != 0;
 
+    [Header("Wind Data")]
+    [SerializeField] AnimationCurve windToRecallSpeed;
+
     
-    [Serializable]
+    [SerializeField] WindManager windManager;
     public struct SpaceSample
     {
         public Vector3 position, direction, velocity;
@@ -253,25 +256,14 @@ public class Projectile : MonoBehaviour
         recallProgress = 1f - (currentDistance / totalRecallDistance);
         HUDManager.Instance.recallElement.SetSpeed(recallProgress);
     
-        // Calculate distance-based speed boost
-        float distanceBoost = 1f;
-        if (currentDistance > maxBoostDistance)
-        {
-            // Apply maximum boost when way beyond threshold
-            distanceBoost = maxSpeedBoost;
-        }
-        else if (currentDistance > maxBoostDistance * 0.7f) // Start slowing down at 70% of threshold
-        {
-            // Gradually reduce boost as it approaches normal range
-            float boostProgress = (currentDistance - (maxBoostDistance * 0.7f)) / (maxBoostDistance * 0.3f);
-            distanceBoost = Mathf.Lerp(1f, maxSpeedBoost, boostProgress);
-        }
-    
         // Get curve-based speed multiplier
         float speedMultiplier = recallAnimationCurve.Evaluate(recallProgress);
+
+        // Get wind-based speed multiplier
+        float windMultiplier = windToRecallSpeed.Evaluate(windManager.GetWindAsPercent());
     
         // Combine both multipliers
-        float currentSpeed = baseRecallSpeed * speedMultiplier * distanceBoost;
+        float currentSpeed = (baseRecallSpeed * speedMultiplier) * windMultiplier;
     
         transform.position = Vector3.MoveTowards(transform.position, initProjectilePosition.position, currentSpeed * Time.deltaTime);
     

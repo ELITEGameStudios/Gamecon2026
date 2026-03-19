@@ -16,6 +16,9 @@ public class ProjectileAbilities : MonoBehaviour
     [HideInInspector] public UnityEvent dashPerformed = new();
     [HideInInspector] public UnityEvent recallStarted = new();
 
+
+    [SerializeField] WindManager windManager;
+
     [Header("References")]
     [SerializeField] private Projectile featherKnife;
     [SerializeField] private Transform projectileFirePoint;
@@ -52,7 +55,7 @@ public class ProjectileAbilities : MonoBehaviour
     public float blinkCooldownTime;
     public float blinkEffectTime = 0.33f;
     public float currentBlinkTimer;
-    public bool canBlink => currentBlinkTimer <= 0 && featherKnife.currentState != Projectile.ProjectileState.Idle && featherKnife.currentState != Projectile.ProjectileState.Recalling;
+    public bool canBlink => windManager.HasEnoughWindForBlink() && featherKnife.currentState != Projectile.ProjectileState.Idle && featherKnife.currentState != Projectile.ProjectileState.Recalling;
 
     public PlayerVFXManager playerVFXManager;
 
@@ -164,7 +167,7 @@ public class ProjectileAbilities : MonoBehaviour
 
     private void OnRecallPressed(InputAction.CallbackContext ctx)
     {
-        if(currentRecallCooldown > 0 || featherKnife.currentState == Projectile.ProjectileState.Idle){return;}
+       if (featherKnife.currentState == Projectile.ProjectileState.Idle){return;}
         else
         {
             parryActive = false;
@@ -290,6 +293,7 @@ public class ProjectileAbilities : MonoBehaviour
             parrySFX.start();
             HUDManager.Instance.recallElement.Parry();
             featherKnife.OnParry();
+            playerMovement.hasDash = true;
         }
         else
         {
