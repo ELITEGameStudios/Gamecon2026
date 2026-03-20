@@ -61,13 +61,11 @@ public class ProjectileAbilities : MonoBehaviour
     public FMOD.Studio.EventInstance parrySFX, parryFailSFX, shootSFX, blinkSFX;
 
     [Header("Homing")]
-    [SerializeField] AnimationCurve homingPowerCurve;
-    [SerializeField] float baseHomingPower;
     /// <summary>
     /// Maximum distance to consider trying to home towards the target. If exceeded, just treated as a straight shot
     /// </summary>
-    [SerializeField] float maxHomingRange = 50.0f; 
-
+    [SerializeField] float maxHomingRange = 50.0f;
+    [SerializeField] float durationForKnifeToHitTargetDuringHome = 0.4f;
     bool parryActive = false;
     bool blinkedThisFrame; // just used for the animator
 
@@ -75,6 +73,16 @@ public class ProjectileAbilities : MonoBehaviour
     {
         EnemyType.Banshee
     };
+
+    bool homingPreviously;
+
+    HomeData homeData;
+    struct HomeData
+    {
+        public Vector3 knifeStart;
+        public Vector3 enemyPos;
+        public float elapsedTime;
+    }
 
     void Start()
     {
@@ -145,23 +153,39 @@ public class ProjectileAbilities : MonoBehaviour
         {
             
             var newTarget = manager.entityManager.GetClosestEnemyToPosition(featherKnife.rb.position, enemiesToNotHomeTowards);
-            var targetDistance = Vector3.Distance(newTarget.transform.position, transform.position);
+            var targetDistance = Vector3.Distance(newTarget.transform.position, featherKnife.rb.position);
             if (targetDistance <= maxHomingRange)
             {
-                HomeTowardsPosition(newTarget.transform.position, targetDistance);
+                if (!homingPreviously)
+                {
+                    StartHoming(featherKnife.rb.position, newTarget.collider.bounds.center);
+                }
+                HomeTowardsPosition();
+                homingPreviously = true;
+            }
+            else
+            {
+                homingPreviously = false;
             }
         }
     }
-
-    void HomeTowardsPosition(Vector3 target, float distance)
+    void HomeTowardsPosition()
     {
-        var current = featherKnife.rb.linearVelocity;
-        var desired = featherKnife.rb.linearVelocity.magnitude * (target - featherKnife.rb.position);
-        float curveEvaluated = homingPowerCurve.Evaluate(1 - (distance / maxHomingRange));
-        float homePower = curveEvaluated * baseHomingPower;
-        Debug.Log("Evaluating curve at point " + (1 - (distance / maxHomingRange)));
-        Debug.Log("Applying " + curveEvaluated + " multiplier to home power, resulting in new rotation" + homePower);
-        featherKnife.rb.linearVelocity = Vector3.RotateTowards(current, desired, homePower, 0.1f);
+        homeData.elapsedTime += Time.deltaTime;
+        featherKnife.rb.position = Vector3.Slerp(homeData.knifeStart, homeData.enemyPos, homeData.elapsedTime / durationForKnifeToHitTargetDuringHome);
+        if (Vector3.Distance(featherKnife.rb.position, homeData.enemyPos) <= 0.01f)
+        {
+            featherKnife.rb.isKinematic = false;
+        }
+    }
+
+    void StartHoming(Vector3 knifePos, Vector3 enemyPos)
+    {
+        homeData.knifeStart = knifePos;
+        homeData.enemyPos = enemyPos;
+        homeData.elapsedTime = 0;
+
+        featherKnife.rb.isKinematic = true; //manual control;
     }
     public bool IsParryable()
     {
