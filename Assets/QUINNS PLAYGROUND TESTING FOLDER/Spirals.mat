@@ -7,15 +7,20 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CrackDecal
-  m_Shader: {fileID: -6465566751694194690, guid: 521f5d183204c58429c56006fa9c5ddd, type: 3}
+  m_Name: Spirals
+  m_Shader: {fileID: -6465566751694194690, guid: 97978ebb277a0e84abb09547ceab8a9e, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
+  m_InvalidKeywords:
+  - _ALPHAPREMULTIPLY_ON
+  - _EMISSION
+  - _METALLICSPECGLOSSMAP
+  - _NORMALMAP
+  - _SURFACE_TYPE_TRANSPARENT
+  m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses:
@@ -25,11 +30,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 127bbee360950e64ba3a9845c6419a30, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 4072bd40dce1f6b44bc33e4f8948dd97, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -45,15 +50,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 65ba74c0359525344b06cd9525a4da6d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 127bbee360950e64ba3a9845c6419a30, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 2500ecda8af19c24f9628b973ae41dbe, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -64,16 +69,12 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_4fa6a4f117f24c329f606f0b2ce5e334_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 840a5e05010e75348a4916b941385e21, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_76263630aadf48cdae39f8de1fbcc002_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 94f1c25eb53e5a74daf8d5ed346021d4, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2D:
+        m_Texture: {fileID: 2800000, guid: 127bbee360950e64ba3a9845c6419a30, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -91,52 +92,68 @@ Material:
     m_Ints: []
     m_Floats:
     - _AddPrecomputedVelocity: 0
-    - _AlphaClip: 0
+    - _AlphaClip: 1
     - _AlphaToMask: 0
+    - _Alpha_Fade: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _Cull: 2
+    - _Cull: 0
+    - _CutOffHeight: 0
     - _Cutoff: 0.5
-    - _DecalAngleFadeSupported: 1
-    - _DecalMeshBiasType: 0
-    - _DecalMeshDepthBias: 0
-    - _DecalMeshViewBias: 0
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DrawOrder: 0
-    - _DstBlend: 0
-    - _DstBlendAlpha: 0
+    - _DisplaceAmount: 5.3
+    - _DisplaceAmount_1: 9
+    - _Dissolve: 0.319
+    - _DstBlend: 10
+    - _DstBlendAlpha: 10
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0
+    - _MoveSpeed: 0
+    - _NoisePower: 1
+    - _NoiseScale: 51.49
+    - _NoiseSpeed: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
+    - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 0.5
+    - _RotationPerSecond: 80
+    - _Smoothness: 0.555
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _Surface: 0
-    - _TextureIndex: 4
-    - _Visibility: 0.03
+    - _Surface: 1
+    - _TopNoiseScale: 51
+    - _TopNoiseStrength: 0.57
+    - _TwirlAmount: -23.89
+    - _Wind_Density: 64.2
+    - _WobbbleAmount: 0
+    - _WobbleFreq: 0
+    - _WobbleIntesity: 0
     - _WorkflowMode: 1
-    - _ZWrite: 1
+    - _ZWrite: 0
+    - _wOBBLEsPEED: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ImpactColor: {r: 0.90188676, g: 0.48283625, b: 0.13443208, a: -0.0038146973}
+    - _EmissionColor: {r: 0.4669811, g: 0.9749466, b: 1, a: 1}
+    - _MoveAxis: {r: 0, g: 0, b: 0, a: 0}
+    - _RotatioAxis: {r: 0, g: 0, b: 1, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _TwirlCentre: {r: 1.16, g: -0.78, b: 0, a: 0}
+    - _TwirlSpeed: {r: 0.5, g: 0, b: 0, a: 0}
+    - _Wind_Colour: {r: 14.506024, g: 22.32453, b: 29.857058, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &4861968730010270338
+--- !u!114 &8102216372555211686
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
