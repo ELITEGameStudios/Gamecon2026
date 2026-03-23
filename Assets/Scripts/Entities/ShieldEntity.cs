@@ -9,7 +9,6 @@ public class ShieldEntity : EntityBase
     [SerializeField] LayerMask knifeMask;
     public override void Damage(int damage = 1)
     {
-        Debug.Log("Shield hit but not parried");
     }
 
     private void FixedUpdate()
@@ -19,10 +18,9 @@ public class ShieldEntity : EntityBase
         {
             if (col.TryGetComponent(out Projectile knife))
             {
-                if (knife.projectileAbilities.ProjectileInParryState() && knife.currentState == Projectile.ProjectileState.Flying)
+                if (knife.projectileAbilities.ParryActive && knife.currentState == Projectile.ProjectileState.Flying)
                 {
                     OnDeath();
-                    Debug.Log("Shield broken");
                 }
             }
         }

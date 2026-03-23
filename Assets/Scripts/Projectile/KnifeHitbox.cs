@@ -26,7 +26,7 @@ public class KnifeHitbox : MonoBehaviour
         bool inValidState = statesWithHitboxes.Contains(state);
         bool parryStateValid;
         if (!parryOnlyHitbox) parryStateValid = true;
-        else parryStateValid = knife.projectileAbilities.ProjectileInParryState();
+        else parryStateValid = knife.projectileAbilities.ParryActive;
         hitbox.enabled = inValidState && parryStateValid;
         struckEnemies.Clear();
     }

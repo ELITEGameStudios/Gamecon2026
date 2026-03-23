@@ -13,7 +13,7 @@ public class EnemyBase : EntityBase
     [SerializeField, ShowIf(nameof(IsBulwark))] ShieldEntity enemyShield;
 
 
-    public EnemyType enemyType { private set; get; } = EnemyType.Dummy;
+    public EnemyType EnemyType { private set; get; } = EnemyType.Dummy;
     [SerializeField] EnemyType type = EnemyType.Grunt;
 
      public bool IsBulwark() => type == EnemyType.Bulwark;
@@ -27,7 +27,7 @@ public class EnemyBase : EntityBase
     {
         base.Init();
         if (collider == null) collider = GetComponent<Collider>();
-        enemyType = type;
+        EnemyType = type;
         // Put your code here
 
     }

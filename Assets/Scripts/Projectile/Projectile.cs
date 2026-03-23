@@ -11,7 +11,10 @@ public class Projectile : MonoBehaviour
     public UnityEvent<KnifeCollisionInfo> enemyStruck = new();
     public UnityEvent<KnifeCollisionInfo> terrainStruck = new();
     public UnityEvent<KnifeRetrievalInfo> knifeRetrieved = new();
-    [HideInInspector] public UnityEvent<ProjectileState> stateChanged = new();
+    public UnityEvent<ProjectileState> stateChanged = new();
+    /// <summary>
+    /// Float parameter is distance travelled.
+    /// </summary>
 
     public enum ProjectileState {Idle, Flying, Embedded, Recalling}//, PickedUp}
     public ProjectileState currentState { get; private set; } = ProjectileState.Idle;
@@ -43,12 +46,16 @@ public class Projectile : MonoBehaviour
     public LayerMask mainIdleCull, mainFlyingCull;
 
     [Header("RecallData")]
+    public Vector3 embeddedPos {get; private set;}
     public Vector3 throwDirection {get; private set;}
     [SerializeField] private AnimationCurve recallAnimationCurve;
-    [SerializeField] float baseRecallSpeed = 50f; // Overall speed multiplier
-    [SerializeField] float maxSpeedBoost = 3f;      // How much to speed up (3x = 300% speed)
-   
-    public float TotalRecallDistance { get; private set; }
+    public float baseRecallSpeed = 50f; // Overall speed multiplier
+    public float maxBoostDistance = 180f; // Distance threshold for speed boost
+    public float maxSpeedBoost = 3f;      // How much to speed up (3x = 300% speed)
+    public float recallCurrentTime { get; private set; }
+    public float totalRecallTime;
+
+    public float totalRecallDistance;
     private float recallProgress;
     [SerializeField] private Collider thisCol;
     [SerializeField] private Transform centerTf;
@@ -69,13 +76,16 @@ public class Projectile : MonoBehaviour
     };
 
     
-    private Rigidbody rb;
+    public Rigidbody rb { get; private set; }
     private Collider col;
-
+    
     // [SerializeField] private Animator animator;
+    private Transform embedParent;
 
-    float elapsedTimeInFlyingState;
 
+    LayerMask terrainMask;
+
+    float timeElaspedWithoutKnife = 0.0f;
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -85,8 +95,8 @@ public class Projectile : MonoBehaviour
         spaceRecordingData = new List<SpaceSample>();
         triggerList = new List<Collider>();
         ReturnToIdle();
+        terrainMask = LayerMask.GetMask("Wall", "Ground", "Default");
     }
-
 
     public Vector3 GetBlinkPosition()
     {
@@ -147,10 +157,11 @@ public class Projectile : MonoBehaviour
                 }
             }
         }
+
         if (currentState == ProjectileState.Flying)
         {
-            elapsedTimeInFlyingState += Time.deltaTime;
-            if (elapsedTimeInFlyingState > lifetime)
+            timeElaspedWithoutKnife += Time.deltaTime;
+            if (timeElaspedWithoutKnife > lifetime)
             {
                 ReturnToIdle();
             }
@@ -169,6 +180,8 @@ public class Projectile : MonoBehaviour
         spaceSample.direction = transform.forward;
         spaceSample.velocity= rb.linearVelocity;
 
+        // debugObj.transform.position = transform.position;
+
         if(currentState != ProjectileState.Embedded || spaceRecordingData.Count < maxRecordingSlots)
         {
             spaceRecordingData.Add(spaceSample);
@@ -178,6 +191,9 @@ public class Projectile : MonoBehaviour
 
     public void SetState(ProjectileState newState)
     {
+        if (currentState == newState) return;
+
+        ProjectileState oldState = currentState;
         currentState = newState;
         
         switch (currentState)
@@ -186,48 +202,60 @@ public class Projectile : MonoBehaviour
                 rb.isKinematic = true;
                 col.enabled = true;
                 col.isTrigger = false;
+                // animator.SetTrigger("Idle");
                 projectileAbilities.OnPickup();
 
                 armRendererCam.cullingMask = armIdleCull;
                 mainCam.cullingMask = mainIdleCull;
                 break;
             case ProjectileState.Flying:
-                elapsedTimeInFlyingState = 0.0f;
+                timeElaspedWithoutKnife = 0.0f;
                 armRendererCam.cullingMask = armFlyingCull;
                 mainCam.cullingMask = mainFlyingCull;
 
                 rb.isKinematic = false;
                 col.isTrigger = false;
                 
+                if(oldState != ProjectileState.Recalling){
+                    // animator.SetTrigger("Flying");
+                }
                 break;
             case ProjectileState.Embedded:
-
-                Debug.Log("Remvoing velocity, embedding");
                 rb.isKinematic = true;
                 col.isTrigger = true;
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
+                // animator.SetTrigger("Idle");
 
                 SetEmbeddedPos();
                 break;
             case ProjectileState.Recalling:
                 // Stop physics immediately
-
-                Debug.Log("Removing velocity, recalling");
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
                 rb.isKinematic = true;
-        
+                col.isTrigger = true;
+                // animator.SetTrigger("Recalling");
+            
                 // Calculate recall parameters
-                TotalRecallDistance = Vector3.Distance(transform.position, initProjectilePosition.position);
+                totalRecallDistance = Vector3.Distance(transform.position, initProjectilePosition.position);
                 recallProgress = 0f;
-
+            
                 // Estimate total time
+                totalRecallTime = CalculateEstimatedRecallTime(totalRecallDistance);
+                recallCurrentTime = totalRecallTime;
+
+                projectileAbilities.SetParryWindow(totalRecallDistance);
                 break;
             
-
+            // case ProjectileState.PickedUp:
+            //     rb.isKinematic = true;
+            //     col.enabled = false;
+            //     gameObject.SetActive(false);
+            //     break;
         }
-        stateChanged.Invoke(newState);
+        stateChanged.Invoke(currentState);
+       
     }
     
     void RecallUpdate()
@@ -235,16 +263,31 @@ public class Projectile : MonoBehaviour
         if (currentState != ProjectileState.Recalling)
             return;
 
+        recallCurrentTime -= Time.deltaTime;
+
         float currentDistance = Vector3.Distance(transform.position, initProjectilePosition.position);
-        recallProgress = 1f - (currentDistance / TotalRecallDistance);
+        recallProgress = 1f - (currentDistance / totalRecallDistance);
         HUDManager.Instance.recallElement.SetSpeed(recallProgress);
     
-      
+        // Calculate distance-based speed boost
+        float distanceBoost = 1f;
+        if (currentDistance > maxBoostDistance)
+        {
+            // Apply maximum boost when way beyond threshold
+            distanceBoost = maxSpeedBoost;
+        }
+        else if (currentDistance > maxBoostDistance * 0.7f) // Start slowing down at 70% of threshold
+        {
+            // Gradually reduce boost as it approaches normal range
+            float boostProgress = (currentDistance - (maxBoostDistance * 0.7f)) / (maxBoostDistance * 0.3f);
+            distanceBoost = Mathf.Lerp(1f, maxSpeedBoost, boostProgress);
+        }
+    
         // Get curve-based speed multiplier
         float speedMultiplier = recallAnimationCurve.Evaluate(recallProgress);
     
         // Combine both multipliers
-        float currentSpeed = baseRecallSpeed * speedMultiplier;
+        float currentSpeed = baseRecallSpeed * speedMultiplier * distanceBoost;
     
         transform.position = Vector3.MoveTowards(transform.position, initProjectilePosition.position, currentSpeed * Time.deltaTime);
     
@@ -279,32 +322,36 @@ public class Projectile : MonoBehaviour
         
             // Calculate distance boost for this segment too!
             float segmentDistance = distance * (1f - progress);
-            //float distanceBoost = CalculateDistanceBoost(segmentDistance);
-
-            float segmentTime = (distance / samples) / (baseRecallSpeed * speedMultiplier); //* distanceBoost);
+            float distanceBoost = CalculateDistanceBoost(segmentDistance);
+        
+            float segmentTime = (distance / samples) / (baseRecallSpeed * speedMultiplier * distanceBoost);
             estimatedTime += segmentTime;
         }
 
         return estimatedTime;
     }
 
-    //private float CalculateDistanceBoost(float currentDistance)
-    //{
-    //    if (currentDistance > maxBoostDistance)
-    //    {
-    //        return maxSpeedBoost;
-    //    }
-    //    else if (currentDistance > maxBoostDistance * 0.7f)
-    //    {
-    //        float boostProgress = (currentDistance - (maxBoostDistance * 0.7f)) / (maxBoostDistance * 0.3f);
-    //        return Mathf.Lerp(1f, maxSpeedBoost, boostProgress);
-    //    }
-    //    return 1f;
-    //}
+    private float CalculateDistanceBoost(float currentDistance)
+    {
+        if (currentDistance > maxBoostDistance)
+        {
+            return maxSpeedBoost;
+        }
+        else if (currentDistance > maxBoostDistance * 0.7f)
+        {
+            float boostProgress = (currentDistance - (maxBoostDistance * 0.7f)) / (maxBoostDistance * 0.3f);
+            return Mathf.Lerp(1f, maxSpeedBoost, boostProgress);
+        }
+        return 1f;
+    }
 
     public void SetEmbeddedPos(){
+        embeddedPos = transform.position;
         blinkSample = spaceRecordingData[spaceRecordingData.Count - 1];
     }
+
+
+    
     public void CastProjectile(Vector3 direction)
     {
         transform.SetParent(null);
@@ -312,6 +359,7 @@ public class Projectile : MonoBehaviour
         transform.localScale = targetLocalScale;
         throwDirection = direction;
         SetState(ProjectileState.Flying);
+        
         rb.linearVelocity = direction * speed;
     }
 
@@ -394,31 +442,9 @@ public class Projectile : MonoBehaviour
         {
             blinkSample = spaceRecordingData[maxRecordingSlots-1];
         }
-
-    }
-  
-    public void OnEnemyStruck()
-    {
-        EmitKnifeCollisionSignal(true);
-        if (projectileAbilities != null)
-        {
-            projectileAbilities.ResetRecallCooldown();
-        }
-
-        bool inParryState = projectileAbilities.ProjectileInParryState();
-
-        if (!inParryState && currentState != ProjectileState.Recalling)
-        {
-            EmbedKnife();
-        }
-    }
-    public void OnObjectStruck()
-    {
-        EmitKnifeCollisionSignal(false);
-        EmbedKnife();
     }
 
-    void EmitKnifeCollisionSignal(bool hitEnemy)
+    void OnKnifeCollision(bool hitEnemy)
     {
         KnifeCollisionInfo collisionInfo = new()
         {
@@ -426,32 +452,52 @@ public class Projectile : MonoBehaviour
             point = rb.position,
             struckEnemy = hitEnemy
         };
-
         if (hitEnemy) enemyStruck.Invoke(collisionInfo);
         else terrainStruck.Invoke(collisionInfo);
     }
 
+    public void OnEnemyStruck()
+    {
+        if (projectileAbilities != null)
+        {
+            projectileAbilities.ResetRecallCooldown();
+        }
+
+        if (!projectileAbilities.ParryActive && currentState != ProjectileState.Recalling)
+        {
+            EmbedKnife();
+        }
+        OnKnifeCollision(hitEnemy: true);
+    }        
+    void OnTerrainStruck()
+    {
+        EmbedKnife();
+        OnKnifeCollision(hitEnemy: false);
+    }
     void EmbedKnife()
     {
-        Quaternion incomingRotation = transform.rotation;
         Vector3 travelDirection = rb.linearVelocity.normalized;
+
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
 
         transform.position += travelDirection * (embedDepth * 0.1f);
 
-        // Restore the original rotation to maintain impact angle
-        transform.rotation = incomingRotation;
-
         SetState(ProjectileState.Embedded);
-
     }
-    void OnCollisionEnter(Collision collision) 
+
+    void OnCollisionEnter(Collision collision) //needs fixing. embedding doesn't work properly
     {
-        if (currentState != ProjectileState.Flying || currentState == ProjectileState.Recalling) return;
-        OnObjectStruck();
+        if (currentState != ProjectileState.Flying || currentState == ProjectileState.Recalling)
+            return;
+
+        if ((terrainMask & (1 << collision.gameObject.layer)) != 0)
+        {
+            OnTerrainStruck();
+        }
+
     }
 }
-
-
 public struct KnifeCollisionInfo
 {
     public Vector3 normal;
