@@ -16,6 +16,7 @@ Shader "Clouds/MainCloudShader"
         _FogLerp("Noise Lerp", Range(0, 1)) = 0
         
         _FogHeight("Height Y", float) = 0
+        _FogFloor("Min Y", float) = -200
         _FogHeightTransition("Height Exp", Range(1, 100)) = 1
         [HDR]_LightEffectColor("Light Factor", Color) = (1, 1, 1, 1)
     }
@@ -53,6 +54,7 @@ Shader "Clouds/MainCloudShader"
             float _FogNoiseTile;
             float _FogNoiseFactor;
             float _FogHeight;
+            float _FogFloor;
             float _FogHeightTransition;
             float _FogMaxDensity;
             float _FogLerp;
@@ -82,11 +84,23 @@ Shader "Clouds/MainCloudShader"
                     // float noiseDensity = saturate(dot(noiseValue, noiseValue) - _FogNoiseFactor) * _FogDensity * lerp(1, 0, pow(currentPosition.y - _FogHeight, _FogHeightExp) );
                     float noiseDensity = saturate(
                         (dot(noiseValue, noiseValue) - _FogNoiseFactor) * density);
-                        
-                        float inputDensity = 
-                        lerp(noiseDensity, density, _FogLerp)
-                        * lerp(1, 0, (currentPosition.y - _FogHeight + _FogHeightTransition) / _FogHeightTransition)
-                        * _FogMaxDensity;
+                    
+                    float heightFactorA =  (currentPosition.y - _FogHeight);
+                    float heightFactorB =  (_FogFloor - currentPosition.y);
+                    float heightFactor;
+
+                    if(abs(heightFactorA) > abs(heightFactorB)){
+                        heightFactor = heightFactorB;
+                    }
+                    else{
+                        heightFactor = heightFactorA;
+                    }
+
+
+                    float inputDensity = 
+                    lerp(noiseDensity, density, _FogLerp)
+                    * lerp(1, 0, heightFactor / _FogHeightTransition)
+                    * _FogMaxDensity;
                         
                     if(inputDensity > 0){
                         // half shadow = AdditionalLightRealtimeShadow(0, currentPosition);
