@@ -41,12 +41,11 @@ public class WindManager : MonoBehaviour
         if (info.pickupType != KnifeRetrievalType.Pickup)
         {
             CurrentWind = 0;
-            Debug.Log("Resetting wind");
         }
     }
     private void FixedUpdate()
     {
-        windDisplay.text = "Wind: " + Mathf.RoundToInt(CurrentWind);
+        if (windDisplay.text != null) windDisplay.text = "Wind: " + Mathf.RoundToInt(CurrentWind);
         if (pauseWindGeneration) return;
         float speed = new Vector2(playerRB.linearVelocity.x, playerRB.linearVelocity.z).sqrMagnitude;
 
