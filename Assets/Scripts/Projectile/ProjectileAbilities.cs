@@ -139,31 +139,18 @@ public class ProjectileAbilities : MonoBehaviour
     public bool IsParryable()
     {
         if (featherKnife.currentState != Projectile.ProjectileState.Recalling) return false;
-        // use distance parry timing instead of time-based
         float currentDistance = Vector3.Distance(featherKnife.transform.position, transform.position);
 
-        Debug.Log("Current distance is " + currentDistance + ", parry window is " + parryWindow);
         return currentDistance <= parryWindow;
     }
     private void OnFirePressed(InputAction.CallbackContext ctx)
     {
-        if (featherKnife.currentState == Projectile.ProjectileState.Recalling){
-            
-            if(IsParryable())
-            {
-                Debug.Log("Parried!");
-                TryShoot(true);
-                attemptedParry.Invoke(true);
-            }
-            else 
-            {
-                parryFailSFX.start();
-                attemptedParry.Invoke(false);
-            }
-        }
-        else
+        if (featherKnife.currentState == Projectile.ProjectileState.Recalling)
         {
-            TryShoot();
+            bool parryable = IsParryable();
+            TryShoot(parryable);
+            attemptedParry.Invoke(parryable);
+            if (!parryable) parryFailSFX.start();
         }
     }
 
