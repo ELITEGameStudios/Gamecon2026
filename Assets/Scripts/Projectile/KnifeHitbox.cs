@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class KnifeHitbox : MonoBehaviour
 {
+    const float SAFE_MARGIN = 1.01f;
+
     [SerializeField] Projectile knife;
     [SerializeField] List<Projectile.ProjectileState> statesWithHitboxes;
     [SerializeField] BoxCollider hitbox;
@@ -43,8 +45,22 @@ public class KnifeHitbox : MonoBehaviour
                 if (struckEnemies.Contains(enemy)) continue; //only hit each enemy once
                 enemy.Damage(damage);
                 struckEnemies.Add(enemy);
-                knife.OnEnemyStruck();
+                knife.OnEnemyStruck(CalculateNormal(obj));
             }
         }
+    }
+
+    Vector3 CalculateNormal(Collider collider)
+    {
+        var closestPoint = collider.ClosestPoint(hitbox.bounds.center);
+        var pointToHitboxCenter = closestPoint - hitbox.bounds.center;
+        var ray = new Ray(hitbox.bounds.center, pointToHitboxCenter);
+        var raycast = Physics.Raycast(ray, out RaycastHit info, pointToHitboxCenter.magnitude + SAFE_MARGIN, enemyMask, QueryTriggerInteraction.Collide);
+
+        if (info.collider != null)
+        {
+            return info.normal;
+        }
+        return Vector3.zero;
     }
 }

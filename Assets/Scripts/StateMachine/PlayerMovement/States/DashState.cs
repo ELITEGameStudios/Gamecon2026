@@ -63,7 +63,6 @@ public class DashState : PlayerMovementState
         // Debug.Log(dashPowerOverSpeed.Evaluate(currentVelocity.magnitude));
         PlayerVFXManager.instance.DashEffect(input);
     }
-
     public override void FixedUpdate()
     {
         movement.CalculateLookRotation();

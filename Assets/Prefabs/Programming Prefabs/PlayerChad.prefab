@@ -3123,82 +3123,6 @@ Transform:
   - {fileID: 353629803868299538}
   m_Father: {fileID: 3930401326771625176}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4874722032866654334
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4743954226515735996}
-  - component: {fileID: 8509023973921303564}
-  m_Layer: 0
-  m_Name: WindManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4743954226515735996
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4874722032866654334}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.24826743, z: 0, w: 0.9686915}
-  m_LocalPosition: {x: 836.0601, y: 527.9923, z: 473.77863}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6450713759936305123}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8509023973921303564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4874722032866654334}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a46d112506ae2a947a28f96af80a8d6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 4860485282995713151}
-  playerRB: {fileID: 5386588365858552040}
-  knife: {fileID: 6373491937540632380}
-  speedToWind:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 1.8602979
-      outSlope: 1.8602979
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.06333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0.8114248
-      outSlope: 0.8114248
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.120000005
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  windDisplay: {fileID: 0}
-  minSpeedForWind: 5
-  maxSpeedForWind: 425
-  speedToWindRatio: 155
-  pauseWindGeneration: 0
 --- !u!1 &5037416986507544548
 GameObject:
   m_ObjectHideFlags: 0
@@ -3722,7 +3646,6 @@ Transform:
   - {fileID: 1771104289695820870}
   - {fileID: 369942441406092580}
   - {fileID: 4835047968788394056}
-  - {fileID: 4743954226515735996}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 61.047, z: 0}
 --- !u!33 &986350710990813882
@@ -3864,7 +3787,6 @@ MonoBehaviour:
   transform: {fileID: 6450713759936305123}
   rigidbody: {fileID: 5386588365858552040}
   animator: {fileID: 0}
-  windManager: {fileID: 8509023973921303564}
   baseSpeed: 400
   clampedRotationY: 85
   movingConsiderationDeadzone: 0.1
@@ -4059,17 +3981,17 @@ MonoBehaviour:
   recallStarted:
     m_PersistentCalls:
       m_Calls: []
-  windManager: {fileID: 8509023973921303564}
   featherKnife: {fileID: 6373491937540632380}
   projectileFirePoint: {fileID: 6713920502105754854}
   playerMovement: {fileID: 3750233208252415097}
   armAnimator: {fileID: 8631581887651075969}
   camShaker: {fileID: 6051217451859815980}
-  parryTiming: 0.7
+  parryTiming: 0.3
   recallCooldown: 4
   currentRecallCooldown: 0
   parryForce: 50
   hitStopTime: 0.1
+  minParryWindow: 80
   hudManager: {fileID: 0}
   parryCamShakeProfile:
     amplitudeCurve:
@@ -11693,10 +11615,6 @@ PrefabInstance:
       propertyPath: heldParent
       value: 
       objectReference: {fileID: 3129694957227849627}
-    - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
-      propertyPath: windManager
-      value: 
-      objectReference: {fileID: 8509023973921303564}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: armRendererCam
       value: 

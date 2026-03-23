@@ -68,6 +68,11 @@ public class Projectile : MonoBehaviour
     public List<Collider> triggerList;
     public bool inTriggerCollision =>  triggerList == null || triggerList.Count != 0;
 
+    [Header("Ricochet Data")]
+    [SerializeField] int maxBounces = 1;
+    [SerializeField] float maxDistanceToEnableAutoaimBounce = 7.0f;
+
+    int bouncesRemaining = 0;
     
     [Serializable]
     public struct SpaceSample
@@ -86,6 +91,11 @@ public class Projectile : MonoBehaviour
     LayerMask terrainMask;
 
     float timeElaspedWithoutKnife = 0.0f;
+
+    List<EnemyType> enemiesToNotBounceTowards = new()
+    {
+        EnemyType.Banshee
+    };
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -210,6 +220,7 @@ public class Projectile : MonoBehaviour
                 break;
             case ProjectileState.Flying:
                 timeElaspedWithoutKnife = 0.0f;
+                bouncesRemaining = maxBounces;
                 armRendererCam.cullingMask = armFlyingCull;
                 mainCam.cullingMask = mainFlyingCull;
 
@@ -444,19 +455,20 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    void OnKnifeCollision(bool hitEnemy)
+    void OnKnifeCollision(bool hitEnemy, Vector3 normal)
     {
         KnifeCollisionInfo collisionInfo = new()
         {
-            normal = -rb.linearVelocity,
+            normal = normal,
             point = rb.position,
             struckEnemy = hitEnemy
         };
         if (hitEnemy) enemyStruck.Invoke(collisionInfo);
         else terrainStruck.Invoke(collisionInfo);
+        AttemptBounce(collisionInfo.normal);
     }
 
-    public void OnEnemyStruck()
+    public void OnEnemyStruck(Vector3 normal)
     {
         if (projectileAbilities != null)
         {
@@ -467,15 +479,16 @@ public class Projectile : MonoBehaviour
         {
             EmbedKnife();
         }
-        OnKnifeCollision(hitEnemy: true);
+        OnKnifeCollision(hitEnemy: true, normal);
     }        
-    void OnTerrainStruck()
+    void OnTerrainStruck(Vector3 normal)
     {
         EmbedKnife();
-        OnKnifeCollision(hitEnemy: false);
+        OnKnifeCollision(hitEnemy: false, normal);
     }
     void EmbedKnife()
     {
+        if (bouncesRemaining > 0) return;
         Vector3 travelDirection = rb.linearVelocity.normalized;
 
         rb.linearVelocity = Vector3.zero;
@@ -486,6 +499,31 @@ public class Projectile : MonoBehaviour
         SetState(ProjectileState.Embedded);
     }
 
+    void AttemptBounce(Vector3 normal)
+    {
+        if (bouncesRemaining <= 0 || currentState != ProjectileState.Flying) return;
+        Vector3 bounceVector = Vector3.zero;
+        var nearest = GameManager.Instance.entityManager.GetClosestEnemyToPosition(rb.position, enemiesToNotBounceTowards);
+        if (nearest != null)
+        {
+            if (Vector3.Distance(nearest.collider.bounds.center, rb.position) <= maxDistanceToEnableAutoaimBounce)
+            {
+                bounceVector = (nearest.collider.bounds.center - rb.position).normalized;
+            }
+        }
+
+
+        if (bounceVector == Vector3.zero)
+        {
+            Vector3 velNormalized = rb.linearVelocity.normalized;
+            bounceVector = Vector3.Reflect(velNormalized, normal).normalized;
+        }
+        CastProjectile(bounceVector);
+        bouncesRemaining--;
+        rb.angularVelocity = Vector3.zero;
+        
+    }
+
     void OnCollisionEnter(Collision collision) //needs fixing. embedding doesn't work properly
     {
         if (currentState != ProjectileState.Flying || currentState == ProjectileState.Recalling)
@@ -493,7 +531,7 @@ public class Projectile : MonoBehaviour
 
         if ((terrainMask & (1 << collision.gameObject.layer)) != 0)
         {
-            OnTerrainStruck();
+            OnTerrainStruck(collision.GetContact(0).normal);
         }
 
     }
