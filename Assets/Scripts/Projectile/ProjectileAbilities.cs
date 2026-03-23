@@ -30,6 +30,7 @@ public class ProjectileAbilities : MonoBehaviour
     public float currentRecallCooldown;
     [SerializeField] private float parryForce = 500f;
     [SerializeField] private float hitStopTime = 0.1f;
+    [SerializeField] private float minParryWindow = 80.0f;
     [SerializeField] private HUDManager hudManager;
     public ApplyShake.CamShakeProfile parryCamShakeProfile;
     
@@ -130,7 +131,7 @@ public class ProjectileAbilities : MonoBehaviour
         if (featherKnife.currentState != Projectile.ProjectileState.Recalling) return false;
         // use distance parry timing instead of time-based
         float currentDistance = Vector3.Distance(featherKnife.transform.position, transform.position);
-        float totalDistance = featherKnife.totalRecallDistance;
+        float totalDistance = featherKnife.TotalRecallDistance;
         float progress = 1f - (currentDistance / totalDistance);
 
         return progress > parryTiming;
@@ -140,7 +141,7 @@ public class ProjectileAbilities : MonoBehaviour
         if(featherKnife.currentState == Projectile.ProjectileState.Recalling){
             // use distance parry timing instead of time-based
             float currentDistance = Vector3.Distance(featherKnife.transform.position, transform.position);
-            float totalDistance = featherKnife.totalRecallDistance;
+            float totalDistance = featherKnife.TotalRecallDistance;
             float progress = 1f - (currentDistance / totalDistance);
             
             // Parry when close to the player (last 20% of journey)
