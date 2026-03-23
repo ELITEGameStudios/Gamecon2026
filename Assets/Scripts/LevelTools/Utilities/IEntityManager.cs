@@ -43,7 +43,7 @@ public class ArenaManager : IEntityManager
             //b = 1000
             //spending time doing sqr root is unnecessary sqrt(b) == 100 > sqrt(a) == 10 
 
-            if (blacklist.Contains(enemy.enemyType)) continue;
+            if (blacklist.Contains(enemy.EnemyType)) continue;
 
             float distance = (position - enemy.transform.position).sqrMagnitude;
             if (distance < distanceToBeat)
@@ -284,7 +284,7 @@ public class WaveManager : IEntityManager
             //b = 1000
             //spending time doing sqr root is unnecessary sqrt(b) == 100 > sqrt(a) == 10 
 
-            if (blacklist.Contains(enemy.enemyType)) continue;
+            if (blacklist.Contains(enemy.EnemyType)) continue;
 
             float distance = (position - enemy.transform.position).sqrMagnitude;
             if (distance < distanceToBeat)

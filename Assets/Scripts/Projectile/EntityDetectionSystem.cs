@@ -34,7 +34,6 @@ public class EntityDetectionSystem : MonoBehaviour
         {
             return;
         }
-
         if (knife.currentState != Projectile.ProjectileState.Idle)
         {
             return;
@@ -52,13 +51,7 @@ public class EntityDetectionSystem : MonoBehaviour
             knifeProjectedLookingAtEnemyProjectedEulerAngles.x += 90;
             knifeProjectedLookingAtEnemyProjectedEulerAngles.z = 0;
             knifeProjectedLookingAtEnemyProjected.eulerAngles = knifeProjectedLookingAtEnemyProjectedEulerAngles;
-            // knife.transform.rotation = Quaternion.RotateTowards(knife.transform.rotation, knifeProjectedLookingAtEnemyProjected, rotationSpeed);
-
             knifeTf.transform.rotation = Quaternion.Slerp(knifeTf.transform.rotation, knifeProjectedLookingAtEnemyProjected, Kp);
-        }
-        else
-        {
-            Debug.Log("Could not find enemy");
         }
     }
 
