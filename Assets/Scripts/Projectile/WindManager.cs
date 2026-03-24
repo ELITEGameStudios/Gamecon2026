@@ -45,7 +45,7 @@ public class WindManager : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (windDisplay.text != null) windDisplay.text = "Wind: " + Mathf.RoundToInt(CurrentWind);
+        if (windDisplay != null) windDisplay.text = "Wind: " + Mathf.RoundToInt(CurrentWind);
         if (pauseWindGeneration) return;
         float speed = new Vector2(playerRB.linearVelocity.x, playerRB.linearVelocity.z).sqrMagnitude;
 
@@ -64,11 +64,20 @@ public class WindManager : MonoBehaviour
         return currentWind > 99;
     }
 
+    public bool HasEnoughWindForRicochet()
+    {
+        return currentWind > 99;
+    }
+
     public float GetWindAsPercent()
     {
         return currentWind / 100.0f;
     }
 
+    public void RestoreWindOnKill()
+    {
+        currentWind = 100.0f;
+    }
 
 
 }

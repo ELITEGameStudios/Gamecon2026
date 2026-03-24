@@ -300,7 +300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   priority: 300
-  projectileSpeed: 12
+  projectileSpeed: 30
 --- !u!114 &6507794403972543954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,8 +314,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   priority: 200
-  projectileHoming: 5
-  maxRange: 100
+  projectileHoming: 7
+  maxRange: 800
   target: {fileID: 0}
   minHomingProximityModifier: 0
   maxHomingProximityModifier: 1
@@ -355,4 +355,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   priority: 0
-  maxLifetime: 7
+  maxLifetime: 18

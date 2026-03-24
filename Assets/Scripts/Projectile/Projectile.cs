@@ -36,6 +36,7 @@ public class Projectile : MonoBehaviour
     
     [Header("Player Reference")]
     [SerializeField] private Transform playerTransform;
+    [SerializeField] private PlayerMovementStateMachine playerMovement;
     public ProjectileAbilities projectileAbilities;
     
     [Header("Camera Layer Data")]
@@ -74,7 +75,6 @@ public class Projectile : MonoBehaviour
 
     int bouncesRemaining = 0;
     
-    [Serializable]
     [Header("Wind Data")]
     [SerializeField] AnimationCurve windToRecallSpeed;
 
@@ -473,6 +473,8 @@ public class Projectile : MonoBehaviour
         {
             EmbedKnife();
         }
+        windManager.RestoreWindOnKill();
+        playerMovement.hasDash = true;
         OnKnifeCollision(hitEnemy: true, normal);
     }        
     void OnTerrainStruck(Vector3 normal)
@@ -497,12 +499,15 @@ public class Projectile : MonoBehaviour
     {
         if (bouncesRemaining <= 0 || currentState != ProjectileState.Flying) return;
         Vector3 bounceVector = Vector3.zero;
-        var nearest = GameManager.Instance.entityManager.GetClosestEnemyToPosition(rb.position, enemiesToNotBounceTowards);
-        if (nearest != null)
+        if (windManager.HasEnoughWindForRicochet())
         {
-            if (Vector3.Distance(nearest.collider.bounds.center, rb.position) <= maxDistanceToEnableAutoaimBounce)
+            var nearest = GameManager.Instance.entityManager.GetClosestEnemyToPosition(rb.position, enemiesToNotBounceTowards);
+            if (nearest != null)
             {
-                bounceVector = (nearest.collider.bounds.center - rb.position).normalized;
+                if (Vector3.Distance(nearest.collider.bounds.center, rb.position) <= maxDistanceToEnableAutoaimBounce)
+                {
+                    bounceVector = (nearest.collider.bounds.center - rb.position).normalized;
+                }
             }
         }
 
