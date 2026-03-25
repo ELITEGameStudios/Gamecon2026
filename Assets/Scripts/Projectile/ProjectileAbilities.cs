@@ -152,8 +152,11 @@ public class ProjectileAbilities : MonoBehaviour
 
         bool parryable = IsParryable();
         TryShoot(parryable);
-        attemptedParry.Invoke(parryable);
-        if (!parryable) parryFailSFX.start();
+        if (featherKnife.currentState == Projectile.ProjectileState.Recalling)
+        {
+            attemptedParry.Invoke(parryable);
+            if (!parryable) parryFailSFX.start();
+        }
         
     }
 
