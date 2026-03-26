@@ -233,7 +233,8 @@ public class ProjectileAbilities : MonoBehaviour
         
         if (cam == null) 
             return;
-        
+
+        featherKnife.BouncesRemaining = featherKnife.MaxBounces;
         HUDManager.Instance.TriggerShootPrompt();
         
         Shoot(parry);
@@ -255,7 +256,6 @@ public class ProjectileAbilities : MonoBehaviour
             // Normal shooting spawn position
             spawnPos = cam.transform.position + cam.transform.forward * 0.5f;
         }
-
         // Ray from crosshair
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
 

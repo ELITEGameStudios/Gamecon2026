@@ -3,9 +3,12 @@ using UnityEngine;
 
 public class PlayerTracker : MonoBehaviour
 {
+    const int WIND_SAMPLE_RATE = 5;
+
     [SerializeField] Player player;
     [SerializeField] Projectile knife;
     [SerializeField] GameManager gameManager;
+    [SerializeField] WindManager windManager;
     [HideInInspector] public TrackerData trackerData;
     Rigidbody playerRb;
 
@@ -14,9 +17,13 @@ public class PlayerTracker : MonoBehaviour
     List<Vector3> velocitiesWhileShooting = new();
     List<float> elapsedUntilKnifeRetrieved = new();
 
+    List<float> windSamples = new();
+
     float elapsedMissingKnifeTime = 0;
 
     float totalBlinkDistance = 0;
+
+    int windSampleTracker = WIND_SAMPLE_RATE;
     public void Start()
     {
 
@@ -85,6 +92,17 @@ public class PlayerTracker : MonoBehaviour
         elapsedMissingKnifeTime += delta;
     }
 
+    private void FixedUpdate()
+    {
+        windSampleTracker--;
+        if (windSampleTracker <= 0)
+        {
+            windSampleTracker = WIND_SAMPLE_RATE;
+            windSamples.Add(windManager.CurrentWind);
+        }
+        Debug.Log("Wind sample tracker == " + windSampleTracker);
+    }
+
     public float GetAverageSpeedWhileFiring()
     {
         Vector3 sum = Vector3.zero;
@@ -93,6 +111,18 @@ public class PlayerTracker : MonoBehaviour
             sum += velocity;
         }
         var avg = (sum / velocitiesWhileShooting.Count).magnitude;
+        if (float.IsNaN(avg)) return 0;
+        return avg;
+    }
+
+    public float GetAverageWind()
+    {
+        float sum = 0;
+        foreach (var windAmount in windSamples)
+        {
+            sum += windAmount;
+        }
+        var avg = (sum / windSamples.Count);
         if (float.IsNaN(avg)) return 0;
         return avg;
     }

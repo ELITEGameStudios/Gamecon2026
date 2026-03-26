@@ -43,7 +43,7 @@ public class DashState : PlayerMovementState
         empowered = false;
         movement.hasDash = false;
         currentDashTimer = dashTime;
-        Debug.Log("Started dash");
+    //    Debug.Log("Started dash");
         SetDashVelocity();
 
         movement.playerDash.start();

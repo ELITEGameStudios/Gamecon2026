@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 
 public class TrackerDisplay : MonoBehaviour
 {
+    const int DISPLAY_REFRESH_RATE = 10;
+
     [SerializeField] PlayerTracker tracker;
     [SerializeField] InputActionReference toggleDisplay;
     [SerializeField] GameObject display;
@@ -13,11 +15,15 @@ public class TrackerDisplay : MonoBehaviour
     [SerializeField] TMP_Text parryDisplay;
     [SerializeField] TMP_Text reclaimDisplay;
     [SerializeField] TMP_Text blinkDisplay;
+    [SerializeField] TMP_Text windDisplay;
 
 
     [SerializeField] TMP_Text blinksCounter;
     [SerializeField] TMP_Text recallCounter;
     [SerializeField] TMP_Text dashCounter;
+
+
+    int refreshTracker = DISPLAY_REFRESH_RATE;
     private void Start()
     {
         if (tracker == null)
@@ -28,26 +34,34 @@ public class TrackerDisplay : MonoBehaviour
         }
         display.SetActive(false);
         toggleDisplay.action.performed += OnTogglePressed;
+        refreshTracker = DISPLAY_REFRESH_RATE;
     }
 
     void OnTogglePressed(InputAction.CallbackContext context)
     {
-        Debug.Log("Button pressed");
         display.SetActive(!display.activeSelf);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        accuracyDisplay.text = tracker.GetHitAccuracy().ToString("F2") + "%";
-        avgSpeedDisplay.text = tracker.GetAverageSpeedWhileFiring().ToString("F2") + " m/s";
-        parryDisplay.text = tracker.GetParryAccuracy().ToString("F2") + "%";
-        reclaimDisplay.text = tracker.GetAverageKnifeReclaimTime().ToString("F2") + " secs";
-        blinkDisplay.text = tracker.GetAverageBlinkDistance().ToString("F2") + "m";
+        refreshTracker--;
+        if (refreshTracker <= 0)
+        {
 
-        var tracked = tracker.GetTrackerData();
-        blinksCounter.text = tracked.blinksTracker.ToString() ;
-        recallCounter.text = tracked.recallTracker.ToString() ;
-        dashCounter.text = tracked.dashTracker.ToString() ;
+            accuracyDisplay.text = tracker.GetHitAccuracy().ToString("F2") + "%";
+            avgSpeedDisplay.text = tracker.GetAverageSpeedWhileFiring().ToString("F2") + " m/s";
+            parryDisplay.text = tracker.GetParryAccuracy().ToString("F2") + "%";
+            reclaimDisplay.text = tracker.GetAverageKnifeReclaimTime().ToString("F2") + " secs";
+            blinkDisplay.text = tracker.GetAverageBlinkDistance().ToString("F2") + "m";
+
+            var tracked = tracker.GetTrackerData();
+            blinksCounter.text = tracked.blinksTracker.ToString();
+            recallCounter.text = tracked.recallTracker.ToString();
+            dashCounter.text = tracked.dashTracker.ToString();
+
+            refreshTracker = DISPLAY_REFRESH_RATE;
+        }
+        Debug.Log("Refresh tracker == " + refreshTracker);
 
     }
 }
