@@ -72,7 +72,6 @@ public class PlayerTracker : MonoBehaviour
         if (parry)
         {
             trackerData.successfulParries++;
-            Debug.Log("Parry attempt successful");
         }
 
     }

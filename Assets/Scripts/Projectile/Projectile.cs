@@ -252,6 +252,7 @@ public class Projectile : MonoBehaviour
                 col.isTrigger = true;
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
+                BounceToEmbedTransitionCooldownRemaining = 0.0f;
                 // animator.SetTrigger("Idle");
 
                 SetEmbeddedPos();
@@ -488,7 +489,7 @@ public class Projectile : MonoBehaviour
         
         if (!AttemptEnemyAutoaimBounce(normal)) //if we're in this func, we hit something, so if bounce failed
         {
-           if (! projectileAbilities.ParryActive) EmbedKnife(); // embed the knife
+            if (!projectileAbilities.ParryActive) EmbedKnife(); // embed the knife
         }
         
        
@@ -499,11 +500,16 @@ public class Projectile : MonoBehaviour
     }        
     void EmbedKnife()
     {
-        if ( BounceToEmbedTransitionCooldownRemaining > 0.0f) return;
+        if (BounceToEmbedTransitionCooldownRemaining > 0.0f) 
+        {
+            return;
+        }
+        else if (currentState == ProjectileState.Recalling)
+        {
+            return;
+        }
         Vector3 travelDirection = rb.linearVelocity.normalized;
 
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
 
         transform.position += travelDirection * (embedDepth * 0.1f);
 

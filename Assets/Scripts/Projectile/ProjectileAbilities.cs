@@ -151,13 +151,12 @@ public class ProjectileAbilities : MonoBehaviour
         if (featherKnife.currentState == Projectile.ProjectileState.Flying || featherKnife.currentState == Projectile.ProjectileState.Embedded) return;
 
         bool parryable = IsParryable();
-        TryShoot(parryable);
         if (featherKnife.currentState == Projectile.ProjectileState.Recalling)
         {
             attemptedParry.Invoke(parryable);
             if (!parryable) parryFailSFX.start();
         }
-        
+        TryShoot(parryable);
     }
 
     private void OnRecallPressed(InputAction.CallbackContext ctx)
