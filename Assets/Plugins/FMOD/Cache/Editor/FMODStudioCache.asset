@@ -131,7 +131,8 @@ MonoBehaviour:
   IsStream: 0
   Is3D: 1
   IsOneShot: 0
-  Parameters: []
+  Parameters:
+  - {fileID: -3089074442602830613}
   MinDistance: 1
   MaxDistance: 20
   Length: 278
@@ -378,6 +379,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 44000
+--- !u!114 &-3089074442602830613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/FootstepsEvent/In Cave
+  m_EditorClassIdentifier: 
+  Name: In Cave
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2183111878
+    data2: 317707328
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-2964189403956306362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -570,7 +595,7 @@ MonoBehaviour:
   - {fileID: 1405720437415962997}
   StringsBanks:
   - {fileID: 9114747985906268585}
-  cacheTime: 639092887036771614
+  cacheTime: 639101299248400142
   cacheVersion: 131634
 --- !u!114 &10998266041711469
 MonoBehaviour:
@@ -614,10 +639,10 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639092887036718367
+  lastModified: 639101299248344024
   FileSizes:
   - Name: Desktop
-    Value: 2982432
+    Value: 3470048
   Exists: 1
 --- !u!114 &2423527646633715673
 MonoBehaviour:
@@ -693,6 +718,30 @@ MonoBehaviour:
   ID:
     data1: 3100524195
     data2: 2913464224
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &3245073051110244819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/TutorialMusic/Cave Change
+  m_EditorClassIdentifier: 
+  Name: Cave Change
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 188317715
+    data2: 2611709039
   Type: 0
   IsGlobal: 0
   Labels: []
@@ -1056,10 +1105,10 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639092887036771614
+  lastModified: 639101299248400142
   FileSizes:
   - Name: Desktop
-    Value: 1526
+    Value: 1628
   Exists: 1
 --- !u!114 &9167691374996464057
 MonoBehaviour:
@@ -1086,6 +1135,7 @@ MonoBehaviour:
   IsOneShot: 0
   Parameters:
   - {fileID: 2946366726044564769}
+  - {fileID: 3245073051110244819}
   MinDistance: 1
   MaxDistance: 20
-  Length: 91500
+  Length: 147800
