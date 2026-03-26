@@ -8,9 +8,22 @@ public class WindManager : MonoBehaviour
     [SerializeField] Projectile knife;
     [SerializeField] AnimationCurve speedToWind;
     [SerializeField] TMP_Text windDisplay;
+
+    [Header("Stats")]
     [SerializeField] float minSpeedForWind;
     [SerializeField] float maxSpeedForWind;
     [SerializeField] float speedToWindRatio = 4.0f;
+
+    [Header("VFX")]
+    [SerializeField] Material tattooMaterial;
+    [SerializeField] ParticleSystem windWraps;
+    [SerializeField] float maxWindWraps = 20.0f;
+    [SerializeField] Color baseWindColor = Color.white;
+    [SerializeField] Color maxWindColor = Color.blue;
+    [SerializeField, ColorUsage (true, true)] Color minWindTattooColor = Color.white;
+    [SerializeField, ColorUsage(true, true)] Color maxWindTattooColor = Color.blue;
+    [SerializeField] SkinnedMeshRenderer leftArm;
+    [SerializeField] AnimationCurve colorTransitionCurve;
     float currentWind = 0;
     public float CurrentWind
     {
@@ -26,6 +39,11 @@ public class WindManager : MonoBehaviour
     float minSpeedSquared;
     float maxSpeedSquared;
 
+
+    ParticleSystem.EmissionModule wrapsEmission;
+    ParticleSystem.MainModule wrapsMainModule;
+
+    Material runtimeTattooMaterial;
     private void Start()
     {
         if (player == null) player = Player.instance;
@@ -34,6 +52,12 @@ public class WindManager : MonoBehaviour
         maxSpeedSquared = maxSpeedForWind * maxSpeedForWind;
 
         knife.knifeRetrieved.AddListener(OnKnifeRetrieved);
+
+        wrapsEmission = windWraps.emission;
+        wrapsMainModule = windWraps.main;
+
+        runtimeTattooMaterial = new(tattooMaterial);
+        leftArm.material = runtimeTattooMaterial;
 
     }
     void OnKnifeRetrieved(KnifeRetrievalInfo info)
@@ -56,7 +80,26 @@ public class WindManager : MonoBehaviour
         float windToAdd = speedToWind.Evaluate(speedAsProgress) * speedToWindRatio;
 
         CurrentWind += windToAdd;
+        float windAsPercent = CurrentWind / 100.0f;
+        if (windWraps.gameObject.activeSelf)
+        {
+            wrapsEmission.rateOverTime = Mathf.Lerp(0, maxWindWraps, windAsPercent);
+            if (windAsPercent > 0.99f)
+            {
+                wrapsMainModule.startColor = maxWindColor;
+            }
+            else
+            {
+                wrapsMainModule.startColor = baseWindColor;
+            }
+            
+        }
 
+        if (tattooMaterial != null)
+        {
+            var newColor = Color.Lerp(minWindTattooColor, maxWindTattooColor, colorTransitionCurve.Evaluate(windAsPercent));
+           runtimeTattooMaterial.SetColor("_EmissionColor", newColor);
+        }
     }
 
     public bool HasEnoughWindForBlink()
