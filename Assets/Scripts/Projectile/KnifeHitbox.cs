@@ -20,6 +20,8 @@ public class KnifeHitbox : MonoBehaviour
         hitbox.isTrigger = true;
 
         knife.stateChanged.AddListener(OnKnifeStateChanged);
+
+        hitbox.enabled = false;
     }
 
     void OnKnifeStateChanged(Projectile.ProjectileState state)
