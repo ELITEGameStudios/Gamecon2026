@@ -125,6 +125,7 @@ public class Projectile : MonoBehaviour
         if (playerTransform != null && currentState == ProjectileState.Embedded)
         {   
             float distance = Vector3.Distance(playerTransform.position, transform.position);
+            if(PlayerMovementStateMachine.instance.parryTutorialEvent != null && PlayerMovementStateMachine.instance.parryTutorialEvent.active){goto AfterDistCheck;}
             if (distance <= pickUpRadius){
                 KnifeRetrievalInfo info = new ()
                 {
@@ -134,6 +135,8 @@ public class Projectile : MonoBehaviour
                 Pickup(); 
             }
         }
+
+        AfterDistCheck:
 
         if(currentState == ProjectileState.Recalling)
         {
@@ -282,6 +285,16 @@ public class Projectile : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(directionToHand) * Quaternion.Euler(-90, 180, 0);
         }
     
+        if (PlayerMovementStateMachine.instance.parryTutorialEvent != null)
+        {
+            ParryTutorialEvent parryTutorialEvent = PlayerMovementStateMachine.instance.parryTutorialEvent;
+            if(currentDistance <= pickUpRadius + 1f && parryTutorialEvent.active)
+            {
+                Time.timeScale = 0;
+                return;
+            }
+        }
+
         if (currentDistance < 0.1f)
         {
             KnifeRetrievalInfo info = new()

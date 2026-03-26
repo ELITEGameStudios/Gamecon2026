@@ -44,7 +44,7 @@ public class GameUIPopup : MonoBehaviour
 
         // Additional operations
         if (sendAlphaCommandOnActive){
-            HUDManager.Instance.screenDimmer.DimScreen(active ? targetAlpha : 0, dimPriority: dimPriority);
+            if(HUDManager.Instance.screenDimmer != null) HUDManager.Instance.screenDimmer.DimScreen(active ? targetAlpha : 0, dimPriority: dimPriority);
         }
 
         if (sendTimeCommandOnActive){

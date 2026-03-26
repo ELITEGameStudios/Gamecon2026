@@ -97,6 +97,10 @@ public class HUDManager : MonoBehaviour
 
     public void TriggerBlinkPrompt() {blinkPrompt.Deactivate(); blinkPrompt.locked = true;}
     public void TriggerRecallPrompt() {recallPrompt.Deactivate(); recallPrompt.locked = true;}
-    public void TriggerShootPrompt() { shootPrompt.Deactivate(); shootPrompt.locked = true;}
+    public void TriggerShootPrompt() { 
+        shootPrompt.Deactivate(); 
+        shootPrompt.locked = true; 
+        if(PlayerMovementStateMachine.instance.parryTutorialEvent != null){PlayerMovementStateMachine.instance.parryTutorialEvent.End();}
+    }
     // public void TriggerDashPrompt() {recallPrompt.Deactivate();}
 }

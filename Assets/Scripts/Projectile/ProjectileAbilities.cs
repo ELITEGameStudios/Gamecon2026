@@ -144,7 +144,7 @@ public class ProjectileAbilities : MonoBehaviour
             float progress = 1f - (currentDistance / totalDistance);
             
             // Parry when close to the player (last 20% of journey)
-            if(progress > parryTiming)
+            if(progress > parryTiming || (PlayerMovementStateMachine.instance.parryTutorialEvent != null && PlayerMovementStateMachine.instance.parryTutorialEvent.active))
             {
                 Debug.Log("Parried!");
                 TryShoot(true);
@@ -179,9 +179,13 @@ public class ProjectileAbilities : MonoBehaviour
 
             if (HUDManager.Instance != null) 
             { 
-            HUDManager.Instance.UpdateRecallCooldown(currentRecallCooldown, recallCooldown);
-            HUDManager.Instance.TriggerRecallPrompt();
-            HUDManager.Instance.recallElement.Activate();
+                HUDManager.Instance.UpdateRecallCooldown(currentRecallCooldown, recallCooldown);
+                HUDManager.Instance.TriggerRecallPrompt();
+                HUDManager.Instance.recallElement.Activate();
+            }
+            if(playerMovement.parryTutorialEvent != null)
+            {
+                playerMovement.parryTutorialEvent.TryActivate();
             }
         }
     }

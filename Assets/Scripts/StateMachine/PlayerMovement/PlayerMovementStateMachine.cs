@@ -65,6 +65,8 @@ public class PlayerMovementStateMachine : StateMachine
     public bool wasMovingLastFrame;
 
     public InputActionReference move, jump, look, dash;
+
+    public ParryTutorialEvent parryTutorialEvent;
     
 
     [Header("FMOD events")]
@@ -217,6 +219,26 @@ public class PlayerMovementStateMachine : StateMachine
     public void CalculateLookRotation()
     {
         Quaternion rotation = headTf.rotation;
+        
+        if(parryTutorialEvent != null && parryTutorialEvent.active)
+        {
+            Vector3 rotationTargetDir = (parryTutorialEvent.GetTargetTransform().position - transform.position).normalized;
+            
+            headTf.rotation = Quaternion.Slerp(
+                headTf.rotation, 
+                Quaternion.LookRotation( rotationTargetDir, Vector3.Cross(rotationTargetDir, transform.right) ), 
+                parryTutorialEvent.Kp);
+                
+            transform.rotation = 
+                Quaternion.LookRotation(
+                    new Vector3( headTf.forward.x, 0, headTf.forward.z ).normalized,
+                    Vector3.up
+                );
+
+            return;
+                
+        }
+        
         
         lookInput = look.action.ReadValue<Vector2>();
         headTf.Rotate(new Vector3(-lookInput.y * rotSensitivity.y, 0, 0));
