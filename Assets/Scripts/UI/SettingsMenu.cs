@@ -13,10 +13,12 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] InputActionReference pauseInput;
     [SerializeField] Button saveButton;
     [SerializeField] GameObject fpsDisplay;
+    [SerializeField] CrosshairManager crosshairManager;
     [Header("Video")]
     [SerializeField] TMP_Dropdown resolutionOptions;
     [SerializeField] Toggle fullscreenToggle;
     [SerializeField] Toggle FPSToggle;
+    [SerializeField] Toggle crosshairToggle;
 
     [Header("Volume")]
     [SerializeField] Slider BGMSlider;
@@ -101,6 +103,8 @@ public class SettingsMenu : MonoBehaviour
             }
         }
 
+        crosshairManager.ToggleCrosshair(currentSettings.crosshairEnabled);
+
     }
 
     void InitAudioSettings()
@@ -130,6 +134,7 @@ public class SettingsMenu : MonoBehaviour
     {
         Screen.SetResolution(requestedResolution.x, requestedResolution.y, currentSettings.fullscreen);
         fpsDisplay.SetActive(currentSettings.showFPS);
+        if (crosshairManager != null) crosshairManager.ToggleCrosshair(currentSettings.crosshairEnabled);
     }
 
     IEnumerator ApplyInputSettings()
@@ -158,16 +163,20 @@ public class SettingsMenu : MonoBehaviour
 
     public void OnFullscreenToggled(bool isOn)
     {
-        fullscreenToggle.isOn = isOn;
         newSettings.fullscreen = isOn;
         OnChangeMade();
     }
 
     public void OnFPSToggled(bool isOn)
     {
-        FPSToggle.isOn = isOn;
         newSettings.showFPS = isOn;
-        OnChangeMade() ;
+        OnChangeMade();
+    }
+
+    public void OnCrosshairToggled(bool isOn)
+    {
+        newSettings.crosshairEnabled = isOn;
+        OnChangeMade();
     }
 
     public void OnResolutionChanged(int index)
