@@ -53,6 +53,7 @@ public class TrackerDisplay : MonoBehaviour
             parryDisplay.text = tracker.GetParryAccuracy().ToString("F2") + "%";
             reclaimDisplay.text = tracker.GetAverageKnifeReclaimTime().ToString("F2") + " secs";
             blinkDisplay.text = tracker.GetAverageBlinkDistance().ToString("F2") + "m";
+            windDisplay.text = tracker.GetAverageWind().ToString("F2") + "%";
 
             var tracked = tracker.GetTrackerData();
             blinksCounter.text = tracked.blinksTracker.ToString();
@@ -60,8 +61,8 @@ public class TrackerDisplay : MonoBehaviour
             dashCounter.text = tracked.dashTracker.ToString();
 
             refreshTracker = DISPLAY_REFRESH_RATE;
+
         }
-        Debug.Log("Refresh tracker == " + refreshTracker);
 
     }
 }

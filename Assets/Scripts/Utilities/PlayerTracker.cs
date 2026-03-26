@@ -72,7 +72,9 @@ public class PlayerTracker : MonoBehaviour
         if (parry)
         {
             trackerData.successfulParries++;
+            Debug.Log("Parry attempt successful");
         }
+
     }
 
     public void OnKnifeCollision(bool hitEnemy)
@@ -100,7 +102,6 @@ public class PlayerTracker : MonoBehaviour
             windSampleTracker = WIND_SAMPLE_RATE;
             windSamples.Add(windManager.CurrentWind);
         }
-        Debug.Log("Wind sample tracker == " + windSampleTracker);
     }
 
     public float GetAverageSpeedWhileFiring()
@@ -169,16 +170,17 @@ public class PlayerTracker : MonoBehaviour
 
     void OnGameOver(float gameDuration)
     {
+        trackerData.beatGame = true;
+        trackerData.avgBlinkDistance = GetAverageBlinkDistance();
+        trackerData.avgWindPercent = GetAverageWind();
+       
         int numberOfSaves = saveSystem.GetNumberOfFilesInDirectory(TrackerService.GetDataFolderPathForLevel(gameManager.CurrentLevel));
         //number of files returns -1 as a fallback in case there's no directory present
         //but that's fine because we're not accessing data in the directory, we're just adding some
         //if there's no directory we'll make one
         //this helps to make sure that the file names start at one
-        Debug.Log("Number of files in directory is " + numberOfSaves);
         if (numberOfSaves < 0) numberOfSaves = 0;
         saveSystem.EnsureSave(TrackerService.GetDataFolderPathForLevel(gameManager.CurrentLevel), (numberOfSaves + 1).ToString(), trackerData);
-        Debug.Log("Saving data to " + TrackerService.GetDataFolderPathForLevel(gameManager.CurrentLevel));
-        trackerData.beatGame = true;
     }
 }
 
@@ -191,6 +193,7 @@ public struct TrackerData
     //Movement
     public int dashTracker;
     public float avgBlinkDistance;
+    public float avgWindPercent;
     //Accuracy 
     public int knifeCollisionCounts;
     public int knifeHitCount;
