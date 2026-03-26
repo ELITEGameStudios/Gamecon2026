@@ -4070,7 +4070,7 @@ MonoBehaviour:
   currentRecallCooldown: 0
   parryForce: 50
   hitStopTime: 0.1
-  minParryWindow: 80
+  minParryWindow: 100
   hudManager: {fileID: 0}
   parryCamShakeProfile:
     amplitudeCurve:
@@ -11780,11 +11780,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[0].value
-      value: 0.8
+      value: 0.85
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[1].value
-      value: 1.95
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToSpeed.m_Curve.Array.data[0].tangentMode
@@ -11796,15 +11796,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[0].inSlope
-      value: 1.1500001
+      value: 1.65
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[1].inSlope
-      value: 1.1500001
+      value: 1.65
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[0].outSlope
-      value: 1.1500001
+      value: 1.65
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[1].inWeight
@@ -11812,7 +11812,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[1].outSlope
-      value: 1.1500001
+      value: 1.65
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[0].outWeight
