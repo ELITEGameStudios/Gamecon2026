@@ -244,6 +244,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2828
+--- !u!114 &-5147020570755026599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/ExitCaveMusic/Cave Change
+  m_EditorClassIdentifier: 
+  Name: Cave Change
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 188317715
+    data2: 2611709039
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-4902315579060070194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,6 +322,34 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 730
+--- !u!114 &-4020057684164364756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/ExitCaveMusic
+  m_EditorClassIdentifier: 
+  Path: event:/ExitCaveMusic
+  Guid:
+    Data1: 1614100847
+    Data2: 1264116359
+    Data3: 377941420
+    Data4: 1677180942
+  Banks:
+  - {fileID: 1405720437415962997}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -5147020570755026599}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 114922
 --- !u!114 &-3497565408322446129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -581,7 +633,6 @@ MonoBehaviour:
   - {fileID: 7045179086079469740}
   - {fileID: -3451159255700479556}
   - {fileID: -8166294274227070138}
-  - {fileID: 9167691374996464057}
   - {fileID: 8446719338376094541}
   - {fileID: 7760372936550852520}
   - {fileID: 10998266041711469}
@@ -590,12 +641,14 @@ MonoBehaviour:
   - {fileID: -8126319085660268047}
   - {fileID: -1752097777992870032}
   - {fileID: 4863433423040303645}
+  - {fileID: -4020057684164364756}
+  - {fileID: 3958908809195159965}
   EditorParameters: []
   MasterBanks:
   - {fileID: 1405720437415962997}
   StringsBanks:
   - {fileID: 9114747985906268585}
-  cacheTime: 639101299248400142
+  cacheTime: 639102158653247857
   cacheVersion: 131634
 --- !u!114 &10998266041711469
 MonoBehaviour:
@@ -639,10 +692,10 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639101299248344024
+  lastModified: 639102158653187374
   FileSizes:
   - Name: Desktop
-    Value: 3470048
+    Value: 3513152
   Exists: 1
 --- !u!114 &2423527646633715673
 MonoBehaviour:
@@ -698,54 +751,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2886
---- !u!114 &2946366726044564769
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/TutorialMusic/Change Tracks
-  m_EditorClassIdentifier: 
-  Name: Change Tracks
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 3100524195
-    data2: 2913464224
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &3245073051110244819
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/TutorialMusic/Cave Change
-  m_EditorClassIdentifier: 
-  Name: Cave Change
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 188317715
-    data2: 2611709039
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
 --- !u!114 &3833374353044651801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -773,6 +778,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1108
+--- !u!114 &3958908809195159965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/CaveMusic
+  m_EditorClassIdentifier: 
+  Path: event:/CaveMusic
+  Guid:
+    Data1: 2057184656
+    Data2: 1231932983
+    Data3: -730345072
+    Data4: -109037719
+  Banks:
+  - {fileID: 1405720437415962997}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 20900
 --- !u!114 &4031925087671048160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1105,37 +1137,8 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639101299248400142
+  lastModified: 639102158653247857
   FileSizes:
   - Name: Desktop
-    Value: 1628
+    Value: 1602
   Exists: 1
---- !u!114 &9167691374996464057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/TutorialMusic
-  m_EditorClassIdentifier: 
-  Path: event:/TutorialMusic
-  Guid:
-    Data1: 2057184656
-    Data2: 1231932983
-    Data3: -730345072
-    Data4: -109037719
-  Banks:
-  - {fileID: 1405720437415962997}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters:
-  - {fileID: 2946366726044564769}
-  - {fileID: 3245073051110244819}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 147800

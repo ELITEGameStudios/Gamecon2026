@@ -153,11 +153,14 @@
 	</object>
 	<object class="EventMixerGroup" id="{b62e3240-19a9-4a05-a844-ee93c48027c6}">
 		<property name="volume">
-			<value>-4</value>
+			<value>-10.5</value>
 		</property>
 		<property name="name">
 			<value>Water Trickle 1</value>
 		</property>
+		<relationship name="modulators">
+			<destination>{15558060-0cc8-46c9-84db-4af61998c04a}</destination>
+		</relationship>
 		<relationship name="effectChain">
 			<destination>{f2a3548e-2756-4006-9014-9c9c5b6c6365}</destination>
 		</relationship>
@@ -245,6 +248,17 @@
 		<relationship name="relatedModule">
 			<destination>{0188e092-25a0-4d6f-8e92-a6280dd9fd3b}</destination>
 		</relationship>
+	</object>
+	<object class="ADSRModulator" id="{15558060-0cc8-46c9-84db-4af61998c04a}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>volume</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="finalValue">
+			<value>-80</value>
+		</property>
 	</object>
 	<object class="MixerBusEffectChain" id="{f2a3548e-2756-4006-9014-9c9c5b6c6365}">
 		<relationship name="effects">
