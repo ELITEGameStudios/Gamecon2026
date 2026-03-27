@@ -69,17 +69,25 @@ public class WindManager : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (!pauseWindGeneration)
+        {
+            float speed = new Vector2(playerRB.linearVelocity.x, playerRB.linearVelocity.z).sqrMagnitude;
+
+            if (speed < minSpeedSquared) return;
+
+            var speedAsProgress = speed / maxSpeedSquared;
+            if (speedAsProgress > 1.0f) speedAsProgress = 1.0f;
+            float windToAdd = speedToWind.Evaluate(speedAsProgress) * speedToWindRatio;
+
+            CurrentWind += windToAdd;
+        }
+        UpdateWindDisplays();
+    }
+
+    void UpdateWindDisplays()
+    {
         if (windDisplay != null) windDisplay.text = "Wind: " + Mathf.RoundToInt(CurrentWind);
-        if (pauseWindGeneration) return;
-        float speed = new Vector2(playerRB.linearVelocity.x, playerRB.linearVelocity.z).sqrMagnitude;
 
-        if (speed < minSpeedSquared) return;
-
-        var speedAsProgress = speed / maxSpeedSquared;
-        if (speedAsProgress > 1.0f) speedAsProgress = 1.0f;
-        float windToAdd = speedToWind.Evaluate(speedAsProgress) * speedToWindRatio;
-
-        CurrentWind += windToAdd;
         float windAsPercent = CurrentWind / 100.0f;
         if (windWraps.gameObject.activeSelf)
         {
@@ -92,13 +100,13 @@ public class WindManager : MonoBehaviour
             {
                 wrapsMainModule.startColor = baseWindColor;
             }
-            
+
         }
 
         if (tattooMaterial != null)
         {
             var newColor = Color.Lerp(minWindTattooColor, maxWindTattooColor, colorTransitionCurve.Evaluate(windAsPercent));
-           runtimeTattooMaterial.SetColor("_EmissionColor", newColor);
+            runtimeTattooMaterial.SetColor("_EmissionColor", newColor);
         }
     }
 
