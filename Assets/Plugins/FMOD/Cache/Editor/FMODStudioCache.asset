@@ -651,7 +651,7 @@ MonoBehaviour:
   - {fileID: 1405720437415962997}
   StringsBanks:
   - {fileID: 9114747985906268585}
-  cacheTime: 639102212294832854
+  cacheTime: 639102241895746541
   cacheVersion: 131634
 --- !u!114 &10998266041711469
 MonoBehaviour:
@@ -695,10 +695,10 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639102212294781182
+  lastModified: 639102241895698912
   FileSizes:
   - Name: Desktop
-    Value: 3944736
+    Value: 3946016
   Exists: 1
 --- !u!114 &1465602905077908361
 MonoBehaviour:
@@ -727,6 +727,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 40056
+--- !u!114 &2332703159036266152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/JumpEvent/In Cave
+  m_EditorClassIdentifier: 
+  Name: In Cave
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2183111878
+    data2: 317707328
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &2423527646633715673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1175,7 +1199,8 @@ MonoBehaviour:
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
-  Parameters: []
+  Parameters:
+  - {fileID: 2332703159036266152}
   MinDistance: 1
   MaxDistance: 20
   Length: 1108
@@ -1221,7 +1246,7 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639102212294832854
+  lastModified: 639102241895746541
   FileSizes:
   - Name: Desktop
     Value: 1748
