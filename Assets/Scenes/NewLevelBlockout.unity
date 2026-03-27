@@ -7301,30 +7301,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e952828c6d13d542997f4672c44441d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  studioEventEmitter: {fileID: 312578034}
+  studioEventEmitter: {fileID: 312578037}
   curve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
-      inSlope: -0.0043065613
-      outSlope: -0.0043065613
+      value: 0.90163887
+      inSlope: -0.0014168648
+      outSlope: -0.0014168648
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.15699507
+      outWeight: 0.23176731
     - serializedVersion: 3
-      time: 38.42388
+      time: 164.97623
       value: 0.4
-      inSlope: -0.032365564
-      outSlope: -0.032365564
+      inSlope: -0.0041188346
+      outSlope: -0.0041188346
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0.12998976
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 49.75731
+      time: 176.30966
       value: 0
       inSlope: -0.03188414
       outSlope: -0.03188414
@@ -7335,7 +7335,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  parameterName: 
+  parameterName: Cave Change
 --- !u!1 &198961240
 GameObject:
   m_ObjectHideFlags: 0
@@ -11308,6 +11308,8 @@ GameObject:
   - component: {fileID: 312578035}
   - component: {fileID: 312578034}
   - component: {fileID: 312578036}
+  - component: {fileID: 312578037}
+  - component: {fileID: 312578038}
   m_Layer: 0
   m_Name: Music
   m_TagString: Untagged
@@ -11378,11 +11380,63 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventEmitter: {fileID: 312578034}
-  footstepEmitter: {fileID: 0}
-  eventA: event:/CaveMusic
-  eventB: event:/ExitCaveMusic
+  inGameMusicEmitter: {fileID: 312578037}
   caveFootstepProperty: In Cave
   caveFootstepValue: 1
+--- !u!114 &312578037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 312578033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1614100847
+      Data2: 1264116359
+      Data3: 377941420
+      Data4: 1677180942
+    Path: event:/ExitCaveMusic
+  Event: 
+  EventPlayTrigger: 4
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 1
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params:
+  - Name: Cave Change
+    Value: 0
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!65 &312578038
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 312578033}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 8
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 32759
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 32.13701, y: 20.217125, z: 45.0832}
+  m_Center: {x: 6.5848694, y: 3.7469072, z: -16.872108}
 --- !u!1001 &316619125
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13563,13 +13617,13 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 2022140145
+      Data2: 1211729018
+      Data3: 1337217454
+      Data4: 1037696245
+    Path: event:/WaterEvent
   Event: 
-  EventPlayTrigger: 0
+  EventPlayTrigger: 1
   EventStopTrigger: 0
   AllowFadeout: 1
   TriggerOnce: 0
@@ -13577,8 +13631,8 @@ MonoBehaviour:
   NonRigidbodyVelocity: 0
   Params: []
   OverrideAttenuation: 0
-  OverrideMinDistance: -1
-  OverrideMaxDistance: -1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1001 &450235530
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24935,14 +24989,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CollisionTag: Player
+  CollisionTag: Untagged
   EventReference:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 45078023
+      Data2: 1212990681
+      Data3: 379518644
+      Data4: 1614548566
+    Path: event:/WindEvent
   Event: 
   EventPlayTrigger: 4
   EventStopTrigger: 3
@@ -24952,8 +25006,8 @@ MonoBehaviour:
   NonRigidbodyVelocity: 0
   Params: []
   OverrideAttenuation: 0
-  OverrideMinDistance: -1
-  OverrideMaxDistance: -1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!65 &1133207484
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24964,10 +25018,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 32759
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -29280,17 +29334,17 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 32759
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 38.626225, y: 20.217125, z: 37.928017}
-  m_Center: {x: -3.281477, y: 3.7469072, z: 0.2646322}
+  m_Size: {x: 38.626225, y: 20.217125, z: 39.577675}
+  m_Center: {x: -3.281477, y: 3.7469072, z: 1.0894537}
 --- !u!114 &1434418713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29303,25 +29357,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CollisionTag: Player
+  CollisionTag: Untagged
   EventReference:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -1335541185
+      Data2: 1327874181
+      Data3: -2034418810
+      Data4: 1323117897
+    Path: event:/CaveWaterEvent
   Event: 
-  EventPlayTrigger: 4
-  EventStopTrigger: 3
+  EventPlayTrigger: 3
+  EventStopTrigger: 4
   AllowFadeout: 1
   TriggerOnce: 0
   Preload: 0
   NonRigidbodyVelocity: 0
   Params: []
   OverrideAttenuation: 0
-  OverrideMinDistance: -1
-  OverrideMaxDistance: -1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1001 &1434601567
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31760,7 +31814,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1519383852197518122, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 259.9998
+      value: 259.99948
       objectReference: {fileID: 0}
     - target: {fileID: 1648708937653568327, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: m_AnchorMax.y
@@ -42420,6 +42474,10 @@ PrefabInstance:
       propertyPath: parryTutorialEvent
       value: 
       objectReference: {fileID: 270726972}
+    - target: {fileID: 3750233208252415097, guid: c489f38eb752e83448adf30f23c025f9, type: 3}
+      propertyPath: groundedState.musicManager
+      value: 
+      objectReference: {fileID: 312578036}
     - target: {fileID: 3889242721043181124, guid: c489f38eb752e83448adf30f23c025f9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 4.5346527

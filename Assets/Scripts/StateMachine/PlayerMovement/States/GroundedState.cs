@@ -17,6 +17,7 @@ public class GroundedState : PlayerMovementState
     // [FMODUnity.EventRef(MigrateTo ="EventReference")]
     public string FMODWalkEvent = "";
     EventInstance playerWalkState;
+    [SerializeField] InGameMusicManager musicManager;
 
 
     public GroundedState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
@@ -72,6 +73,7 @@ public class GroundedState : PlayerMovementState
         }
                 
         playerWalkState = RuntimeManager.CreateInstance(FMODWalkEvent);
+        musicManager.SetFootstepEmitter(playerWalkState);
         playerWalkState.start();
 
 
