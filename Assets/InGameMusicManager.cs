@@ -25,7 +25,7 @@ public class InGameMusicManager : MonoBehaviour
     void Update()
     {
         if(changed && caveFootstepValue > 0){caveFootstepValue -= Time.deltaTime;}
-        else{caveFootstepValue = 0;}
+        else if(changed){caveFootstepValue = 0;}
         
         PLAYBACK_STATE playback;
         RESULT result = footstepEmitter.getPlaybackState(out playback);
