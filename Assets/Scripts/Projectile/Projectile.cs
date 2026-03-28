@@ -479,17 +479,10 @@ public class Projectile : MonoBehaviour
         {
             projectileAbilities.ResetRecallCooldown();
         }
-
-        /*
-        //Parry shot : no bounce or embed on enemies (just flies right through), but can bounce on terrain if bounces remaining
-        // regular shot : if bounces remain, then bounce, whether its enemies or terrain is fine
-        // if no bounces, then embed, whether its enemies or terrain
-        */
-
         
-        if (!AttemptEnemyAutoaimBounce(normal)) //if we're in this func, we hit something, so if bounce failed
-        {
-            if (!projectileAbilities.ParryActive) EmbedKnife(); // embed the knife
+        if (!AttemptEnemyAutoaimBounce(normal))
+        { 
+           if (!projectileAbilities.ParryActive) EmbedKnife(); 
         }
         
        
@@ -546,24 +539,6 @@ public class Projectile : MonoBehaviour
     /// <returns>Whether or not the bounce was successful.</returns>
     /// 
 
-    bool AttemptPhysicsBounce(Vector3 normal, string objTag)
-    {
-
-
-        if (BouncesRemaining <= 0 || currentState != ProjectileState.Flying) return false;
-
-        for (int i = 0; i < unallowedObjectsToBounceOff.Length; i++)
-        {
-            if (unallowedObjectsToBounceOff[i] == objTag) return false;
-        }
-        
-        Vector3 velNormalized = rb.linearVelocity.normalized;
-        CastProjectile(Vector3.Reflect(velNormalized, normal).normalized);
-        PostBounce();
-        
-        return true;
-    }
-
     void PostBounce()
     {
         BouncesRemaining--;
@@ -579,13 +554,19 @@ public class Projectile : MonoBehaviour
         Vector3 normal = collision.GetContact(0).normal;
         string objTag = collision.gameObject.tag;
         ReportCollision(false, normal, objTag);
-            
-        if (!AttemptEnemyAutoaimBounce(normal))
+
+        bool viableTagForBounce = true;
+        for (int i = 0; i < unallowedObjectsToBounceOff.Length; i++)
         {
-            if (!AttemptPhysicsBounce(normal, objTag))
+            if (objTag == unallowedObjectsToBounceOff[i])
             {
-                EmbedKnife();
+                viableTagForBounce = false;
+                break;
             }
+        }
+        if ( !viableTagForBounce || !AttemptEnemyAutoaimBounce(normal))
+        {
+             EmbedKnife();
         }
         
 
