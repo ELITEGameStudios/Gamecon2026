@@ -8,11 +8,14 @@ public class KnifeHitbox : MonoBehaviour
     [SerializeField] Projectile knife;
     [SerializeField] List<Projectile.ProjectileState> statesWithHitboxes;
     [SerializeField] BoxCollider hitbox;
-    [SerializeField] LayerMask enemyMask;
     [SerializeField] bool parryOnlyHitbox = false;
     [SerializeField] int damage = 1;
 
     List<EnemyBase> struckEnemies = new();
+    List<ShieldEntity> struckShields = new();
+    LayerMask enemyMask;
+
+    int tick;
     private void Start()
     {
         if (knife == null) knife = GetComponentInParent<Projectile>();
@@ -22,6 +25,7 @@ public class KnifeHitbox : MonoBehaviour
         knife.stateChanged.AddListener(OnKnifeStateChanged);
 
         hitbox.enabled = false;
+        enemyMask = LayerMask.GetMask("EnemyHurtbox");
     }
 
     void OnKnifeStateChanged(Projectile.ProjectileState state)
@@ -33,18 +37,34 @@ public class KnifeHitbox : MonoBehaviour
         else parryStateValid = knife.projectileAbilities.ParryActive;
         hitbox.enabled = inValidState && parryStateValid;
         struckEnemies.Clear();
+        struckShields.Clear();
     }
 
     private void FixedUpdate()
     {
         if (!hitbox.enabled) return;
 
+        tick++;
         var overlap = Physics.OverlapBox(hitbox.bounds.center, hitbox.bounds.extents, hitbox.transform.rotation, enemyMask, QueryTriggerInteraction.Collide);
         foreach (var obj in overlap)
         {
-            if (obj.transform.parent.TryGetComponent(out EnemyBase enemy))
+            if (obj.transform.parent.TryGetComponent(out ShieldEntity shield))
+            {
+                if (struckShields.Contains(shield)) continue;
+                struckShields.Add(shield);
+                Debug.Log("Struck shield " + shield.name + " on tick " + tick);
+            }
+            else if (obj.transform.parent.TryGetComponent(out EnemyBase enemy))
             {
                 if (struckEnemies.Contains(enemy)) continue; //only hit each enemy once
+                else if (enemy.EnemyShield != null)
+                {
+                    if (struckShields.Contains(enemy.EnemyShield))
+                    {
+                        continue;
+                    }
+                }
+                Debug.Log("struck enemy " + enemy.name + " on tick " + tick);
                 enemy.Damage(damage);
                 struckEnemies.Add(enemy);
                 knife.OnEnemyStruck(CalculateNormal(obj));

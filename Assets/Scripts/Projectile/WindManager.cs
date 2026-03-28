@@ -83,7 +83,6 @@ public class WindManager : MonoBehaviour
         }
         UpdateWindDisplays();
     }
-
     void UpdateWindDisplays()
     {
         if (windDisplay != null) windDisplay.text = "Wind: " + Mathf.RoundToInt(CurrentWind);

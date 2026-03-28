@@ -18,6 +18,8 @@ public class EnemyBase : EntityBase
 
      public bool IsBulwark() => type == EnemyType.Bulwark;
 
+
+    public ShieldEntity EnemyShield { private set => enemyShield = value; get => enemyShield; }
     /* ---------------------------Template Inherited function documentation------------------------- */
     // Feel free to copy paste these into any new enemy you implement so you can have documentation comments at hand
 
@@ -52,7 +54,6 @@ public class EnemyBase : EntityBase
     public override void Damage(int damage = 1)
     {
         // Before damage event is internally processed
-        if (enemyShield != null) damage = 0;
         base.Damage(damage);
         // after damage event is internally processed 
     }

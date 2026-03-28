@@ -33,7 +33,6 @@ public class CrosshairManager : MonoBehaviour
             else
             {
                 crosshairImage.color = hit.collider.CompareTag("Enemy") ? highlightColor : baseColor;
-                Debug.Log("Crosshair looking at object of type " + hit.collider.tag);
             }
         }
     }
