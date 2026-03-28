@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.VFX;
 
 public class KnifeParticleManager : MonoBehaviour
 {
+    const int UPDATE_RATE = 6;
+
     [SerializeField] ParticleSystem terrainCollision;
     [SerializeField] ParticleSystem enemyCollision;
     [SerializeField] ParticleSystem windExplosion;
@@ -12,19 +15,29 @@ public class KnifeParticleManager : MonoBehaviour
     [SerializeField] VisualEffect throwTrailEffect;
 
     [Header("Impact Decal")]
-    [SerializeField] DecalProjector impactDecal;
+    [SerializeField] List<DecalData> impactDecals;
     [SerializeField] AnimationCurve impactDecalTransparencyOverTime;
-    [SerializeField] Color impactDecalColor;
-    [SerializeField] int numberOfDecals = 8;
+    [SerializeField] int decalSpriteCount = 8;
+    [SerializeField] float impactExtrusion;
+    [SerializeField] Material impactMaterial;
 
+    int currentDecal = 0;
 
-    float impactDecalLifetimeTracker = 0.0f;
+    int updateTracker = 0;
+
+    [System.Serializable]
+    class DecalData
+    {
+        public DecalProjector projector;
+       [HideInInspector] public float lifetime;
+    }
+
     public void InitParticleManager(Projectile knife, Transform player)
     {
         knife.enemyStruck.AddListener(OnEnemyCollision);
         knife.terrainStruck.AddListener(OnTerrainCollision);
         knife.projectileAbilities.knifeThrown.AddListener(OnKnifeFired);
-        knife.knifeRetrieved.AddListener((retrieveType)=> OnKnifeRetrieved());
+        knife.knifeRetrieved.AddListener((retrieveType) => OnKnifeRetrieved());
         terrainCollision.Stop();
         enemyCollision.Stop();
 
@@ -36,17 +49,23 @@ public class KnifeParticleManager : MonoBehaviour
             particle.Stop();
         }
 
-        impactDecal.enabled = false;
+        for (int i = 0; i < impactDecals.Count; i++)
+        {   
+            var decal = impactDecals[i];
+            decal.projector.enabled = false;
+            decal.projector.transform.SetParent(null); // don't follow knife  
+        }
     }
-     
+
     void OnKnifeRetrieved()
     {
-        impactDecal.enabled = false;
+
     }
+
     void OnKnifeFired(KnifeThrowInfo throwInfo)
     {
         if (throwInfo.parried) PlayParryFireEffects();
-        else PlayStandardFireEffects(); 
+        else PlayStandardFireEffects();
     }
 
     void PlayParryFireEffects()
@@ -57,24 +76,27 @@ public class KnifeParticleManager : MonoBehaviour
 
     void PlayStandardFireEffects()
     {
-       if (throwTrailEffect != null) throwTrailEffect.Play();
+        if (throwTrailEffect != null) throwTrailEffect.Play();
     }
 
-     void OnEnemyCollision(KnifeCollisionInfo collision)
+    void OnEnemyCollision(KnifeCollisionInfo collision)
     {
         PlayParticleAtCollisionPoint(collision, enemyCollision);
         PlayParticleAtCollisionPoint(collision, windExplosion);
         PlayParticleAtCollisionPoint(collision, shockwaveExplosion);
     }
-     void OnTerrainCollision(KnifeCollisionInfo collision)
+    void OnTerrainCollision(KnifeCollisionInfo collision)
     {
         PlayParticleAtCollisionPoint(collision, terrainCollision);
 
-        impactDecal.enabled = true;
-        int rand = Random.Range(0, numberOfDecals);
-        impactDecal.material.SetFloat("_TextureIndex", rand);
-        //impactDecal.transform.position = collision.point;
-        impactDecalLifetimeTracker = 0.0f;
+        int rand = Random.Range(0, decalSpriteCount);
+        var decal = impactDecals[currentDecal];
+        decal.lifetime = 0.0f;
+        decal.projector.enabled = true;
+        decal.projector.material.SetFloat("_TextureIndex", rand);
+        currentDecal = (currentDecal + 1) % impactDecals.Count;
+        decal.projector.transform.position = collision.point + (collision.normal * impactExtrusion);
+
     }
     void PlayParticleAtCollisionPoint(KnifeCollisionInfo collision, ParticleSystem particle, bool flipAlongNormal = false)
     {
@@ -83,15 +105,27 @@ public class KnifeParticleManager : MonoBehaviour
         particle.transform.LookAt(collision.normal * flip);
         particle.Play();
     }
-
+    
     private void Update()
     {
-        if (impactDecalLifetimeTracker < 1.0f)
+
+        updateTracker++;
+        for (int i = 0; i < impactDecals.Count; i++)
         {
-            impactDecalLifetimeTracker += Time.deltaTime;
-            float val = impactDecalTransparencyOverTime.Evaluate(impactDecalLifetimeTracker);
-            impactDecalColor.a = val;
-            impactDecal.material.SetColor("_ImpactColor", impactDecalColor);
+            var decal = impactDecals[i];
+            if (!decal.projector.enabled) continue;
+            decal.lifetime += Time.deltaTime;
+        }
+        if (updateTracker >= UPDATE_RATE) 
+        {
+            updateTracker = 0;
+            for (int i = 0; i < impactDecals.Count; i++)
+            {
+                var decal = impactDecals[i];
+                if (!decal.projector.enabled) continue;
+                float val = impactDecalTransparencyOverTime.Evaluate(decal.lifetime);
+                decal.projector.fadeFactor = val;
+            }
         }
     }
 

@@ -73,7 +73,6 @@ public class PlayerTracker : MonoBehaviour
         {
             trackerData.successfulParries++;
         }
-
     }
 
     public void OnKnifeCollision(bool hitEnemy)

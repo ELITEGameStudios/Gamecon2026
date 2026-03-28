@@ -410,7 +410,7 @@ GameObject:
   - component: {fileID: 1187233528422089780}
   - component: {fileID: 8876484694371734414}
   m_Layer: 8
-  m_Name: GameObject
+  m_Name: KnifeModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3177,28 +3177,29 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 1.8602979
-      outSlope: 1.8602979
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.06333334
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0.8114248
-      outSlope: 0.8114248
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.120000005
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   windDisplay: {fileID: 0}
+  speedDisplay: {fileID: 0}
   minSpeedForWind: 5
-  maxSpeedForWind: 425
-  speedToWindRatio: 155
+  maxSpeedForWind: 525
+  speedToWindRatio: 105
   tattooMaterial: {fileID: 2100000, guid: df43ef19029af974f9d711b4d4a941e5, type: 2}
   windWraps: {fileID: 727402662580572196}
   maxWindWraps: 20
@@ -3941,6 +3942,7 @@ MonoBehaviour:
     started: 0
     jumpPower: 18
     movement: {fileID: 3750233208252415097}
+    windManager: {fileID: 8509023973921303564}
     wallRunMinSpeed: 400
     currentWallRunSpeed: 0
     wallRunMaxDist: 0.8
@@ -4016,6 +4018,7 @@ MonoBehaviour:
     started: 0
     jumpPower: 13
     movement: {fileID: 3750233208252415097}
+    empoweredDashDrainRate: 120
     dashVelocity: {x: 0, y: 0, z: 0}
     dashTime: 0.5
     additiveForceThreshold: 100
@@ -4101,9 +4104,10 @@ MonoBehaviour:
   parryTiming: 0.3
   recallCooldown: 4
   currentRecallCooldown: 0
-  parryForce: 50
+  parryForce: 15
   hitStopTime: 0.1
-  minParryWindow: 30
+  minParryWindow: 15
+  upwardsBiasForParry: 0.6
   hudManager: {fileID: 0}
   parryCamShakeProfile:
     amplitudeCurve:
@@ -16212,6 +16216,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1876273515514977572, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: m_Size.x
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 2213639360887847516, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -16413,6 +16421,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8528103503705562027, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: impactMaterial
+      value: 
+      objectReference: {fileID: -876546973899608171, guid: 521f5d183204c58429c56006fa9c5ddd, type: 3}
+    - target: {fileID: 8528103503705562027, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: throwTrailEffect
       value: 
       objectReference: {fileID: 5548407660501776204}
@@ -16448,6 +16460,10 @@ PrefabInstance:
       propertyPath: playerMovement
       value: 
       objectReference: {fileID: 3750233208252415097}
+    - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: baseRecallSpeed
+      value: 70
+      objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: playerTransform
       value: 
@@ -16518,11 +16534,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[0].value
-      value: 0.85
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[1].value
-      value: 2.5
+      value: 2.25
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToSpeed.m_Curve.Array.data[0].tangentMode
@@ -16534,15 +16550,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[0].inSlope
-      value: 1.65
+      value: 1.45
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[1].inSlope
-      value: 1.65
+      value: 1.45
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[0].outSlope
-      value: 1.65
+      value: 1.45
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[1].inWeight
@@ -16550,7 +16566,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[1].outSlope
-      value: 1.65
+      value: 1.45
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[0].outWeight

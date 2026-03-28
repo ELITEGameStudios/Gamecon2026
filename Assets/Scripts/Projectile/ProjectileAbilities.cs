@@ -34,6 +34,7 @@ public class ProjectileAbilities : MonoBehaviour
     [SerializeField] private float parryForce = 500f;
     [SerializeField] private float hitStopTime = 0.1f;
     [SerializeField] private float minParryWindow = 80.0f;
+    [SerializeField] private float upwardsBiasForParry = 0.65f;
     [SerializeField] private HUDManager hudManager;
     public ApplyShake.CamShakeProfile parryCamShakeProfile;
 
@@ -323,9 +324,14 @@ public class ProjectileAbilities : MonoBehaviour
             Time.timeScale = 1f;
         }
 
-        playerMovement.rigidbody.linearVelocity = 
-            ( transform.up - transform.forward  ).normalized * parryForce;
-
+       
+        var parryImpulse = (transform.up - transform.forward).normalized * parryForce;
+        parryImpulse = Vector3.Lerp(parryImpulse, new Vector3(0, parryForce, 0), upwardsBiasForParry);
+        //Debug.Log("Applying parry impulse of " + parryImpulse);
+        Vector3 newVelocity = playerMovement.rigidbody.linearVelocity + parryImpulse;
+        if (newVelocity.y < parryForce) newVelocity.y = parryForce;
+        playerMovement.rigidbody.linearVelocity = newVelocity;
+        if (playerMovement.rigidbody.linearVelocity.y < 0)
         camShaker.StartShake(parryCamShakeProfile);
     }
 

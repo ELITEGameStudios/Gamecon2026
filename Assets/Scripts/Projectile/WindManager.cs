@@ -8,6 +8,7 @@ public class WindManager : MonoBehaviour
     [SerializeField] Projectile knife;
     [SerializeField] AnimationCurve speedToWind;
     [SerializeField] TMP_Text windDisplay;
+    [SerializeField] TMP_Text speedDisplay;
 
     [Header("Stats")]
     [SerializeField] float minSpeedForWind;
@@ -29,6 +30,18 @@ public class WindManager : MonoBehaviour
     {
         get => currentWind;
         set => currentWind = Mathf.Clamp (value, 0, 100);
+    }
+
+    public float MaxSpeed
+    {
+        get => maxSpeedForWind;
+        private set => maxSpeedForWind = value;
+    }
+
+    public float MinSpeed
+    {
+        get => minSpeedForWind;
+        private set => minSpeedForWind = value;
     }
 
     [HideInInspector] public bool pauseWindGeneration = false;
@@ -86,7 +99,7 @@ public class WindManager : MonoBehaviour
     void UpdateWindDisplays()
     {
         if (windDisplay != null) windDisplay.text = "Wind: " + Mathf.RoundToInt(CurrentWind);
-
+        if (speedDisplay != null) speedDisplay.text = "Speed: " + Mathf.RoundToInt(new Vector2(playerRB.linearVelocity.x, playerRB.linearVelocity.z).magnitude) + "u/s";
         float windAsPercent = CurrentWind / 100.0f;
         if (windWraps.gameObject.activeSelf)
         {

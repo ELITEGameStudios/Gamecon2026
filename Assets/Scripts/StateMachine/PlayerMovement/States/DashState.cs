@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 [System.Serializable]
 public class DashState : PlayerMovementState
 {
-    const float EMPOWERED_DASH_WIND_DRAIN_RATE = 120.0f;
+    [SerializeField] float empoweredDashDrainRate = 120.0f;
 
 
     InputActionReference dashButton;
@@ -113,7 +113,7 @@ public class DashState : PlayerMovementState
     void EmpowerLogic()
     {
         if (!empowered) return;
-        windManager.CurrentWind -= (EMPOWERED_DASH_WIND_DRAIN_RATE * Time.fixedDeltaTime);
+        windManager.CurrentWind -= (empoweredDashDrainRate * Time.fixedDeltaTime);
         if (windManager.CurrentWind <= 0.001f || !dashButton.action.IsPressed())
         {
             End();
