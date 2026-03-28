@@ -14,8 +14,6 @@ public class KnifeHitbox : MonoBehaviour
     List<EnemyBase> struckEnemies = new();
     List<ShieldEntity> struckShields = new();
     LayerMask enemyMask;
-
-    int tick;
     private void Start()
     {
         if (knife == null) knife = GetComponentInParent<Projectile>();
@@ -30,21 +28,33 @@ public class KnifeHitbox : MonoBehaviour
 
     void OnKnifeStateChanged(Projectile.ProjectileState state)
     {
-       
         bool inValidState = statesWithHitboxes.Contains(state);
         bool parryStateValid;
         if (!parryOnlyHitbox) parryStateValid = true;
         else parryStateValid = knife.projectileAbilities.ParryActive;
         hitbox.enabled = inValidState && parryStateValid;
-        struckEnemies.Clear();
-        struckShields.Clear();
+
+        if (state == Projectile.ProjectileState.Flying)
+        {
+            struckEnemies.Clear();
+            struckShields.Clear();
+        }
+        /*
+         Clear previous hits on flying state entry only because this prevents states like recall from
+        being able to hit enemies that blocked the initial attack.
+
+        So a shield that currently has the knife embedded in it can still be placed
+        close to the enemy for aesthetic appeal while still functioning as a shield
+        by preventing the player from killing them via sticking the knife in and recalling while the hitbox 
+        is lodged within it.
+
+        */
     }
 
     private void FixedUpdate()
     {
         if (!hitbox.enabled) return;
 
-        tick++;
         var overlap = Physics.OverlapBox(hitbox.bounds.center, hitbox.bounds.extents, hitbox.transform.rotation, enemyMask, QueryTriggerInteraction.Collide);
         foreach (var obj in overlap)
         {
@@ -52,7 +62,6 @@ public class KnifeHitbox : MonoBehaviour
             {
                 if (struckShields.Contains(shield)) continue;
                 struckShields.Add(shield);
-                Debug.Log("Struck shield " + shield.name + " on tick " + tick);
             }
             else if (obj.transform.parent.TryGetComponent(out EnemyBase enemy))
             {
@@ -64,7 +73,6 @@ public class KnifeHitbox : MonoBehaviour
                         continue;
                     }
                 }
-                Debug.Log("struck enemy " + enemy.name + " on tick " + tick);
                 enemy.Damage(damage);
                 struckEnemies.Add(enemy);
                 knife.OnEnemyStruck(CalculateNormal(obj));
