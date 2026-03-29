@@ -27,7 +27,7 @@ public class PlayerTracker : MonoBehaviour
     public void Start()
     {
 
-        
+        windManager = FindFirstObjectByType<WindManager>();
         trackerData = new();
         playerRb = player.GetComponent<Rigidbody>();
         knife.enemyStruck.AddListener((data) => OnKnifeCollision(true));

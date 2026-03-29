@@ -3899,7 +3899,7 @@ MonoBehaviour:
   rigidbody: {fileID: 5386588365858552040}
   animator: {fileID: 0}
   windManager: {fileID: 8509023973921303564}
-  baseSpeed: 400
+  baseSpeed: 7
   clampedRotationY: 85
   movingConsiderationDeadzone: 0.1
   minWallTangentSlope: 65
@@ -3933,6 +3933,7 @@ MonoBehaviour:
     bigFallThreshold: 3
     desiredVelocity: {x: 0, y: 0, z: 0}
     FMODWalkEvent: event:/FootstepsEvent
+    musicManager: {fileID: 0}
   wallRunState:
     name: On Wall
     rigidbody: {fileID: 0}
@@ -3943,7 +3944,7 @@ MonoBehaviour:
     jumpPower: 18
     movement: {fileID: 3750233208252415097}
     windManager: {fileID: 8509023973921303564}
-    wallRunMinSpeed: 400
+    wallRunMinSpeed: 12
     currentWallRunSpeed: 0
     wallRunMaxDist: 0.8
     jumpXStrength: 0.2
@@ -3952,7 +3953,7 @@ MonoBehaviour:
     raycastForwardCheckDist: 0
     barrierCheckDepth: 0.4
     maxTransitionAngle: 65
-    wallRunAdditiveSpeed: 200
+    wallRunAdditiveSpeed: 8
     wallRunAdditiveForceOverSpeed:
       serializedVersion: 2
       m_Curve:
@@ -3966,7 +3967,7 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0.21228899
       - serializedVersion: 3
-        time: 1000
+        time: 100
         value: 0
         inSlope: -0.0022391307
         outSlope: -0.0022391307
@@ -4064,6 +4065,7 @@ MonoBehaviour:
   jump: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   look: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   dash: {fileID: -4048086248360759698, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  parryTutorialEvent: {fileID: 0}
   FMODJumpEvent: event:/JumpEvent
   FMODLandEvent: event:/LandEvent
   FMODDashEvent: event:/DashEvent
