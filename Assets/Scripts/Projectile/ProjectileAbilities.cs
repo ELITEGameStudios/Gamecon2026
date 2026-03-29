@@ -16,6 +16,9 @@ public class ProjectileAbilities : MonoBehaviour
     [HideInInspector] public UnityEvent dashPerformed = new();
     [HideInInspector] public UnityEvent recallStarted = new();
 
+
+    [SerializeField] WindManager windManager;
+
     [Header("References")]
     [SerializeField] private Projectile featherKnife;
     [SerializeField] private Transform projectileFirePoint;
@@ -25,13 +28,17 @@ public class ProjectileAbilities : MonoBehaviour
     public ApplyShake camShaker;
 
     [Header("Settings")]
-    [SerializeField] private float parryTiming = 0.8f; // 0.8 = last 20% of distance is parryable
+    [SerializeField] private float parryTiming = 0.2f;
     public float recallCooldown = 8f;
     public float currentRecallCooldown;
     [SerializeField] private float parryForce = 500f;
     [SerializeField] private float hitStopTime = 0.1f;
+    [SerializeField] private float minParryWindow = 80.0f;
+    [SerializeField] private float upwardsBiasForParry = 0.65f;
     [SerializeField] private HUDManager hudManager;
     public ApplyShake.CamShakeProfile parryCamShakeProfile;
+
+    float parryWindow = 0.0f;
     
     [Header("Impact Frame Post Processing Effects")]
     [SerializeField] private Volume postProcessVolume;
@@ -52,7 +59,7 @@ public class ProjectileAbilities : MonoBehaviour
     public float blinkCooldownTime;
     public float blinkEffectTime = 0.33f;
     public float currentBlinkTimer;
-    public bool canBlink => currentBlinkTimer <= 0 && featherKnife.currentState != Projectile.ProjectileState.Idle && featherKnife.currentState != Projectile.ProjectileState.Recalling;
+    public bool canBlink => windManager.HasEnoughWindForBlink() && featherKnife.currentState != Projectile.ProjectileState.Idle && featherKnife.currentState != Projectile.ProjectileState.Recalling;
 
     public PlayerVFXManager playerVFXManager;
 
@@ -60,7 +67,7 @@ public class ProjectileAbilities : MonoBehaviour
     public string FMODParryEvent = "", FMODShootEvent = "", FMODBlinkEvent = "", FMODParryFailEvent = "";
     public FMOD.Studio.EventInstance parrySFX, parryFailSFX, shootSFX, blinkSFX;
 
-    bool parryActive = false;
+    public bool ParryActive { get; private set; } = false;
     bool blinkedThisFrame; // just used for the animator
 
     void Start()
@@ -125,49 +132,40 @@ public class ProjectileAbilities : MonoBehaviour
         }
     }
 
+    public void SetParryWindow(float totalDistance)
+    {
+        parryWindow = totalDistance * parryTiming;
+        if (parryWindow < minParryWindow)
+        {
+            parryWindow = minParryWindow;
+        }
+    }
     public bool IsParryable()
     {
         if (featherKnife.currentState != Projectile.ProjectileState.Recalling) return false;
-        // use distance parry timing instead of time-based
         float currentDistance = Vector3.Distance(featherKnife.transform.position, transform.position);
-        float totalDistance = featherKnife.totalRecallDistance;
-        float progress = 1f - (currentDistance / totalDistance);
 
-        return progress > parryTiming;
+        return currentDistance <= parryWindow;
     }
     private void OnFirePressed(InputAction.CallbackContext ctx)
     {
-        if(featherKnife.currentState == Projectile.ProjectileState.Recalling){
-            // use distance parry timing instead of time-based
-            float currentDistance = Vector3.Distance(featherKnife.transform.position, transform.position);
-            float totalDistance = featherKnife.totalRecallDistance;
-            float progress = 1f - (currentDistance / totalDistance);
-            
-            // Parry when close to the player (last 20% of journey)
-            if(progress > parryTiming || (PlayerMovementStateMachine.instance.parryTutorialEvent != null && PlayerMovementStateMachine.instance.parryTutorialEvent.active))
-            {
-                Debug.Log("Parried!");
-                TryShoot(true);
-                attemptedParry.Invoke(true);
-            }
-            else if(progress > parryTiming - 0.25f)
-            {
-                parryFailSFX.start();
-                attemptedParry.Invoke(false);
-            }
-        }
-        else
+        if (featherKnife.currentState == Projectile.ProjectileState.Flying || featherKnife.currentState == Projectile.ProjectileState.Embedded) return;
+
+        bool parryable = IsParryable();
+        if (featherKnife.currentState == Projectile.ProjectileState.Recalling)
         {
-            TryShoot();
+            attemptedParry.Invoke(parryable);
+            if (!parryable) parryFailSFX.start();
         }
+        TryShoot(parryable);
     }
 
     private void OnRecallPressed(InputAction.CallbackContext ctx)
     {
-        if(currentRecallCooldown > 0 || featherKnife.currentState == Projectile.ProjectileState.Idle){return;}
+       if (featherKnife.currentState == Projectile.ProjectileState.Idle){return;}
         else
         {
-            parryActive = false;
+            ParryActive = false;
             if (featherKnife.currentState == Projectile.ProjectileState.Flying) { featherKnife.SetEmbeddedPos(); }
 
             recallStarted.Invoke();
@@ -205,7 +203,7 @@ public class ProjectileAbilities : MonoBehaviour
         currentBlinkTimer = blinkCooldownTime;
         playerMovement.Blink();
         featherKnife.Pickup();
-        parryActive = false;
+        ParryActive = false;
         HUDManager.Instance.blinkElement.Activate();
         HUDManager.Instance.TriggerBlinkPrompt();
         KnifeRetrievalInfo info = new ()
@@ -239,7 +237,8 @@ public class ProjectileAbilities : MonoBehaviour
         
         if (cam == null) 
             return;
-        
+
+        featherKnife.BouncesRemaining = featherKnife.MaxBounces;
         HUDManager.Instance.TriggerShootPrompt();
         
         Shoot(parry);
@@ -250,7 +249,7 @@ public class ProjectileAbilities : MonoBehaviour
     {
         Vector3 spawnPos;
 
-        parryActive = parry;
+        ParryActive = parry;
         if (parry)
         {
             // For parry, spawn the projectile further away from camera
@@ -261,7 +260,6 @@ public class ProjectileAbilities : MonoBehaviour
             // Normal shooting spawn position
             spawnPos = cam.transform.position + cam.transform.forward * 0.5f;
         }
-
         // Ray from crosshair
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
 
@@ -294,6 +292,7 @@ public class ProjectileAbilities : MonoBehaviour
             parrySFX.start();
             HUDManager.Instance.recallElement.Parry();
             featherKnife.OnParry();
+            playerMovement.hasDash = true;
         }
         else
         {
@@ -329,9 +328,14 @@ public class ProjectileAbilities : MonoBehaviour
             Time.timeScale = 1f;
         }
 
-        playerMovement.rigidbody.linearVelocity = 
-            ( transform.up - transform.forward  ).normalized * parryForce;
-
+       
+        var parryImpulse = (transform.up - transform.forward).normalized * parryForce;
+        parryImpulse = Vector3.Lerp(parryImpulse, new Vector3(0, parryForce, 0), upwardsBiasForParry);
+        //Debug.Log("Applying parry impulse of " + parryImpulse);
+        Vector3 newVelocity = playerMovement.rigidbody.linearVelocity + parryImpulse;
+        if (newVelocity.y < parryForce) newVelocity.y = parryForce;
+        playerMovement.rigidbody.linearVelocity = newVelocity;
+        if (playerMovement.rigidbody.linearVelocity.y < 0)
         camShaker.StartShake(parryCamShakeProfile);
     }
 
@@ -401,8 +405,4 @@ public class ProjectileAbilities : MonoBehaviour
         playerVFXManager.blinkVolume.weight = 0f;
     }
 
-    public bool ProjectileInParryState()
-    {
-        return parryActive;
-    }
 }

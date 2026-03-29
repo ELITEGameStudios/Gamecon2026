@@ -39,7 +39,7 @@ public class ApplyShake : MonoBehaviour
         for (int i = 0; i < totalPoints - 1; i++)
         {
             float simTime = profile.time - (timeInterval * (i+1));
-            Debug.Log(simTime);
+           // Debug.Log(simTime);
             
             float randomAngle = Random.Range(0, 360);
             points.Add(

@@ -9,6 +9,7 @@ public class PlayerSettings
     public bool fullscreen = true;
     public bool showTutorialPrompts = true;
     public bool showFPS = false;
+    public bool crosshairEnabled = true;
     //Audio
     public float bgmVolume = 1.0f;
     public float sfxVolume = 1.0f;

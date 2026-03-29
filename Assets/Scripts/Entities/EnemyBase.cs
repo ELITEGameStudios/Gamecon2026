@@ -13,11 +13,13 @@ public class EnemyBase : EntityBase
     [SerializeField, ShowIf(nameof(IsBulwark))] ShieldEntity enemyShield;
 
 
-    public EnemyType enemyType { private set; get; } = EnemyType.Dummy;
+    public EnemyType EnemyType { private set; get; } = EnemyType.Dummy;
     [SerializeField] EnemyType type = EnemyType.Grunt;
 
      public bool IsBulwark() => type == EnemyType.Bulwark;
 
+
+    public ShieldEntity EnemyShield { private set => enemyShield = value; get => enemyShield; }
     /* ---------------------------Template Inherited function documentation------------------------- */
     // Feel free to copy paste these into any new enemy you implement so you can have documentation comments at hand
 
@@ -27,7 +29,7 @@ public class EnemyBase : EntityBase
     {
         base.Init();
         if (collider == null) collider = GetComponent<Collider>();
-        enemyType = type;
+        EnemyType = type;
         // Put your code here
 
     }
@@ -52,7 +54,6 @@ public class EnemyBase : EntityBase
     public override void Damage(int damage = 1)
     {
         // Before damage event is internally processed
-        if (enemyShield != null) damage = 0;
         base.Damage(damage);
         // after damage event is internally processed 
     }
@@ -60,7 +61,6 @@ public class EnemyBase : EntityBase
     // Handles contact damage against the player
     public override void CollisionEnterEvent(Collision collision)
     {
-        Debug.Log("");
         if(collision.gameObject == Player.instance.gameObject)
         {
             Player.instance.Damage(contactDamage);
