@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovementStateMachine : StateMachine
 {
     public static PlayerMovementStateMachine instance {get; private set;}
-
+    [SerializeField] WindManager windManager;
 
     [Header("Base Properties")]
     public float baseSpeed = 5f;
@@ -86,8 +86,9 @@ public class PlayerMovementStateMachine : StateMachine
         if(instance == null) {instance = this;}
         else if(instance != this){Destroy(this);}
         
-        defaultState = airborneState; 
+        defaultState = airborneState;
 
+        dashState.Initialize(dash, windManager);
         airborneState.OnReset();
         groundedState.OnReset();
         wallRunState.OnReset();
@@ -169,7 +170,6 @@ public class PlayerMovementStateMachine : StateMachine
             Debug.Log("Caught an error");
         }
     }
-
     protected override void OnSetState()
     {
         stateName = currentState.name;
@@ -195,10 +195,11 @@ public class PlayerMovementStateMachine : StateMachine
         
         SetState(airborneState);
         Vector3 targetPos = featherKnife.GetBlinkPosition();
-        KnifeRetrievalInfo info = new ()
+        Vector3 blinkVector = targetPos - transform.position;
+        KnifeRetrievalInfo info = new()
         {
             pickupType = KnifeRetrievalType.Blink,
-            blinkDistance = Vector3.Distance(transform.position, targetPos),
+            blinkDistance = blinkVector.magnitude
         };
         featherKnife.knifeRetrieved.Invoke(info);
         Quaternion rot = featherKnife.transform.rotation;
@@ -212,6 +213,7 @@ public class PlayerMovementStateMachine : StateMachine
         // }
 
         transform.position = targetPos;
+        rigidbody.linearVelocity = rigidbody.linearVelocity.magnitude * blinkVector.normalized;
         
         CheckWallViaRay(ignoreWallRunTimer: true, fromBlink: true);
     }

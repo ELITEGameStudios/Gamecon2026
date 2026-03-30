@@ -17,6 +17,7 @@ public class GroundedState : PlayerMovementState
     // [FMODUnity.EventRef(MigrateTo ="EventReference")]
     public string FMODWalkEvent = "";
     EventInstance playerWalkState;
+    [SerializeField] InGameMusicManager musicManager;
 
 
     public GroundedState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
@@ -45,7 +46,7 @@ public class GroundedState : PlayerMovementState
         if(movement.movementInput.magnitude > 1){movement.movementInput.Normalize();}
 
 
-        desiredSpeed = Mathf.Lerp(movement.current2DVelocity, movement.liveMaxSpeed * Time.fixedDeltaTime, movement.currentVelocity > movement.liveMaxSpeed * Time.fixedDeltaTime ? overshootKp : rampupKp);
+        desiredSpeed = Mathf.Lerp(movement.current2DVelocity, movement.liveMaxSpeed , movement.currentVelocity > movement.liveMaxSpeed  ? overshootKp : rampupKp);
         desiredVelocity =             
             (
                 (transform.right * movement.movementInput.x) +
@@ -72,6 +73,7 @@ public class GroundedState : PlayerMovementState
         }
                 
         playerWalkState = RuntimeManager.CreateInstance(FMODWalkEvent);
+        musicManager.SetFootstepEmitter(playerWalkState);
         playerWalkState.start();
 
 

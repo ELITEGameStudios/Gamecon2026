@@ -3,6 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class WallRunState : PlayerMovementState
 {
+    [SerializeField] WindManager windManager;
     [Header("Wallrun Parameters")]
     public float wallRunMinSpeed;
     public float currentWallRunSpeed;
@@ -66,10 +67,14 @@ public class WallRunState : PlayerMovementState
 
 
             // Determine the speed in which the player will wall run
-            float currentSpeed = movement.currentVelocity / Time.fixedDeltaTime;
+
+
+
+            float currentSpeed = new Vector2(rigidbody.linearVelocity.x, rigidbody.linearVelocity.z).magnitude;
             if(currentSpeed < wallRunMinSpeed){currentWallRunSpeed = wallRunMinSpeed; return;} // Sets to the min wall run speed if your speed is slower. (May be obselete since wall run might reqire you tp be this speed)
             
             currentWallRunSpeed = currentSpeed;
+
 
             // (Legacy) Speed will be between the current speed and the minimum wall run speed, determined by the angle of your entry velocity and the wall's run direction
             // currentWallRunSpeed = Mathf.Lerp(
@@ -142,7 +147,7 @@ public class WallRunState : PlayerMovementState
 
             // if(Vector3.Distance(transform.position, hitPoint) > wallRunMaxDist) { transform.position = hitPoint + hitInfo.normal * movement.bodyRadius; } This was causing a bug where the player moves abnormally fast when facing away from the wall at a certain angle. Meant to be a way to ensure the player is confined to be against the wall
             rigidbody.linearVelocity =
-            wallRunDirection * Time.fixedDeltaTime * currentWallRunSpeed;
+            wallRunDirection * currentWallRunSpeed;
             Debug.DrawRay(hitInfo.point, hitInfo.normal);
             Debug.Log("Wallrun was fine");
             
@@ -169,10 +174,16 @@ public class WallRunState : PlayerMovementState
                 ? (isRight ? -jumpXStrength : jumpXStrength )
                 : 0;
 
+        float lateralMovement = new Vector2(rigidbody.linearVelocity.x, rigidbody.linearVelocity.z).magnitude;
+        Debug.Log("Velocity before jump: " + lateralMovement);
+
+        Debug.Log("current wall run speed == " + currentWallRunSpeed);
+        Debug.Log("current wall run bonus speed evaulated == " + wallRunAdditiveForceOverSpeed.Evaluate(currentWallRunSpeed));
         rigidbody.linearVelocity = 
             ( (transform.forward * jumpZStrength) + (transform.up * jumpYStrength) + (transform.right * xJumpDirection)  ).normalized *
-            (currentWallRunSpeed + wallRunAdditiveSpeed * wallRunAdditiveForceOverSpeed.Evaluate(currentWallRunSpeed)) * Time.fixedDeltaTime;
+            (currentWallRunSpeed + wallRunAdditiveSpeed * wallRunAdditiveForceOverSpeed.Evaluate(currentWallRunSpeed));
 
+        Debug.Log("Velocity after jump: " + (currentWallRunSpeed + wallRunAdditiveSpeed * wallRunAdditiveForceOverSpeed.Evaluate(currentWallRunSpeed)) * Time.fixedDeltaTime);
         movement.SetState(movement.airborneState);
     }
 

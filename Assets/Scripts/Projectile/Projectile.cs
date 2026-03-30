@@ -2,15 +2,22 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.ProBuilder;
 using UnityEngine.ProBuilder.MeshOperations;
 
 [RequireComponent(typeof(Collider))]
 public class Projectile : MonoBehaviour
 {
 
+     string[] unallowedObjectsToBounceOff = {
+        "SoftTerrain",
+        "Enemy"
+    };
+
     public UnityEvent<KnifeCollisionInfo> enemyStruck = new();
     public UnityEvent<KnifeCollisionInfo> terrainStruck = new();
     public UnityEvent<KnifeRetrievalInfo> knifeRetrieved = new();
+    public UnityEvent<ProjectileState> stateChanged = new();
     /// <summary>
     /// Float parameter is distance travelled.
     /// </summary>
@@ -35,6 +42,7 @@ public class Projectile : MonoBehaviour
     
     [Header("Player Reference")]
     [SerializeField] private Transform playerTransform;
+    [SerializeField] private PlayerMovementStateMachine playerMovement;
     public ProjectileAbilities projectileAbilities;
     
     [Header("Camera Layer Data")]
@@ -67,22 +75,39 @@ public class Projectile : MonoBehaviour
     public List<Collider> triggerList;
     public bool inTriggerCollision =>  triggerList == null || triggerList.Count != 0;
 
+    [Header("Ricochet Data")]
+    [SerializeField] int maxBounces = 1;
+    [SerializeField] float maxDistanceToEnableAutoaimBounce = 7.0f;
+    [SerializeField] float bounceToEmbedTransitionCooldown = 0.1f;
+
+    public float BounceToEmbedTransitionCooldownRemaining { get; private set; }
+    public int BouncesRemaining { set; get; }
+    public int MaxBounces { private set => maxBounces = value; get => maxBounces; }
+    [Header("Wind Data")]
+    [SerializeField] AnimationCurve windToRecallSpeed;
+
     
-    [Serializable]
+    [SerializeField] WindManager windManager;
     public struct SpaceSample
     {
         public Vector3 position, direction, velocity;
     };
 
     
-    private Rigidbody rb;
+    public Rigidbody rb { get; private set; }
     private Collider col;
     
     // [SerializeField] private Animator animator;
     private Transform embedParent;
 
 
-    LayerMask terrainMask;
+
+    float timeElaspedWithoutKnife = 0.0f;
+
+    List<EnemyType> enemiesToNotBounceTowards = new()
+    {
+        EnemyType.Banshee
+    };
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -92,7 +117,6 @@ public class Projectile : MonoBehaviour
         spaceRecordingData = new List<SpaceSample>();
         triggerList = new List<Collider>();
         ReturnToIdle();
-        terrainMask = LayerMask.GetMask("Wall", "Ground", "Default");
     }
 
     public Vector3 GetBlinkPosition()
@@ -157,6 +181,20 @@ public class Projectile : MonoBehaviour
                 }
             }
         }
+
+        if (currentState == ProjectileState.Flying)
+        {
+            timeElaspedWithoutKnife += Time.deltaTime;
+            if (timeElaspedWithoutKnife > lifetime)
+            {
+                ReturnToIdle();
+            }
+        }
+        if (BounceToEmbedTransitionCooldownRemaining > 0.0f)
+        {
+            BounceToEmbedTransitionCooldownRemaining -= Time.deltaTime;
+            if (BounceToEmbedTransitionCooldownRemaining < 0.0f) BounceToEmbedTransitionCooldownRemaining = 0.0f;
+        }
     }
 
     void FixedUpdate()
@@ -182,6 +220,8 @@ public class Projectile : MonoBehaviour
 
     public void SetState(ProjectileState newState)
     {
+        if (currentState == newState) return;
+
         ProjectileState oldState = currentState;
         currentState = newState;
         
@@ -196,8 +236,10 @@ public class Projectile : MonoBehaviour
 
                 armRendererCam.cullingMask = armIdleCull;
                 mainCam.cullingMask = mainIdleCull;
+                BounceToEmbedTransitionCooldownRemaining = 0.0f;
                 break;
             case ProjectileState.Flying:
+                timeElaspedWithoutKnife = 0.0f;
                 armRendererCam.cullingMask = armFlyingCull;
                 mainCam.cullingMask = mainFlyingCull;
 
@@ -213,6 +255,7 @@ public class Projectile : MonoBehaviour
                 col.isTrigger = true;
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
+                BounceToEmbedTransitionCooldownRemaining = 0.0f;
                 // animator.SetTrigger("Idle");
 
                 SetEmbeddedPos();
@@ -225,9 +268,6 @@ public class Projectile : MonoBehaviour
                 col.isTrigger = true;
                 // animator.SetTrigger("Recalling");
             
-                CancelInvoke(nameof(ReturnToIdle));
-                Invoke(nameof(ReturnToIdle), lifetime);
-            
                 // Calculate recall parameters
                 totalRecallDistance = Vector3.Distance(transform.position, initProjectilePosition.position);
                 recallProgress = 0f;
@@ -235,6 +275,8 @@ public class Projectile : MonoBehaviour
                 // Estimate total time
                 totalRecallTime = CalculateEstimatedRecallTime(totalRecallDistance);
                 recallCurrentTime = totalRecallTime;
+
+                projectileAbilities.SetParryWindow(totalRecallDistance);
                 break;
             
             // case ProjectileState.PickedUp:
@@ -243,6 +285,8 @@ public class Projectile : MonoBehaviour
             //     gameObject.SetActive(false);
             //     break;
         }
+        stateChanged.Invoke(currentState);
+       
     }
     
     void RecallUpdate()
@@ -256,25 +300,14 @@ public class Projectile : MonoBehaviour
         recallProgress = 1f - (currentDistance / totalRecallDistance);
         HUDManager.Instance.recallElement.SetSpeed(recallProgress);
     
-        // Calculate distance-based speed boost
-        float distanceBoost = 1f;
-        if (currentDistance > maxBoostDistance)
-        {
-            // Apply maximum boost when way beyond threshold
-            distanceBoost = maxSpeedBoost;
-        }
-        else if (currentDistance > maxBoostDistance * 0.7f) // Start slowing down at 70% of threshold
-        {
-            // Gradually reduce boost as it approaches normal range
-            float boostProgress = (currentDistance - (maxBoostDistance * 0.7f)) / (maxBoostDistance * 0.3f);
-            distanceBoost = Mathf.Lerp(1f, maxSpeedBoost, boostProgress);
-        }
-    
         // Get curve-based speed multiplier
         float speedMultiplier = recallAnimationCurve.Evaluate(recallProgress);
+
+        // Get wind-based speed multiplier
+        float windMultiplier = windToRecallSpeed.Evaluate(windManager.GetWindAsPercent());
     
         // Combine both multipliers
-        float currentSpeed = baseRecallSpeed * speedMultiplier * distanceBoost;
+        float currentSpeed = (baseRecallSpeed * speedMultiplier) * windMultiplier;
     
         transform.position = Vector3.MoveTowards(transform.position, initProjectilePosition.position, currentSpeed * Time.deltaTime);
     
@@ -358,9 +391,6 @@ public class Projectile : MonoBehaviour
         SetState(ProjectileState.Flying);
         
         rb.linearVelocity = direction * speed;
-        
-        CancelInvoke(nameof(ReturnToIdle));
-        Invoke(nameof(ReturnToIdle), lifetime);
     }
 
     private void ReturnToIdle()
@@ -442,7 +472,91 @@ public class Projectile : MonoBehaviour
         {
             blinkSample = spaceRecordingData[maxRecordingSlots-1];
         }
+    }
 
+    void ReportCollision(bool hitEnemy, Vector3 normal, string tag)
+    {
+        KnifeCollisionInfo collisionInfo = new()
+        {
+            normal = normal,
+            point = rb.position,
+            struckEnemy = hitEnemy
+        };
+        if (hitEnemy) enemyStruck.Invoke(collisionInfo);
+        else terrainStruck.Invoke(collisionInfo);
+    }
+
+    public void OnEnemyStruck(Vector3 normal)
+    {
+        if (projectileAbilities != null)
+        {
+            projectileAbilities.ResetRecallCooldown();
+        }
+        
+        if (!AttemptEnemyAutoaimBounce(normal))
+        { 
+           if (!projectileAbilities.ParryActive) EmbedKnife(); 
+        }
+        
+       
+        windManager.RestoreWindOnKill();
+        playerMovement.hasDash = true;
+        ReportCollision(hitEnemy: true, normal, "Enemy");
+        
+    }        
+    void EmbedKnife()
+    {
+        if (BounceToEmbedTransitionCooldownRemaining > 0.0f) 
+        {
+            return;
+        }
+        else if (currentState == ProjectileState.Recalling)
+        {
+            return;
+        }
+        Vector3 travelDirection = rb.linearVelocity.normalized;
+
+
+        transform.position += travelDirection * (embedDepth * 0.1f);
+
+        SetState(ProjectileState.Embedded);
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="normal"></param>
+    /// <returns>Whether or not the bounce was successful.</returns>
+    bool AttemptEnemyAutoaimBounce(Vector3 normal)
+    {
+        if (BouncesRemaining <= 0 || currentState != ProjectileState.Flying || projectileAbilities.ParryActive) return false;
+        if (windManager.HasEnoughWindForRicochet())
+        {
+            var nearest = GameManager.Instance.entityManager.GetClosestEnemyToPosition(rb.position, enemiesToNotBounceTowards);
+            if (nearest != null)
+            {
+                if (Vector3.Distance(nearest.collider.bounds.center, rb.position) <= maxDistanceToEnableAutoaimBounce)
+                {
+                    CastProjectile((nearest.collider.bounds.center - rb.position).normalized);
+                    PostBounce();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="normal"></param>
+    /// <param name="objTag"></param>
+    /// <returns>Whether or not the bounce was successful.</returns>
+    /// 
+
+    void PostBounce()
+    {
+        BouncesRemaining--;
+        rb.angularVelocity = Vector3.zero;
+        BounceToEmbedTransitionCooldownRemaining = bounceToEmbedTransitionCooldown;
     }
 
     void OnCollisionEnter(Collision collision) //needs fixing. embedding doesn't work properly
@@ -450,54 +564,27 @@ public class Projectile : MonoBehaviour
         if (currentState != ProjectileState.Flying || currentState == ProjectileState.Recalling)
             return;
 
+        Vector3 normal = collision.GetContact(0).normal;
+        string objTag = collision.gameObject.tag;
+        ReportCollision(false, normal, objTag);
 
-        KnifeCollisionInfo collisionInfo = new()
+        bool viableTagForBounce = true;
+        for (int i = 0; i < unallowedObjectsToBounceOff.Length; i++)
         {
-            normal = -rb.linearVelocity,
-            point = rb.position,
-            struckEnemy = false
-        };
-        
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            if (projectileAbilities != null)
+            if (objTag == unallowedObjectsToBounceOff[i])
             {
-                projectileAbilities.ResetRecallCooldown();
+                viableTagForBounce = false;
+                break;
             }
-            enemyStruck.Invoke(collisionInfo);
-            var enemy = collision.transform.GetComponent<EnemyBase>();
-            if (enemy == null && collision.transform.parent != null) enemy = collision.transform.parent.GetComponent<EnemyBase>();
-            enemy.Damage();
-            collisionInfo.struckEnemy = true;
         }
-
-
-        if ((terrainMask & (1 << collision.gameObject.layer)) != 0)
+        if ( !viableTagForBounce || !AttemptEnemyAutoaimBounce(normal))
         {
-            terrainStruck.Invoke(collisionInfo);
+             EmbedKnife();
         }
-
-        if (hitEffect)
-            Instantiate(hitEffect, transform.position, Quaternion.identity);
         
-        Quaternion incomingRotation = transform.rotation;
-        Vector3 travelDirection = rb.linearVelocity.normalized; 
 
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-
-        transform.position += travelDirection * (embedDepth * 0.1f);
-
-        // Restore the original rotation to maintain impact angle
-        transform.rotation = incomingRotation;
-
-        SetState(ProjectileState.Embedded);
-
-        CancelInvoke(nameof(ReturnToIdle));
     }
 }
-
-
 public struct KnifeCollisionInfo
 {
     public Vector3 normal;
