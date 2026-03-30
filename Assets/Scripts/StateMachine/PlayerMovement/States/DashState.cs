@@ -5,6 +5,11 @@ using UnityEngine.InputSystem;
 public class DashState : PlayerMovementState
 {
     [SerializeField] float empoweredDashDrainRate = 120.0f;
+    [SerializeField] float FOVIncrease = 10;
+    [SerializeField] float FOVTweenDuration = 0.1f;
+    [SerializeField] Camera FPSCamera;
+
+    float tweenTracker = 0.0f;
 
 
     InputActionReference dashButton;
@@ -19,8 +24,12 @@ public class DashState : PlayerMovementState
     public bool additive, canAirJump;
 
 
+
     bool empowered = false;
     float initialSpeedWhenEmpowered;
+
+    float baseFOV = 0;
+
     public DashState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
     {
         name = "Dash State";
@@ -30,6 +39,7 @@ public class DashState : PlayerMovementState
     {
         dashButton = button;
         windManager = wind;
+        baseFOV = FPSCamera.fieldOfView;
     }
 
     public override void OnReset()
@@ -48,6 +58,7 @@ public class DashState : PlayerMovementState
 
         movement.playerDash.start();
         HUDManager.Instance.dashElement.Activate();
+        tweenTracker = 0;
     }
 
     private void SetDashVelocity()
@@ -88,6 +99,15 @@ public class DashState : PlayerMovementState
         // Debug.Log(dashPowerOverSpeed.Evaluate(currentVelocity.magnitude));
         PlayerVFXManager.instance.DashEffect(input);
     }
+    public override void Update()
+    {
+        if (tweenTracker < FOVTweenDuration)
+        {
+            tweenTracker += Time.deltaTime;
+            FPSCamera.fieldOfView = Mathf.Lerp(baseFOV, baseFOV + FOVIncrease, tweenTracker / FOVTweenDuration);
+        }
+    }
+
     public override void FixedUpdate()
     {
         movement.CalculateLookRotation();
@@ -110,6 +130,14 @@ public class DashState : PlayerMovementState
         EmpowerLogic();
     }
 
+    public override void InactiveUpdate()
+    {
+        if (tweenTracker < FOVTweenDuration)
+        {
+            tweenTracker += Time.deltaTime;
+            FPSCamera.fieldOfView = Mathf.Lerp(FOVIncrease + baseFOV, baseFOV, tweenTracker / FOVTweenDuration);
+        }
+    }
     void EmpowerLogic()
     {
         if (!empowered) return;
@@ -140,5 +168,6 @@ public class DashState : PlayerMovementState
     {
         base.End(interrupted);
         windManager.pauseWindGeneration = false;
+        tweenTracker = 0;
     }
 }

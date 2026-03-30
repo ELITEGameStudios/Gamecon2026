@@ -30,9 +30,9 @@ public class EntityDetectionSystem : MonoBehaviour
             return;
         }
 
-        if (cinematics.inCinematic)
+        if (cinematics != null)
         {
-            return;
+            if (cinematics.inCinematic)  return;
         }
         if (knife.currentState != Projectile.ProjectileState.Idle)
         {

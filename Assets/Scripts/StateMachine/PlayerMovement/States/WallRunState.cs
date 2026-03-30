@@ -40,7 +40,6 @@ public class WallRunState : PlayerMovementState
     public bool canWallRun => currentWallRunSleepTimer <= 0;// && movement.currentVelocity >= wallRunMinSpeed;
 
 
-    float previousLateral;
     public WallRunState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
     {
         name = "Wall Running";
@@ -48,8 +47,6 @@ public class WallRunState : PlayerMovementState
 
     public override void Start()
     {
-        previousLateral = new Vector2(rigidbody.linearVelocity.x, rigidbody.linearVelocity.z).magnitude;
-        Debug.Log("Velocity before jump: " + previousLateral);
         movement.hasDash = true;
         movement.OnStopWalking();
         // Vector3 closestPoint = storedCollision.collider.ClosestPoint(transform.position);
@@ -180,9 +177,15 @@ public class WallRunState : PlayerMovementState
 
         Debug.Log("current wall run speed == " + currentWallRunSpeed);
         Debug.Log("current wall run bonus speed evaulated == " + wallRunAdditiveForceOverSpeed.Evaluate(currentWallRunSpeed));
-        rigidbody.linearVelocity = 
-            ( (transform.forward * jumpZStrength) + (transform.up * jumpYStrength) + (transform.right * xJumpDirection)  ).normalized *
-            (currentWallRunSpeed + wallRunAdditiveSpeed * wallRunAdditiveForceOverSpeed.Evaluate(currentWallRunSpeed));
+
+        var lateralJumpDirection = ((transform.forward * jumpZStrength) + (transform.right * xJumpDirection)).normalized;
+        var jumpBoost = wallRunAdditiveSpeed * wallRunAdditiveForceOverSpeed.Evaluate(jumpPower);
+
+        var finalJumpVelocity = currentWallRunSpeed + jumpBoost;
+        rigidbody.linearVelocity = (lateralJumpDirection * finalJumpVelocity) + (transform.up * jumpYStrength) * finalJumpVelocity;
+        //rigidbody.linearVelocity = 
+        //    ( (transform.forward * jumpZStrength) + (transform.up * jumpYStrength) + (transform.right * xJumpDirection)  ).normalized *
+        //    (currentWallRunSpeed + wallRunAdditiveSpeed * wallRunAdditiveForceOverSpeed.Evaluate(currentWallRunSpeed));
 
         float lateralMovement = new Vector2(rigidbody.linearVelocity.x, rigidbody.linearVelocity.z).magnitude;
 
