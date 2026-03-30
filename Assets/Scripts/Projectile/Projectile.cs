@@ -304,6 +304,22 @@ public class Projectile : MonoBehaviour
     
         transform.position = Vector3.MoveTowards(transform.position, initProjectilePosition.position, currentSpeed * Time.deltaTime);
     
+        if (PlayerMovementStateMachine.instance.parryTutorialEvent != null)
+        {
+            ParryTutorialEvent parryTutorialEvent = PlayerMovementStateMachine.instance.parryTutorialEvent;
+            if(parryTutorialEvent.active)
+            {
+                Time.timeScale = parryTutorialEvent.GetTimeScale(currentDistance);
+                return;
+            }
+            // if(currentDistance <= pickUpRadius + 1f && parryTutorialEvent.active)
+            // {
+            //     Time.timeScale = 0;
+            //     return;
+            // }
+        }
+
+
         // Rotate towards hand
         Vector3 directionToHand = (initProjectilePosition.position - transform.position).normalized;
         if (directionToHand != Vector3.zero)
@@ -311,15 +327,6 @@ public class Projectile : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(directionToHand) * Quaternion.Euler(-90, 180, 0);
         }
     
-        if (PlayerMovementStateMachine.instance.parryTutorialEvent != null)
-        {
-            ParryTutorialEvent parryTutorialEvent = PlayerMovementStateMachine.instance.parryTutorialEvent;
-            if(currentDistance <= pickUpRadius + 1f && parryTutorialEvent.active)
-            {
-                Time.timeScale = 0;
-                return;
-            }
-        }
 
         if (currentDistance < 0.1f)
         {
