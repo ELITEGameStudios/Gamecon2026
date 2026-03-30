@@ -78,23 +78,28 @@ public class WindManager : MonoBehaviour
         if (info.pickupType != KnifeRetrievalType.Pickup)
         {
             CurrentWind = 0;
+            UpdateWindDisplays();
         }
     }
     private void FixedUpdate()
     {
         if (!pauseWindGeneration)
         {
-            float speed = new Vector2(playerRB.linearVelocity.x, playerRB.linearVelocity.z).sqrMagnitude;
-
-            if (speed < minSpeedSquared) return;
-
-            var speedAsProgress = speed / maxSpeedSquared;
-            if (speedAsProgress > 1.0f) speedAsProgress = 1.0f;
-            float windToAdd = speedToWind.Evaluate(speedAsProgress) * speedToWindRatio;
-
-            CurrentWind += windToAdd;
+            AddWindFromVelocity();
         }
         UpdateWindDisplays();
+    }
+    void AddWindFromVelocity()
+    {
+        float speed = new Vector2(playerRB.linearVelocity.x, playerRB.linearVelocity.z).sqrMagnitude;
+
+        if (speed < minSpeedSquared) return;
+
+        var speedAsProgress = speed / maxSpeedSquared;
+        if (speedAsProgress > 1.0f) speedAsProgress = 1.0f;
+        float windToAdd = speedToWind.Evaluate(speedAsProgress) * speedToWindRatio;
+
+        CurrentWind += windToAdd;
     }
     void UpdateWindDisplays()
     {

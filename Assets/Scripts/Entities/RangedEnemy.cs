@@ -89,4 +89,22 @@ public class RangedEnemy : EnemyBase
         cooldownTracker = cooldown;
         firing = false;
     }
+
+    protected override void OnDeath()
+    {
+        StartCoroutine(ClearEnemyFromMemory());
+    }
+
+    IEnumerator ClearEnemyFromMemory()
+    {
+        foreach (var pool in projectilePools)
+        {
+            yield return null;
+            foreach (var projectile in pool.Value)
+            {
+                Destroy(projectile.gameObject);
+            }
+        }
+        base.OnDeath();
+    }
 }
