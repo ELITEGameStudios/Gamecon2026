@@ -40,6 +40,7 @@ public class WallRunState : PlayerMovementState
     public bool canWallRun => currentWallRunSleepTimer <= 0;// && movement.currentVelocity >= wallRunMinSpeed;
 
 
+    float previousLateral;
     public WallRunState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
     {
         name = "Wall Running";
@@ -47,6 +48,8 @@ public class WallRunState : PlayerMovementState
 
     public override void Start()
     {
+        previousLateral = new Vector2(rigidbody.linearVelocity.x, rigidbody.linearVelocity.z).magnitude;
+        Debug.Log("Velocity before jump: " + previousLateral);
         movement.hasDash = true;
         movement.OnStopWalking();
         // Vector3 closestPoint = storedCollision.collider.ClosestPoint(transform.position);
@@ -70,7 +73,7 @@ public class WallRunState : PlayerMovementState
 
 
 
-            float currentSpeed = new Vector2(rigidbody.linearVelocity.x, rigidbody.linearVelocity.z).magnitude;
+            float currentSpeed = movement.current2DVelocity;
             if(currentSpeed < wallRunMinSpeed){currentWallRunSpeed = wallRunMinSpeed; return;} // Sets to the min wall run speed if your speed is slower. (May be obselete since wall run might reqire you tp be this speed)
             
             currentWallRunSpeed = currentSpeed;
@@ -174,8 +177,6 @@ public class WallRunState : PlayerMovementState
                 ? (isRight ? -jumpXStrength : jumpXStrength )
                 : 0;
 
-        float lateralMovement = new Vector2(rigidbody.linearVelocity.x, rigidbody.linearVelocity.z).magnitude;
-        Debug.Log("Velocity before jump: " + lateralMovement);
 
         Debug.Log("current wall run speed == " + currentWallRunSpeed);
         Debug.Log("current wall run bonus speed evaulated == " + wallRunAdditiveForceOverSpeed.Evaluate(currentWallRunSpeed));
@@ -183,7 +184,9 @@ public class WallRunState : PlayerMovementState
             ( (transform.forward * jumpZStrength) + (transform.up * jumpYStrength) + (transform.right * xJumpDirection)  ).normalized *
             (currentWallRunSpeed + wallRunAdditiveSpeed * wallRunAdditiveForceOverSpeed.Evaluate(currentWallRunSpeed));
 
-        Debug.Log("Velocity after jump: " + (currentWallRunSpeed + wallRunAdditiveSpeed * wallRunAdditiveForceOverSpeed.Evaluate(currentWallRunSpeed)) * Time.fixedDeltaTime);
+        float lateralMovement = new Vector2(rigidbody.linearVelocity.x, rigidbody.linearVelocity.z).magnitude;
+
+        Debug.Log("Velocity after jump: " + lateralMovement);
         movement.SetState(movement.airborneState);
     }
 

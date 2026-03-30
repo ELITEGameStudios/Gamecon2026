@@ -73,7 +73,7 @@ public class GroundedState : PlayerMovementState
         }
                 
         playerWalkState = RuntimeManager.CreateInstance(FMODWalkEvent);
-        musicManager.SetFootstepEmitter(playerWalkState);
+       if (musicManager != null) musicManager.SetFootstepEmitter(playerWalkState);
         playerWalkState.start();
 
 

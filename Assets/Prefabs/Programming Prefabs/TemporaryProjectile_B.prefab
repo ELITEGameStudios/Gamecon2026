@@ -102,9 +102,6 @@ MonoBehaviour:
   knife: {fileID: 9093975886187365857}
   statesWithHitboxes: 0100000003000000
   hitbox: {fileID: 7213132704581501372}
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 32768
   parryOnlyHitbox: 0
   damage: 1
 --- !u!1 &2099644040497004097
@@ -176,9 +173,6 @@ MonoBehaviour:
   knife: {fileID: 9093975886187365857}
   statesWithHitboxes: 01000000
   hitbox: {fileID: 1876273515514977572}
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 32768
   parryOnlyHitbox: 1
   damage: 1
 --- !u!1 &2287347467293118206
@@ -660,6 +654,9 @@ MonoBehaviour:
   stateChanged:
     m_PersistentCalls:
       m_Calls: []
+  knifeRicocheted:
+    m_PersistentCalls:
+      m_Calls: []
   targetLocalScale: {x: 500, y: 500, z: 500}
   knifeParticleManager: {fileID: 8528103503705562027}
   speed: 80
@@ -775,7 +772,7 @@ MonoBehaviour:
   triggerList: []
   maxBounces: 1
   maxDistanceToEnableAutoaimBounce: 7
-  bounceToEmbedTransitionCooldown: 0.1
+  bounceToEmbedTransitionCooldown: 0
   windToRecallSpeed:
     serializedVersion: 2
     m_Curve: []

@@ -14,10 +14,12 @@ public class Projectile : MonoBehaviour
         "Enemy"
     };
 
-    public UnityEvent<KnifeCollisionInfo> enemyStruck = new();
-    public UnityEvent<KnifeCollisionInfo> terrainStruck = new();
-    public UnityEvent<KnifeRetrievalInfo> knifeRetrieved = new();
-    public UnityEvent<ProjectileState> stateChanged = new();
+    [HideInInspector] public UnityEvent<KnifeCollisionInfo> enemyStruck = new();
+    [HideInInspector] public UnityEvent<KnifeCollisionInfo> terrainStruck = new();
+    [HideInInspector] public UnityEvent<KnifeRetrievalInfo> knifeRetrieved = new();
+    [HideInInspector] public UnityEvent<ProjectileState> stateChanged = new();
+    [HideInInspector] public UnityEvent knifeRicocheted = new();
+   
     /// <summary>
     /// Float parameter is distance travelled.
     /// </summary>
@@ -78,9 +80,7 @@ public class Projectile : MonoBehaviour
     [Header("Ricochet Data")]
     [SerializeField] int maxBounces = 1;
     [SerializeField] float maxDistanceToEnableAutoaimBounce = 7.0f;
-    [SerializeField] float bounceToEmbedTransitionCooldown = 0.1f;
 
-    public float BounceToEmbedTransitionCooldownRemaining { get; private set; }
     public int BouncesRemaining { set; get; }
     public int MaxBounces { private set => maxBounces = value; get => maxBounces; }
     [Header("Wind Data")]
@@ -190,11 +190,6 @@ public class Projectile : MonoBehaviour
                 ReturnToIdle();
             }
         }
-        if (BounceToEmbedTransitionCooldownRemaining > 0.0f)
-        {
-            BounceToEmbedTransitionCooldownRemaining -= Time.deltaTime;
-            if (BounceToEmbedTransitionCooldownRemaining < 0.0f) BounceToEmbedTransitionCooldownRemaining = 0.0f;
-        }
     }
 
     void FixedUpdate()
@@ -236,7 +231,6 @@ public class Projectile : MonoBehaviour
 
                 armRendererCam.cullingMask = armIdleCull;
                 mainCam.cullingMask = mainIdleCull;
-                BounceToEmbedTransitionCooldownRemaining = 0.0f;
                 break;
             case ProjectileState.Flying:
                 timeElaspedWithoutKnife = 0.0f;
@@ -255,7 +249,6 @@ public class Projectile : MonoBehaviour
                 col.isTrigger = true;
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
-                BounceToEmbedTransitionCooldownRemaining = 0.0f;
                 // animator.SetTrigger("Idle");
 
                 SetEmbeddedPos();
@@ -506,11 +499,7 @@ public class Projectile : MonoBehaviour
     }        
     void EmbedKnife()
     {
-        if (BounceToEmbedTransitionCooldownRemaining > 0.0f) 
-        {
-            return;
-        }
-        else if (currentState == ProjectileState.Recalling)
+        if (currentState == ProjectileState.Recalling)
         {
             return;
         }
@@ -538,6 +527,7 @@ public class Projectile : MonoBehaviour
                 {
                     CastProjectile((nearest.collider.bounds.center - rb.position).normalized);
                     PostBounce();
+                    knifeRicocheted.Invoke();
                     return true;
                 }
             }
@@ -556,7 +546,6 @@ public class Projectile : MonoBehaviour
     {
         BouncesRemaining--;
         rb.angularVelocity = Vector3.zero;
-        BounceToEmbedTransitionCooldownRemaining = bounceToEmbedTransitionCooldown;
     }
 
     void OnCollisionEnter(Collision collision) //needs fixing. embedding doesn't work properly
