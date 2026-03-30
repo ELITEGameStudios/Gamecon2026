@@ -8,6 +8,8 @@ public class ParryTutorialEvent : MonoBehaviour
 
     [SerializeField] Animator anim;
     [SerializeField] GameUIPopup gameUIPopup;
+    [SerializeField] AnimationCurve timeScaleByDistance;
+    
 
 
     public void SetCanBeActivated(bool canBeActivated)
@@ -38,6 +40,10 @@ public class ParryTutorialEvent : MonoBehaviour
     public void TryActivate()
     {
         if(canBeActivated){Begin();}
+    }
+
+    public float GetTimeScale(float dist){
+        return timeScaleByDistance.Evaluate(dist);
     }
 
     public void Begin()
