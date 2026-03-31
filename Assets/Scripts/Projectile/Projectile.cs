@@ -18,11 +18,11 @@ public class Projectile : MonoBehaviour
     [HideInInspector] public UnityEvent<KnifeCollisionInfo> terrainStruck = new();
     [HideInInspector] public UnityEvent<KnifeRetrievalInfo> knifeRetrieved = new();
     [HideInInspector] public UnityEvent<ProjectileState> stateChanged = new();
-    [HideInInspector] public UnityEvent knifeRicocheted = new();
-   
     /// <summary>
-    /// Float parameter is distance travelled.
+    /// Vector3 is the new direction of the knife after the ricochet.
     /// </summary>
+    [HideInInspector] public UnityEvent<Vector3> knifeRicocheted = new();
+   
 
     public enum ProjectileState {Idle, Flying, Embedded, Recalling}//, PickedUp}
     public ProjectileState currentState { get; private set; } = ProjectileState.Idle;
@@ -532,9 +532,10 @@ public class Projectile : MonoBehaviour
             {
                 if (Vector3.Distance(nearest.collider.bounds.center, rb.position) <= maxDistanceToEnableAutoaimBounce)
                 {
-                    CastProjectile((nearest.collider.bounds.center - rb.position).normalized);
+                    var bounceDirection = (nearest.collider.bounds.center - rb.position).normalized;
+                    CastProjectile(bounceDirection);
                     PostBounce();
-                    knifeRicocheted.Invoke();
+                    knifeRicocheted.Invoke(bounceDirection);
                     return true;
                 }
             }

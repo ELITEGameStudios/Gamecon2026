@@ -11,7 +11,6 @@ public class DashState : PlayerMovementState
 
     float tweenTracker = 0.0f;
 
-
     InputActionReference dashButton;
     WindManager windManager;
     public Vector3 dashVelocity;

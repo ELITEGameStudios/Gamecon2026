@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class RicochetShockwave : MonoBehaviour
+public class RicochetVFX : MonoBehaviour
 {
     [SerializeField] Projectile knife;
     [SerializeField] VisualEffect sparksVFX;
@@ -10,9 +10,9 @@ public class RicochetShockwave : MonoBehaviour
         knife.knifeRicocheted.AddListener(OnKnifeBounced);
         sparksVFX.transform.SetParent(null);
     }
-    void OnKnifeBounced()
+    void OnKnifeBounced(Vector3 dir)
     {
-        sparksVFX.transform.position = knife.transform.position;
+        sparksVFX.transform.SetPositionAndRotation(knife.transform.position, Quaternion.LookRotation(knife.transform.forward));
         sparksVFX.Play();
     }
 }

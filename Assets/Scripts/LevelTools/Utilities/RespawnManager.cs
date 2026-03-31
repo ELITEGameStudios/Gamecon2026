@@ -78,7 +78,8 @@ public class RespawnManager : MonoBehaviour
 
     private Transform GetRespawnLocation(Vector3 worldPos)
     {
-        if(respawnPoints.Length == 0){return respawnPoint;}
+        if (respawnPoints == null) return respawnPoint;
+        if (respawnPoints.Length == 0){return respawnPoint;}
         int winningIndex = 0;
         float winningDist = Vector3.Distance(worldPos, respawnPoints[0].position);
         for (int i = 1; i < respawnPoints.Length; i++)
