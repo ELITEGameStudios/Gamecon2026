@@ -8,52 +8,54 @@ public class DashState : PlayerMovementState
     [SerializeField] float FOVIncrease = 10;
     [SerializeField] float FOVTweenDuration = 0.1f;
     [SerializeField] Camera FPSCamera;
+    [SerializeField] float empoweredDashDuration = 0.2f;
+    [SerializeField] float dashCooldown = 1.5f;
 
     float tweenTracker = 0.0f;
 
 
     InputActionReference dashButton;
-    WindManager windManager;
-    public Vector3 dashVelocity;
+    public float dashVelocity;
     public float dashTime;
     public float additiveForceThreshold = 75;
-    public float currentDashTimer;
+    public float elapsedDashTime;
     public float dashPower = 5;
     public float minimumAdditiveVelocity = 7;
     public AnimationCurve dashPowerOverSpeed;
     public bool additive, canAirJump;
 
-
-
-    bool empowered = false;
-    float initialSpeedWhenEmpowered;
+    
 
     float baseFOV = 0;
 
+    public float CooldownTracker { get; private set; }
     public DashState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
     {
         name = "Dash State";
     }
 
-    public void Initialize(InputActionReference button, WindManager wind)
+    public void Initialize(InputActionReference button)
     {
         dashButton = button;
-        windManager = wind;
         baseFOV = FPSCamera.fieldOfView;
     }
 
     public override void OnReset()
     {
         base.OnReset();
-        currentDashTimer = dashTime;
+        elapsedDashTime = 0;
     }
 
     public override void Start()
     {
-        empowered = false;
+        if (CooldownTracker > 0)
+        { 
+            End(true); 
+            return; 
+        }
         movement.hasDash = false;
-        currentDashTimer = dashTime;
-    //    Debug.Log("Started dash");
+        elapsedDashTime = 0;
+        //    Debug.Log("Started dash");
         SetDashVelocity();
 
         movement.playerDash.start();
@@ -61,6 +63,8 @@ public class DashState : PlayerMovementState
         tweenTracker = 0;
     }
 
+
+   
     private void SetDashVelocity()
     {
 
@@ -81,22 +85,8 @@ public class DashState : PlayerMovementState
         float angle = Vector2.Angle(currentVelocity, movementVector);
         additive = angle < additiveForceThreshold && currentVelocity.magnitude > minimumAdditiveVelocity;
 
-        if (!empowered)
-        {
-            dashVelocity = new Vector3(
-                movementVector.x,
-                0,
-                movementVector.y
-            ) * (dashPower * dashPowerOverSpeed.Evaluate(currentVelocity.magnitude) + (additive ? currentVelocity.magnitude : 0));
-        }
-        else
-        {
-            dashVelocity =
-               movement.headTf.transform.forward
-            * (dashPower * dashPowerOverSpeed.Evaluate(currentVelocity.magnitude) + initialSpeedWhenEmpowered);
-        }
-
-        // Debug.Log(dashPowerOverSpeed.Evaluate(currentVelocity.magnitude));
+        dashVelocity = (dashPower * dashPowerOverSpeed.Evaluate(currentVelocity.magnitude) + (additive ? currentVelocity.magnitude : 0));
+        
         PlayerVFXManager.instance.DashEffect(input);
     }
     public override void Update()
@@ -112,24 +102,18 @@ public class DashState : PlayerMovementState
     {
         movement.CalculateLookRotation();
 
-        rigidbody.linearVelocity = dashVelocity;
-        currentDashTimer -= Time.deltaTime;
+        rigidbody.linearVelocity = dashVelocity * movement.headTf.transform.forward;
 
-        if (currentDashTimer > 0) { currentDashTimer -= Time.fixedDeltaTime; }
-        else
+        if (elapsedDashTime < dashTime)
         {
-            if (windManager.CurrentWind > 0 && dashButton.action.IsPressed())
-            {
-                EmpowerDash();
-            }
-            else
-            {
-                End();
-            }
+            elapsedDashTime += Time.fixedDeltaTime;
         }
-        EmpowerLogic();
+        if (elapsedDashTime >= dashTime || !dashButton.action.IsPressed())
+        {
+            CooldownTracker = dashCooldown;
+            End();
+        }
     }
-
     public override void InactiveUpdate()
     {
         if (tweenTracker < FOVTweenDuration)
@@ -137,24 +121,10 @@ public class DashState : PlayerMovementState
             tweenTracker += Time.deltaTime;
             FPSCamera.fieldOfView = Mathf.Lerp(FOVIncrease + baseFOV, baseFOV, tweenTracker / FOVTweenDuration);
         }
+        CooldownTracker -= Time.deltaTime;
     }
-    void EmpowerLogic()
-    {
-        if (!empowered) return;
-        windManager.CurrentWind -= (empoweredDashDrainRate * Time.fixedDeltaTime);
-        if (windManager.CurrentWind <= 0.001f || !dashButton.action.IsPressed())
-        {
-            End();
-        }
-        SetDashVelocity();
-    }
-    void EmpowerDash()
-    {
-        if (empowered) return;
-        empowered = true;
-        windManager.pauseWindGeneration = true;
-        initialSpeedWhenEmpowered = rigidbody.linearVelocity.magnitude;
-    }
+
+
     public override void Jump()
     {
         if(canAirJump || movement.CheckGrounded())
@@ -167,7 +137,6 @@ public class DashState : PlayerMovementState
     public override void End(bool interrupted = false)
     {
         base.End(interrupted);
-        windManager.pauseWindGeneration = false;
         tweenTracker = 0;
     }
 }

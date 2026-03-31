@@ -17,8 +17,6 @@ public class ProjectileAbilities : MonoBehaviour
     [HideInInspector] public UnityEvent recallStarted = new();
 
 
-    [SerializeField] WindManager windManager;
-
     [Header("References")]
     [SerializeField] private Projectile featherKnife;
     [SerializeField] private Transform projectileFirePoint;
@@ -59,7 +57,7 @@ public class ProjectileAbilities : MonoBehaviour
     public float blinkCooldownTime;
     public float blinkEffectTime = 0.33f;
     public float currentBlinkTimer;
-    public bool canBlink => windManager.HasEnoughWindForBlink() && featherKnife.currentState != Projectile.ProjectileState.Idle && featherKnife.currentState != Projectile.ProjectileState.Recalling;
+    public bool canBlink => currentBlinkTimer <= 0.0f && featherKnife.currentState != Projectile.ProjectileState.Idle && featherKnife.currentState != Projectile.ProjectileState.Recalling;
 
     public PlayerVFXManager playerVFXManager;
 
@@ -162,7 +160,7 @@ public class ProjectileAbilities : MonoBehaviour
 
     private void OnRecallPressed(InputAction.CallbackContext ctx)
     {
-       if (featherKnife.currentState == Projectile.ProjectileState.Idle){return;}
+       if (featherKnife.currentState == Projectile.ProjectileState.Idle || currentRecallCooldown > 0.0f){return;}
         else
         {
             ParryActive = false;
@@ -185,6 +183,8 @@ public class ProjectileAbilities : MonoBehaviour
             {
                 playerMovement.parryTutorialEvent.TryActivate();
             }
+
+            currentRecallCooldown = recallCooldown;
         }
     }
     
@@ -238,7 +238,6 @@ public class ProjectileAbilities : MonoBehaviour
         if (cam == null) 
             return;
 
-        featherKnife.BouncesRemaining = featherKnife.MaxBounces;
         HUDManager.Instance.TriggerShootPrompt();
         
         Shoot(parry);
@@ -292,7 +291,6 @@ public class ProjectileAbilities : MonoBehaviour
             parrySFX.start();
             HUDManager.Instance.recallElement.Parry();
             featherKnife.OnParry();
-            playerMovement.hasDash = true;
         }
         else
         {

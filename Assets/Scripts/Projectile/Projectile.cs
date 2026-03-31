@@ -1,28 +1,17 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.ProBuilder;
-using UnityEngine.ProBuilder.MeshOperations;
 
 [RequireComponent(typeof(Collider))]
 public class Projectile : MonoBehaviour
 {
 
-     string[] unallowedObjectsToBounceOff = {
-        "SoftTerrain",
-        "Enemy"
-    };
-
     [HideInInspector] public UnityEvent<KnifeCollisionInfo> enemyStruck = new();
     [HideInInspector] public UnityEvent<KnifeCollisionInfo> terrainStruck = new();
     [HideInInspector] public UnityEvent<KnifeRetrievalInfo> knifeRetrieved = new();
     [HideInInspector] public UnityEvent<ProjectileState> stateChanged = new();
-    [HideInInspector] public UnityEvent knifeRicocheted = new();
    
-    /// <summary>
-    /// Float parameter is distance travelled.
-    /// </summary>
+
 
     public enum ProjectileState {Idle, Flying, Embedded, Recalling}//, PickedUp}
     public ProjectileState currentState { get; private set; } = ProjectileState.Idle;
@@ -69,7 +58,6 @@ public class Projectile : MonoBehaviour
     [SerializeField] private Collider thisCol;
     [SerializeField] private Transform centerTf;
     
-
     [Header("Blink Data")]
     public List<SpaceSample> spaceRecordingData;
     public int maxRecordingSlots;
@@ -77,17 +65,8 @@ public class Projectile : MonoBehaviour
     public List<Collider> triggerList;
     public bool inTriggerCollision =>  triggerList == null || triggerList.Count != 0;
 
-    [Header("Ricochet Data")]
-    [SerializeField] int maxBounces = 1;
-    [SerializeField] float maxDistanceToEnableAutoaimBounce = 7.0f;
-
-    public int BouncesRemaining { set; get; }
-    public int MaxBounces { private set => maxBounces = value; get => maxBounces; }
     [Header("Wind Data")]
     [SerializeField] AnimationCurve windToRecallSpeed;
-
-    
-    [SerializeField] WindManager windManager;
     public struct SpaceSample
     {
         public Vector3 position, direction, velocity;
@@ -100,14 +79,8 @@ public class Projectile : MonoBehaviour
     // [SerializeField] private Animator animator;
     private Transform embedParent;
 
-
-
     float timeElaspedWithoutKnife = 0.0f;
 
-    List<EnemyType> enemiesToNotBounceTowards = new()
-    {
-        EnemyType.Banshee
-    };
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -296,11 +269,11 @@ public class Projectile : MonoBehaviour
         // Get curve-based speed multiplier
         float speedMultiplier = recallAnimationCurve.Evaluate(recallProgress);
 
-        // Get wind-based speed multiplier
-        float windMultiplier = windToRecallSpeed.Evaluate(windManager.GetWindAsPercent());
-    
+        // Calculate distance-based boost
+        float distanceBoost = CalculateDistanceBoost(currentDistance);
+
         // Combine both multipliers
-        float currentSpeed = (baseRecallSpeed * speedMultiplier) * windMultiplier;
+        float currentSpeed = (baseRecallSpeed * speedMultiplier) * distanceBoost;
     
         transform.position = Vector3.MoveTowards(transform.position, initProjectilePosition.position, currentSpeed * Time.deltaTime);
     
@@ -377,11 +350,9 @@ public class Projectile : MonoBehaviour
 
     public void SetEmbeddedPos(){
         embeddedPos = transform.position;
-        blinkSample = spaceRecordingData[spaceRecordingData.Count - 1];
+       // blinkSample = spaceRecordingData[spaceRecordingData.Count - 1];
     }
 
-
-    
     public void CastProjectile(Vector3 direction)
     {
         transform.SetParent(null);
@@ -424,7 +395,6 @@ public class Projectile : MonoBehaviour
         col.enabled = false;
         gameObject.SetActive(false);
 
-        
         // Instantly return to hand + idle state
         transform.SetParent(heldParent);
         transform.localPosition = Vector3.up * -0.65f;
@@ -493,16 +463,9 @@ public class Projectile : MonoBehaviour
             projectileAbilities.ResetRecallCooldown();
         }
         
-        if (!AttemptEnemyAutoaimBounce(normal))
-        { 
-           if (!projectileAbilities.ParryActive) EmbedKnife(); 
-        }
+        if (!projectileAbilities.ParryActive) EmbedKnife(); 
         
-       
-        windManager.RestoreWindOnKill();
-        playerMovement.hasDash = true;
         ReportCollision(hitEnemy: true, normal, "Enemy");
-        
     }        
     void EmbedKnife()
     {
@@ -512,47 +475,9 @@ public class Projectile : MonoBehaviour
         }
         Vector3 travelDirection = rb.linearVelocity.normalized;
 
-
         transform.position += travelDirection * (embedDepth * 0.1f);
 
         SetState(ProjectileState.Embedded);
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="normal"></param>
-    /// <returns>Whether or not the bounce was successful.</returns>
-    bool AttemptEnemyAutoaimBounce(Vector3 normal)
-    {
-        if (BouncesRemaining <= 0 || currentState != ProjectileState.Flying || projectileAbilities.ParryActive) return false;
-        if (windManager.HasEnoughWindForRicochet())
-        {
-            var nearest = GameManager.Instance.entityManager.GetClosestEnemyToPosition(rb.position, enemiesToNotBounceTowards);
-            if (nearest != null)
-            {
-                if (Vector3.Distance(nearest.collider.bounds.center, rb.position) <= maxDistanceToEnableAutoaimBounce)
-                {
-                    CastProjectile((nearest.collider.bounds.center - rb.position).normalized);
-                    PostBounce();
-                    knifeRicocheted.Invoke();
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="normal"></param>
-    /// <param name="objTag"></param>
-    /// <returns>Whether or not the bounce was successful.</returns>
-    /// 
-
-    void PostBounce()
-    {
-        BouncesRemaining--;
-        rb.angularVelocity = Vector3.zero;
     }
 
     void OnCollisionEnter(Collision collision) //needs fixing. embedding doesn't work properly
@@ -564,21 +489,7 @@ public class Projectile : MonoBehaviour
         string objTag = collision.gameObject.tag;
         ReportCollision(false, normal, objTag);
 
-        bool viableTagForBounce = true;
-        for (int i = 0; i < unallowedObjectsToBounceOff.Length; i++)
-        {
-            if (objTag == unallowedObjectsToBounceOff[i])
-            {
-                viableTagForBounce = false;
-                break;
-            }
-        }
-        if ( !viableTagForBounce || !AttemptEnemyAutoaimBounce(normal))
-        {
-             EmbedKnife();
-        }
-        
-
+        EmbedKnife();
     }
 }
 public struct KnifeCollisionInfo
