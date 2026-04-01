@@ -154,4 +154,5 @@ Hybrid was rejected for the following reasons:
 As a result, it would be better for an either or system. Wind is better than cooldowns for the goals listed in the design document, but a good cooldown system is better than a hybrid compromise.
 
 
-
+Other Links:
+Homing vs Ricochet In Depth Analysis: https://docs.google.com/document/d/1_d2uI1dtKb79ttrd8frjCOlz895vvlAwnMbIE5meyms/edit?tab=t.0 
