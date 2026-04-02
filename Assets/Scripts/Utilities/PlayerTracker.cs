@@ -24,14 +24,19 @@ public class PlayerTracker : MonoBehaviour
     float totalBlinkDistance = 0;
 
     int windSampleTracker = WIND_SAMPLE_RATE;
+
+    /// <summary>
+    /// True means the kill was assisted by ricochet.
+    /// </summary>
+    List<bool> assistedKills = new();
     public void Start()
     {
 
         windManager = FindFirstObjectByType<WindManager>();
         trackerData = new();
         playerRb = player.GetComponent<Rigidbody>();
-        knife.enemyStruck.AddListener((data) => OnKnifeCollision(true));
-        knife.terrainStruck.AddListener((data) => OnKnifeCollision(false));
+        knife.enemyStruck.AddListener(OnKnifeCollision);
+        knife.terrainStruck.AddListener(OnKnifeCollision);
         knife.projectileAbilities.attemptedParry.AddListener(OnKnifeParryAttempt);
         knife.knifeRetrieved.AddListener(OnKnifeRetrieved);
         knife.projectileAbilities.dashPerformed.AddListener(OnDashPerformed);
@@ -75,13 +80,15 @@ public class PlayerTracker : MonoBehaviour
         }
     }
 
-    public void OnKnifeCollision(bool hitEnemy)
+    public void OnKnifeCollision(KnifeCollisionInfo info)
     {
         trackerData.knifeCollisionCounts++;
-        if (hitEnemy)
+        if (info.struckEnemy)
         {
             trackerData.knifeHitCount++;
             velocitiesWhileShooting.Add(playerRb.linearVelocity);
+            assistedKills.Add(knife.RicochetActive);
+            Debug.Log("Ricoballs active == " + knife.RicochetActive);
         }
     }
 
@@ -101,7 +108,6 @@ public class PlayerTracker : MonoBehaviour
             windSamples.Add(windManager.CurrentWind);
         }
     }
-
     public float GetAverageSpeedWhileFiring()
     {
         Vector3 sum = Vector3.zero;
@@ -140,6 +146,18 @@ public class PlayerTracker : MonoBehaviour
         return accuracy * 100;
     }
 
+    public float GetAssistedKillPercentage()
+    {
+        int assistedKillCount = 0;
+        for (int i = 0; i < assistedKills.Count; i++)
+        {
+            if (assistedKills[i]) assistedKillCount++;
+        }
+        var percentage = (float)assistedKillCount / trackerData.knifeHitCount;
+        if (float.IsNaN(percentage)) percentage = 0;
+        return percentage * 100;
+    }
+
     public float GetAverageKnifeReclaimTime()
     {
         float sum = 0;
@@ -171,7 +189,8 @@ public class PlayerTracker : MonoBehaviour
         trackerData.beatGame = true;
         trackerData.avgBlinkDistance = GetAverageBlinkDistance();
         trackerData.avgWindPercent = GetAverageWind();
-       
+        trackerData.avgAssistedKills = GetAssistedKillPercentage();
+
         int numberOfSaves = saveSystem.GetNumberOfFilesInDirectory(TrackerService.GetDataFolderPathForLevel(gameManager.CurrentLevel));
         //number of files returns -1 as a fallback in case there's no directory present
         //but that's fine because we're not accessing data in the directory, we're just adding some
@@ -195,6 +214,7 @@ public struct TrackerData
     //Accuracy 
     public int knifeCollisionCounts;
     public int knifeHitCount;
+    public float avgAssistedKills;
     //Parrying
     public int parryAttempts;
     public int successfulParries;
