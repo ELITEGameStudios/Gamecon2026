@@ -40,13 +40,14 @@ public class ProjectileContactModifier : ProjectileModifier
     }
     public void OnProjectileFired(EnemyProjectile projectile)
     {
-        ResetIgnoredColliders();
+        ResetContactModifiers();
     }
 
-    public void ResetIgnoredColliders()
+    public void ResetContactModifiers()
     {
         ignoredColliders.Clear();
         ignoredColliders.Add(projectile.enemy.GetComponent<Collider>());
+        hitsRemaining = numberOfHits;
     }
     public void CheckForContact()
     {
