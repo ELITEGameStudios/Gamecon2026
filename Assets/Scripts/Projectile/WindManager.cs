@@ -122,8 +122,7 @@ public class WindManager : MonoBehaviour
 
         if (tattooMaterial != null)
         {
-            var newColor = Color.Lerp(minWindTattooColor, maxWindTattooColor, colorTransitionCurve.Evaluate(windAsPercent));
-            runtimeTattooMaterial.SetColor("_EmissionColor", newColor);
+            runtimeTattooMaterial.SetFloat("_windPercentage", windAsPercent);
         }
     }
 

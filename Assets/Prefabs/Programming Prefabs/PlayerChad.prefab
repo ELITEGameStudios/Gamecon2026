@@ -3356,21 +3356,21 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.005
-      inSlope: 2.3699625
-      outSlope: 2.3699625
+      value: 0
+      inSlope: 2.8087764
+      outSlope: 2.8087764
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.015515538
+      outWeight: 0.04333334
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0.14349414
-      outSlope: 0.14349414
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.18999994
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -3379,7 +3379,7 @@ MonoBehaviour:
   speedDisplay: {fileID: 0}
   minSpeedForWind: 5
   maxSpeedForWind: 105
-  speedToWindRatio: 9.75
+  speedToWindRatio: 4.25
   tattooMaterial: {fileID: 2100000, guid: df43ef19029af974f9d711b4d4a941e5, type: 2}
   windWraps: {fileID: 727402662580572196}
   maxWindWraps: 20
@@ -4123,36 +4123,69 @@ MonoBehaviour:
     jumpPower: 18
     movement: {fileID: 3750233208252415097}
     windManager: {fileID: 8509023973921303564}
+    dragOverTime:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 5
+        value: 1
+        inSlope: -0.0042854063
+        outSlope: -0.0042854063
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.16860187
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 10
+        value: 0
+        inSlope: 0.015255006
+        outSlope: 0.015255006
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.32713318
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     wallRunMinSpeed: 12
     currentWallRunSpeed: 0
     wallRunMaxDist: 0.8
     jumpXStrength: 0.2
-    jumpYStrength: 0.375
+    jumpYStrength: 0.6
     jumpZStrength: 0.425
     raycastForwardCheckDist: 0
     barrierCheckDepth: 0.4
     maxTransitionAngle: 65
-    wallRunAdditiveSpeed: 5.5
+    wallRunAdditiveSpeed: 6
     wallRunAdditiveForceOverSpeed:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
         value: 1
-        inSlope: -0.00003372175
-        outSlope: -0.00003372175
+        inSlope: 0
+        outSlope: 0
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
-        outWeight: 0.21228899
+        outWeight: 0
       - serializedVersion: 3
         time: 100
         value: 0
-        inSlope: -0.0022391307
-        outSlope: -0.0022391307
+        inSlope: -0.01178939
+        outSlope: -0.01178939
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.10111474
+        inWeight: 0.093333356
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -16719,11 +16752,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[0].value
-      value: 0.8
+      value: 0.55
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[1].value
-      value: 1.25
+      value: 2.25
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToSpeed.m_Curve.Array.data[0].tangentMode
@@ -16735,15 +16768,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[0].inSlope
-      value: 0.45
+      value: 1.7
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[1].inSlope
-      value: 0.45
+      value: 1.7
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[0].outSlope
-      value: 0.45
+      value: 1.7
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[1].inWeight
@@ -16751,7 +16784,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[1].outSlope
-      value: 0.45
+      value: 1.7
       objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: windToRecallSpeed.m_Curve.Array.data[0].outWeight

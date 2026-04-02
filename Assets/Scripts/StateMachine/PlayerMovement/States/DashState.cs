@@ -28,7 +28,7 @@ public class DashState : PlayerMovementState
     float initialSpeedWhenEmpowered;
 
     float baseFOV = 0;
-
+    float baseDrag = 0.0f;
     public DashState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
     {
         name = "Dash State";
@@ -39,6 +39,7 @@ public class DashState : PlayerMovementState
         dashButton = button;
         windManager = wind;
         baseFOV = FPSCamera.fieldOfView;
+        baseDrag = movement.rigidbody.linearDamping;
     }
 
     public override void OnReset()
@@ -58,6 +59,7 @@ public class DashState : PlayerMovementState
         movement.playerDash.start();
         HUDManager.Instance.dashElement.Activate();
         tweenTracker = 0;
+        movement.rigidbody.linearDamping = 0;   
     }
 
     private void SetDashVelocity()
@@ -168,5 +170,6 @@ public class DashState : PlayerMovementState
         base.End(interrupted);
         windManager.pauseWindGeneration = false;
         tweenTracker = 0;
+        movement.rigidbody.linearDamping = baseDrag;
     }
 }

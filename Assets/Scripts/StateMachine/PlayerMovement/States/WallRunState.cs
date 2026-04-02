@@ -5,6 +5,7 @@ public class WallRunState : PlayerMovementState
 {
     [SerializeField] WindManager windManager;
     [Header("Wallrun Parameters")]
+    [SerializeField] AnimationCurve dragOverTime;
     public float wallRunMinSpeed;
     public float currentWallRunSpeed;
     public float wallRunMaxDist;
@@ -39,19 +40,25 @@ public class WallRunState : PlayerMovementState
     float currentWallRunSleepTimer;
     public bool canWallRun => currentWallRunSleepTimer <= 0;// && movement.currentVelocity >= wallRunMinSpeed;
 
+    float baseDrag;
 
+    float elaspedWallrunTIme = 0;
+
+    float startingSpeed;
     public WallRunState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
     {
         name = "Wall Running";
+        baseDrag = rigidbody.linearDamping;
     }
 
     public override void Start()
     {
+        elaspedWallrunTIme = 0;
         movement.hasDash = true;
         movement.OnStopWalking();
         // Vector3 closestPoint = storedCollision.collider.ClosestPoint(transform.position);
         // Vector3 raycastDir = (closestPoint - transform.position).normalized;
-        
+
         movement.armAnimator.SetBool("OnWall", true);   
         movement.armAnimator.SetBool("IsRight", isRight);   
 
@@ -71,9 +78,10 @@ public class WallRunState : PlayerMovementState
 
 
             float currentSpeed = movement.current2DVelocity;
-            if(currentSpeed < wallRunMinSpeed){currentWallRunSpeed = wallRunMinSpeed; return;} // Sets to the min wall run speed if your speed is slower. (May be obselete since wall run might reqire you tp be this speed)
+            if(currentSpeed < wallRunMinSpeed){currentSpeed = wallRunMinSpeed; return;} // Sets to the min wall run speed if your speed is slower. (May be obselete since wall run might reqire you tp be this speed)
             
             currentWallRunSpeed = currentSpeed;
+            startingSpeed = currentSpeed;
 
 
             // (Legacy) Speed will be between the current speed and the minimum wall run speed, determined by the angle of your entry velocity and the wall's run direction
@@ -83,7 +91,6 @@ public class WallRunState : PlayerMovementState
             // )/ Time.fixedDeltaTime;
         }
     }
-
     public override void FixedUpdate()
     {
 
@@ -143,11 +150,11 @@ public class WallRunState : PlayerMovementState
             Vector3 hitPoint = hitInfo.point;
 
             if(Vector3.Distance(transform.position, hitPoint) > wallRunMaxDist) { transform.position = hitPoint + hitInfo.normal * movement.bodyRadius; } //This is causing a bug where the player moves abnormally fast when facing away from the wall at a certain angle. Meant to be a way to ensure the player is confined to be against the wall
-            
+
 
             // if(Vector3.Distance(transform.position, hitPoint) > wallRunMaxDist) { transform.position = hitPoint + hitInfo.normal * movement.bodyRadius; } This was causing a bug where the player moves abnormally fast when facing away from the wall at a certain angle. Meant to be a way to ensure the player is confined to be against the wall
-            rigidbody.linearVelocity =
-            wallRunDirection * currentWallRunSpeed;
+            currentWallRunSpeed = startingSpeed * dragOverTime.Evaluate(elaspedWallrunTIme);
+            rigidbody.linearVelocity = wallRunDirection * currentWallRunSpeed;
             Debug.DrawRay(hitInfo.point, hitInfo.normal);
             Debug.Log("Wallrun was fine");
             
@@ -159,6 +166,11 @@ public class WallRunState : PlayerMovementState
         }
         
         movement.CalculateLookRotation();
+        elaspedWallrunTIme += Time.fixedDeltaTime;
+        if (movement.current2DVelocity + 0.01f < wallRunMinSpeed)
+        {
+            movement.SetState(movement.airborneState);
+        }
     }
 
     public override void InactiveUpdate()
@@ -191,6 +203,8 @@ public class WallRunState : PlayerMovementState
 
         Debug.Log("Velocity after jump: " + lateralMovement);
         movement.SetState(movement.airborneState);
+
+
     }
 
     public void StartWallrunCooldown()
@@ -204,5 +218,6 @@ public class WallRunState : PlayerMovementState
         movement.armAnimator.SetBool("OnWall", false);
         StartWallrunCooldown();
         base.End(interrupted);
+        rigidbody.linearDamping = baseDrag;
     }
 }
