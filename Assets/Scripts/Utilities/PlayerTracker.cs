@@ -8,7 +8,6 @@ public class PlayerTracker : MonoBehaviour
     [SerializeField] Player player;
     [SerializeField] Projectile knife;
     [SerializeField] GameManager gameManager;
-    [SerializeField] WindManager windManager;
     [HideInInspector] public TrackerData trackerData;
     Rigidbody playerRb;
 
@@ -23,11 +22,9 @@ public class PlayerTracker : MonoBehaviour
 
     float totalBlinkDistance = 0;
 
-    int windSampleTracker = WIND_SAMPLE_RATE;
     public void Start()
     {
 
-        windManager = FindFirstObjectByType<WindManager>();
         trackerData = new();
         playerRb = player.GetComponent<Rigidbody>();
         knife.enemyStruck.AddListener((data) => OnKnifeCollision(true));
@@ -92,15 +89,6 @@ public class PlayerTracker : MonoBehaviour
         elapsedMissingKnifeTime += delta;
     }
 
-    private void FixedUpdate()
-    {
-        windSampleTracker--;
-        if (windSampleTracker <= 0)
-        {
-            windSampleTracker = WIND_SAMPLE_RATE;
-            windSamples.Add(windManager.CurrentWind);
-        }
-    }
 
     public float GetAverageSpeedWhileFiring()
     {
@@ -170,7 +158,6 @@ public class PlayerTracker : MonoBehaviour
     {
         trackerData.beatGame = true;
         trackerData.avgBlinkDistance = GetAverageBlinkDistance();
-        trackerData.avgWindPercent = GetAverageWind();
        
         int numberOfSaves = saveSystem.GetNumberOfFilesInDirectory(TrackerService.GetDataFolderPathForLevel(gameManager.CurrentLevel));
         //number of files returns -1 as a fallback in case there's no directory present
@@ -191,7 +178,6 @@ public struct TrackerData
     //Movement
     public int dashTracker;
     public float avgBlinkDistance;
-    public float avgWindPercent;
     //Accuracy 
     public int knifeCollisionCounts;
     public int knifeHitCount;

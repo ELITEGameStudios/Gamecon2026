@@ -1427,129 +1427,6 @@ Transform:
   - {fileID: 706555448153270950}
   m_Father: {fileID: 8350536988814303255}
   m_LocalEulerAnglesHint: {x: -0.000040696505, y: -4.2209353, z: -0.000010008197}
---- !u!1 &2151498008602018620
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8874615707296479949}
-  - component: {fileID: 1142032834232194283}
-  - component: {fileID: 7103821021066546521}
-  m_Layer: 0
-  m_Name: RicochetSparksVFX
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8874615707296479949
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2151498008602018620}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8692358492245253041}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!2083052967 &1142032834232194283
-VisualEffect:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2151498008602018620}
-  m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 762d515dc326f8b4bb1a37e951c87d37, type: 3}
-  m_InitialEventName: OnPlay
-  m_InitialEventNameOverriden: 0
-  m_StartSeed: 0
-  m_ResetSeedOnPlay: 1
-  m_AllowInstancing: 1
-  m_ResourceVersion: 1
-  m_PropertySheet:
-    m_Float:
-      m_Array:
-      - m_Value: 30
-        m_Name: Scale
-        m_Overridden: 1
-    m_Vector2f:
-      m_Array:
-      - m_Value: {x: 12.5, y: 15}
-        m_Name: SpeedRange
-        m_Overridden: 1
-      - m_Value: {x: 0.5, y: 0.7}
-        m_Name: Lifetime
-        m_Overridden: 1
-    m_Vector3f:
-      m_Array: []
-    m_Vector4f:
-      m_Array: []
-    m_Uint:
-      m_Array: []
-    m_Int:
-      m_Array: []
-    m_Matrix4x4f:
-      m_Array: []
-    m_AnimationCurve:
-      m_Array: []
-    m_Gradient:
-      m_Array: []
-    m_NamedObject:
-      m_Array: []
-    m_Bool:
-      m_Array: []
---- !u!73398921 &7103821021066546521
-VFXRenderer:
-  serializedVersion: 1
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2151498008602018620}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 0
-  m_LightProbeUsage: 0
-  m_ReflectionProbeUsage: 0
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
 --- !u!1 &2367802602154527386
 GameObject:
   m_ObjectHideFlags: 0
@@ -3089,53 +2966,6 @@ Transform:
   - {fileID: 4376389634593791874}
   m_Father: {fileID: 2692687621091088703}
   m_LocalEulerAnglesHint: {x: 4.574814, y: -2.204962, z: -12.14275}
---- !u!1 &4587565805199258103
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8692358492245253041}
-  - component: {fileID: 1306132702286524499}
-  m_Layer: 0
-  m_Name: RicochetVFXManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8692358492245253041
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4587565805199258103}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8874615707296479949}
-  m_Father: {fileID: 4835047968788394056}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1306132702286524499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4587565805199258103}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cbc8ff45bad0ad4aaad547f0a3d1d14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  knife: {fileID: 6373491937540632380}
-  sparksVFX: {fileID: 1142032834232194283}
 --- !u!1 &4728104731013250835
 GameObject:
   m_ObjectHideFlags: 0
@@ -3294,115 +3124,6 @@ Transform:
   - {fileID: 353629803868299538}
   m_Father: {fileID: 3930401326771625176}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4874722032866654334
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4743954226515735996}
-  - component: {fileID: 8509023973921303564}
-  m_Layer: 0
-  m_Name: WindManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4743954226515735996
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4874722032866654334}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.24826743, z: 0, w: 0.9686915}
-  m_LocalPosition: {x: 836.0601, y: 527.9923, z: 473.77863}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6450713759936305123}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8509023973921303564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4874722032866654334}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a46d112506ae2a947a28f96af80a8d6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 4860485282995713151}
-  playerRB: {fileID: 5386588365858552040}
-  knife: {fileID: 6373491937540632380}
-  speedToWind:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  windDisplay: {fileID: 0}
-  speedDisplay: {fileID: 0}
-  minSpeedForWind: 5
-  maxSpeedForWind: 525
-  speedToWindRatio: 105
-  tattooMaterial: {fileID: 2100000, guid: df43ef19029af974f9d711b4d4a941e5, type: 2}
-  windWraps: {fileID: 727402662580572196}
-  maxWindWraps: 20
-  baseWindColor: {r: 0.36366722, g: 0.48558807, b: 0.43722647, a: 1}
-  maxWindColor: {r: 0.3254902, g: 0.7137255, b: 0.7490196, a: 1}
-  minWindTattooColor: {r: 0.01132071, g: 0.01132071, b: 0.01132071, a: 1}
-  maxWindTattooColor: {r: 47.93727, g: 47.93727, b: 47.93727, a: 1}
-  leftArm: {fileID: 6358512309231767231}
-  colorTransitionCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 3.2929122
-      outSlope: 3.2929122
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.03666663
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  pauseWindGeneration: 0
 --- !u!1 &5037416986507544548
 GameObject:
   m_ObjectHideFlags: 0
@@ -3926,7 +3647,6 @@ Transform:
   - {fileID: 1771104289695820870}
   - {fileID: 369942441406092580}
   - {fileID: 4835047968788394056}
-  - {fileID: 4743954226515735996}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 61.047, z: 0}
 --- !u!33 &986350710990813882
@@ -4068,7 +3788,6 @@ MonoBehaviour:
   transform: {fileID: 6450713759936305123}
   rigidbody: {fileID: 5386588365858552040}
   animator: {fileID: 0}
-  windManager: {fileID: 8509023973921303564}
   baseSpeed: 6
   clampedRotationY: 85
   movingConsiderationDeadzone: 0.1
@@ -4113,7 +3832,7 @@ MonoBehaviour:
     started: 0
     jumpPower: 18
     movement: {fileID: 3750233208252415097}
-    windManager: {fileID: 8509023973921303564}
+    windManager: {fileID: 0}
     wallRunMinSpeed: 12
     currentWallRunSpeed: 0
     wallRunMaxDist: 0.8
@@ -4193,10 +3912,12 @@ MonoBehaviour:
     FOVIncrease: 12.5
     FOVTweenDuration: 0.1
     FPSCamera: {fileID: 6280549147774990832}
-    dashVelocity: {x: 0, y: 0, z: 0}
-    dashTime: 0.5
+    empoweredDashDuration: 0
+    dashCooldown: 1.75
+    dashVelocity: 0
+    dashTime: 0.4
     additiveForceThreshold: 100
-    currentDashTimer: 0
+    elapsedDashTime: 0
     dashPower: 5
     minimumAdditiveVelocity: 0
     dashPowerOverSpeed:
@@ -4270,7 +3991,6 @@ MonoBehaviour:
   recallStarted:
     m_PersistentCalls:
       m_Calls: []
-  windManager: {fileID: 8509023973921303564}
   featherKnife: {fileID: 6373491937540632380}
   projectileFirePoint: {fileID: 6713920502105754854}
   playerMovement: {fileID: 3750233208252415097}
@@ -4278,7 +3998,7 @@ MonoBehaviour:
   camShaker: {fileID: 6051217451859815980}
   parryTiming: 0.3
   recallCooldown: 4
-  currentRecallCooldown: 0
+  currentRecallCooldown: 4
   parryForce: 15
   hitStopTime: 0.1
   minParryWindow: 15
@@ -4342,7 +4062,7 @@ MonoBehaviour:
   fireAction: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   recallAction: {fileID: 4056342282253358456, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   blinkAction: {fileID: 1038071111951610058, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  blinkCooldownTime: 0
+  blinkCooldownTime: 6
   blinkEffectTime: 0.33
   currentBlinkTimer: 0
   playerVFXManager: {fileID: 4665424704562357672}
@@ -4905,7 +4625,6 @@ Transform:
   m_Children:
   - {fileID: 9207512195341191026}
   - {fileID: 6607654758663032036}
-  - {fileID: 8692358492245253041}
   m_Father: {fileID: 6450713759936305123}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6257914512402226488
@@ -16604,6 +16323,10 @@ PrefabInstance:
       propertyPath: throwTrailEffect
       value: 
       objectReference: {fileID: 5548407660501776204}
+    - target: {fileID: 8528103503705562027, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
+      propertyPath: impactDecals.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: mainCam
       value: 
@@ -16620,10 +16343,6 @@ PrefabInstance:
       propertyPath: heldParent
       value: 
       objectReference: {fileID: 3129694957227849627}
-    - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
-      propertyPath: windManager
-      value: 
-      objectReference: {fileID: 8509023973921303564}
     - target: {fileID: 9093975886187365857, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       propertyPath: armRendererCam
       value: 
@@ -16759,7 +16478,8 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 840440039517347714, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
     - {fileID: 3961294738787416915, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 75039118134248317, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2961036286376670713, guid: e1d6a9559a4329e42b2768669cb15121, type: 3}
       insertIndex: 0
