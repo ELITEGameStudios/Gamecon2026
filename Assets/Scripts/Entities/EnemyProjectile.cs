@@ -23,6 +23,8 @@ public class EnemyProjectile : MonoBehaviour
     public GameObject meshObjects;
     public Rigidbody rb;
     public Transform enemy;
+    public float lifetime;
+    public float currentLifetime;
 
    bool active = false;
 
@@ -40,9 +42,10 @@ public class EnemyProjectile : MonoBehaviour
            Destroy(gameObject);
        }
     } 
-    public void InitProjectile(Transform e)
+    public void InitProjectile(Transform e, float lifetime = 5)
     {
         enemy = e;
+        this.lifetime = lifetime;
         var mods = GetComponents<ProjectileModifier>();
         foreach (var mod in mods)
         {
@@ -58,6 +61,7 @@ public class EnemyProjectile : MonoBehaviour
         meshObjects.SetActive(false);
         projectileDestroyed.Invoke(this);
         active = false;
+        currentLifetime = 0;
     }
 
     private void FixedUpdate()
@@ -67,6 +71,12 @@ public class EnemyProjectile : MonoBehaviour
             mod.UpdateModifier();
         }
         rb.linearVelocity = projectileSpeed;
+        
+        if (active)
+        {
+            currentLifetime += Time.fixedDeltaTime;
+            if(currentLifetime >= lifetime){DestroyProjectile();}
+        }
     }
 
     public void Activate(Transform target, Vector3 spawnPos)
@@ -86,6 +96,14 @@ public class EnemyProjectile : MonoBehaviour
             if (mod is T) return mod as T;
         }
         return null;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // if(other.attachedRigidbody == Player.instance.mainRb)
+        // {
+            Player.instance.Die();
+        // }
     }
 }
 [System.Serializable]
