@@ -28,9 +28,9 @@ public class GruntEnemy : RangedEnemy
         {
             EnemyProjectile projectile = GetProjectile(0);
             projectile.Activate(target, info.useTransformForOffset ? info.offsetTransform.position : transform.position);
-            projectilePools[info].Enqueue(projectile);
+            // projectilePools[info].Enqueue(projectile);
             iterations++;
-            
+
             if(iterations >= targetIterations){break;}
            if (info != projectileInfo[^1]) yield return new WaitForSeconds(info.delayAfterShot);
         }

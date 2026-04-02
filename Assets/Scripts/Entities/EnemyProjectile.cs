@@ -82,8 +82,10 @@ public class EnemyProjectile : MonoBehaviour
     public void Activate(Transform target, Vector3 spawnPos)
     {
         ProjectileTarget newTarget = new() { targetTransform = target };
+        InitProjectile(target);
 
         rb.MovePosition(spawnPos);
+        projectileCollider.enabled = true;
         projectileActivated.Invoke(newTarget);
         meshObjects.SetActive(true);
         active = true;
