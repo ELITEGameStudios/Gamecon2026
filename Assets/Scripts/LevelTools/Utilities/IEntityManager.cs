@@ -44,7 +44,7 @@ public class ArenaManager : IEntityManager
             //spending time doing sqr root is unnecessary sqrt(b) == 100 > sqrt(a) == 10 
 
             if (blacklist.Contains(enemy.EnemyType)) continue;
-
+            else if (enemy.health <= 0) continue;
             float distance = (position - enemy.transform.position).sqrMagnitude;
             if (distance < distanceToBeat)
             {

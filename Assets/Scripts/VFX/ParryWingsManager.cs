@@ -43,6 +43,11 @@ public class ParryWingsManager : MonoBehaviour
     void OnParryEnded(Projectile.ProjectileState state)
     {
         if (state == Projectile.ProjectileState.Flying) return; // means it was just fired by the parry, ignore it
+        DisableRenderers();
+    }
+
+    void DisableRenderers()
+    {
         foreach (var renderer in skinnedMeshes) renderer.enabled = false;
         foreach (var renderer in regularMeshes) renderer.enabled = false;
     }
