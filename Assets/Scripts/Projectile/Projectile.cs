@@ -83,6 +83,7 @@ public class Projectile : MonoBehaviour
 
     public int BouncesRemaining { set; get; }
     public int MaxBounces { private set => maxBounces = value; get => maxBounces; }
+    public bool RicochetActive { private set; get; } = false;
     [Header("Wind Data")]
     [SerializeField] AnimationCurve windToRecallSpeed;
 
@@ -108,6 +109,8 @@ public class Projectile : MonoBehaviour
     {
         EnemyType.Banshee
     };
+
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -278,8 +281,7 @@ public class Projectile : MonoBehaviour
             //     gameObject.SetActive(false);
             //     break;
         }
-        stateChanged.Invoke(currentState);
-       
+        stateChanged.Invoke(currentState);  
     }
     
     void RecallUpdate()
@@ -415,11 +417,13 @@ public class Projectile : MonoBehaviour
     
     public void OnParry()
     {
+        RicochetActive = false;
         // animator.SetTrigger("Parried");
     }
 
     public void Pickup()
-    {   
+    {
+        RicochetActive = false;
         rb.isKinematic = true;
         col.enabled = false;
         gameObject.SetActive(false);
@@ -482,7 +486,11 @@ public class Projectile : MonoBehaviour
             point = rb.position,
             struckEnemy = hitEnemy
         };
-        if (hitEnemy) enemyStruck.Invoke(collisionInfo);
+        if (hitEnemy)
+        {
+            collisionInfo.ricochetKill = RicochetActive;
+            enemyStruck.Invoke(collisionInfo);
+        }
         else terrainStruck.Invoke(collisionInfo);
     }
 
@@ -536,6 +544,7 @@ public class Projectile : MonoBehaviour
                     CastProjectile(bounceDirection);
                     PostBounce();
                     knifeRicocheted.Invoke(bounceDirection);
+                    RicochetActive = true;
                     return true;
                 }
             }
@@ -587,6 +596,7 @@ public struct KnifeCollisionInfo
     public Vector3 normal;
     public Vector3 point;
     public bool struckEnemy;
+    public bool ricochetKill;
 }
 
 public struct KnifeThrowInfo

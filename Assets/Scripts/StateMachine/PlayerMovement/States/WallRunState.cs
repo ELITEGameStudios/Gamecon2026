@@ -167,10 +167,7 @@ public class WallRunState : PlayerMovementState
         
         movement.CalculateLookRotation();
         elaspedWallrunTIme += Time.fixedDeltaTime;
-        if (movement.current2DVelocity + 0.01f < wallRunMinSpeed)
-        {
-            movement.SetState(movement.airborneState);
-        }
+        
     }
 
     public override void InactiveUpdate()
