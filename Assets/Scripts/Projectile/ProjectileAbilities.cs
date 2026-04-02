@@ -395,7 +395,7 @@ public class ProjectileAbilities : MonoBehaviour
         var parryImpulse = (transform.up - transform.forward).normalized * parryForce;
         parryImpulse = Vector3.Lerp(parryImpulse, new Vector3(0, parryForce, 0), upwardsBiasForParry);
         //Debug.Log("Applying parry impulse of " + parryImpulse);
-        Vector3 newVelocity = playerMovement.rigidbody.linearVelocity + parryImpulse;
+        Vector3 newVelocity = parryImpulse;
         if (newVelocity.y < parryForce) newVelocity.y = parryForce;
         playerMovement.rigidbody.linearVelocity = newVelocity;
         if (playerMovement.rigidbody.linearVelocity.y < 0)
