@@ -4,6 +4,7 @@ public class Player : EntityBase
 {
     public static Player instance {get; private set;}
 
+    public Rigidbody mainRb;
     public EntityDetectionSystem entityDetectionSystem {get; private set;}
 
 
@@ -23,6 +24,7 @@ public class Player : EntityBase
 
     protected override void OnDeath()
     {
+        health = maxHealth;
         // Put all your death event code here BEFORE base.Death()
         entityDeath.start();
 
@@ -32,7 +34,6 @@ public class Player : EntityBase
 
         // base.OnDeath(); ( Commented out for now, i dont think we intend to delete the player yet... )
         entityKilled.Invoke(this);
-        health = maxHealth;
         Debug.Log("Player " + name + " died");
     }
 
@@ -41,7 +42,7 @@ public class Player : EntityBase
     {
         // Before damage event is internally processed 
 
-        base.Damage();
+        base.Damage(damage);
         // after damage event is internally processed 
 
 
