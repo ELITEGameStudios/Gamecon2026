@@ -140,7 +140,7 @@ public class PlayerMovementStateMachine : StateMachine
             {
                 if(rigidbody.linearVelocity.y < groundedState.bigFallThreshold){armAnimator.SetTrigger("BigFall");}
                 SetState(groundedState);
-                dashState.EndCooldown();
+
                 playerLand.start();
             } 
         }
