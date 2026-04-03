@@ -160,17 +160,17 @@ public class ProjectileAbilities : MonoBehaviour
         if (manager != null && featherKnife.currentState == Projectile.ProjectileState.Flying && !parryActive)
         {
             
-            var newTarget = manager.entityManager.GetClosestEnemyToPosition(featherKnife.rb.position, enemiesToNotHomeTowards);
-            var targetDistance = Vector3.Distance(newTarget.transform.position, featherKnife.rb.position);
-            if (targetDistance <= maxHomingRange)
-            {
-                if (!homingPreviously)
-                {
-                    StartHoming(featherKnife.rb.position, newTarget.collider.bounds.center);
-                }
-                HomeTowardsPosition();
-                homingPreviously = true;
-            }
+            //var newTarget = manager.entityManager.GetClosestEnemyToPosition(featherKnife.rb.position, enemiesToNotHomeTowards);
+            //var targetDistance = Vector3.Distance(newTarget.transform.position, featherKnife.rb.position);
+            //if (targetDistance <= maxHomingRange)
+            //{
+            //    if (!homingPreviously)
+            //    {
+            //        StartHoming(featherKnife.rb.position, newTarget.collider.bounds.center);
+            //    }
+            //    HomeTowardsPosition();
+            //    homingPreviously = true;
+            //}
         }
     }
 
@@ -395,11 +395,12 @@ public class ProjectileAbilities : MonoBehaviour
         var parryImpulse = (transform.up - transform.forward).normalized * parryForce;
         parryImpulse = Vector3.Lerp(parryImpulse, new Vector3(0, parryForce, 0), upwardsBiasForParry);
         //Debug.Log("Applying parry impulse of " + parryImpulse);
-        Vector3 newVelocity = parryImpulse;
+        Vector3 newVelocity = playerMovement.rigidbody.linearVelocity + parryImpulse;
         if (newVelocity.y < parryForce) newVelocity.y = parryForce;
         playerMovement.rigidbody.linearVelocity = newVelocity;
         if (playerMovement.rigidbody.linearVelocity.y < 0)
         camShaker.StartShake(parryCamShakeProfile);
+        playerMovement.hasDash = true;
     }
 
     private IEnumerator HitstopPostProcessEffect()

@@ -5,6 +5,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Collider))]
 public class Projectile : MonoBehaviour
 {
+    [SerializeField] WindManager windManager;
 
     [HideInInspector] public UnityEvent<KnifeCollisionInfo> enemyStruck = new();
     [HideInInspector] public UnityEvent<KnifeCollisionInfo> terrainStruck = new();

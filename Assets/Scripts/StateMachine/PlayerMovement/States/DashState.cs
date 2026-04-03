@@ -8,11 +8,14 @@ public class DashState : PlayerMovementState
     [SerializeField] float FOVIncrease = 10;
     [SerializeField] float FOVTweenDuration = 0.1f;
     [SerializeField] Camera FPSCamera;
+    [SerializeField] float dashCooldown;
+    [SerializeField] WindManager windManager;
 
+
+    public float CooldownTracker { get; private set; }
     float tweenTracker = 0.0f;
 
     InputActionReference dashButton;
-    WindManager windManager;
     public Vector3 dashVelocity;
     public float dashTime;
     public float additiveForceThreshold = 75;
@@ -34,10 +37,9 @@ public class DashState : PlayerMovementState
         name = "Dash State";
     }
 
-    public void Initialize(InputActionReference button, WindManager wind)
+    public void Initialize(InputActionReference button)
     {
         dashButton = button;
-        windManager = wind;
         baseFOV = FPSCamera.fieldOfView;
         baseDrag = movement.rigidbody.linearDamping;
     }
@@ -60,6 +62,7 @@ public class DashState : PlayerMovementState
         HUDManager.Instance.dashElement.Activate();
         tweenTracker = 0;
         movement.rigidbody.linearDamping = 0;   
+        CooldownTracker = dashCooldown;
     }
 
     private void SetDashVelocity()
@@ -137,6 +140,11 @@ public class DashState : PlayerMovementState
         {
             tweenTracker += Time.deltaTime;
             FPSCamera.fieldOfView = Mathf.Lerp(FOVIncrease + baseFOV, baseFOV, tweenTracker / FOVTweenDuration);
+        }
+
+        if (CooldownTracker > 0)
+        {
+            CooldownTracker -= Time.deltaTime;
         }
     }
     void EmpowerLogic()
