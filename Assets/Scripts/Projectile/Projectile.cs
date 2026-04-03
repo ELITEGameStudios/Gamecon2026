@@ -1,18 +1,10 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.ProBuilder;
-using UnityEngine.ProBuilder.MeshOperations;
 
 [RequireComponent(typeof(Collider))]
 public class Projectile : MonoBehaviour
 {
-
-     string[] unallowedObjectsToBounceOff = {
-        "SoftTerrain",
-        "Enemy"
-    };
 
     [HideInInspector] public UnityEvent<KnifeCollisionInfo> enemyStruck = new();
     [HideInInspector] public UnityEvent<KnifeCollisionInfo> terrainStruck = new();
@@ -69,7 +61,6 @@ public class Projectile : MonoBehaviour
     [SerializeField] private Collider thisCol;
     [SerializeField] private Transform centerTf;
     
-
     [Header("Blink Data")]
     public List<SpaceSample> spaceRecordingData;
     public int maxRecordingSlots;
@@ -86,9 +77,6 @@ public class Projectile : MonoBehaviour
     public bool RicochetActive { private set; get; } = false;
     [Header("Wind Data")]
     [SerializeField] AnimationCurve windToRecallSpeed;
-
-    
-    [SerializeField] WindManager windManager;
     public struct SpaceSample
     {
         public Vector3 position, direction, velocity;
@@ -100,8 +88,6 @@ public class Projectile : MonoBehaviour
     
     // [SerializeField] private Animator animator;
     private Transform embedParent;
-
-
 
     float timeElaspedWithoutKnife = 0.0f;
 
@@ -298,11 +284,11 @@ public class Projectile : MonoBehaviour
         // Get curve-based speed multiplier
         float speedMultiplier = recallAnimationCurve.Evaluate(recallProgress);
 
-        // Get wind-based speed multiplier
-        float windMultiplier = windToRecallSpeed.Evaluate(windManager.GetWindAsPercent());
-    
+        // Calculate distance-based boost
+        float distanceBoost = CalculateDistanceBoost(currentDistance);
+
         // Combine both multipliers
-        float currentSpeed = (baseRecallSpeed * speedMultiplier) * windMultiplier;
+        float currentSpeed = (baseRecallSpeed * speedMultiplier) * distanceBoost;
     
         transform.position = Vector3.MoveTowards(transform.position, initProjectilePosition.position, currentSpeed * Time.deltaTime);
     
@@ -379,11 +365,9 @@ public class Projectile : MonoBehaviour
 
     public void SetEmbeddedPos(){
         embeddedPos = transform.position;
-        blinkSample = spaceRecordingData[spaceRecordingData.Count - 1];
+       // blinkSample = spaceRecordingData[spaceRecordingData.Count - 1];
     }
 
-
-    
     public void CastProjectile(Vector3 direction)
     {
         transform.SetParent(null);
@@ -428,7 +412,6 @@ public class Projectile : MonoBehaviour
         col.enabled = false;
         gameObject.SetActive(false);
 
-        
         // Instantly return to hand + idle state
         transform.SetParent(heldParent);
         transform.localPosition = Vector3.up * -0.65f;
@@ -501,16 +484,9 @@ public class Projectile : MonoBehaviour
             projectileAbilities.ResetRecallCooldown();
         }
         
-        if (!AttemptEnemyAutoaimBounce(normal))
-        { 
-           if (!projectileAbilities.ParryActive) EmbedKnife(); 
-        }
+        if (!projectileAbilities.ParryActive) EmbedKnife(); 
         
-       
-        windManager.RestoreWindOnKill();
-        playerMovement.hasDash = true;
         ReportCollision(hitEnemy: true, normal, "Enemy");
-        
     }        
     void EmbedKnife()
     {
@@ -519,7 +495,6 @@ public class Projectile : MonoBehaviour
             return;
         }
         Vector3 travelDirection = rb.linearVelocity.normalized;
-
 
         transform.position += travelDirection * (embedDepth * 0.1f);
 
@@ -574,21 +549,7 @@ public class Projectile : MonoBehaviour
         string objTag = collision.gameObject.tag;
         ReportCollision(false, normal, objTag);
 
-        bool viableTagForBounce = true;
-        for (int i = 0; i < unallowedObjectsToBounceOff.Length; i++)
-        {
-            if (objTag == unallowedObjectsToBounceOff[i])
-            {
-                viableTagForBounce = false;
-                break;
-            }
-        }
-        if ( !viableTagForBounce || !AttemptEnemyAutoaimBounce(normal))
-        {
-             EmbedKnife();
-        }
-        
-
+        EmbedKnife();
     }
 }
 public struct KnifeCollisionInfo

@@ -68,7 +68,7 @@ public abstract class EntityBase : MonoBehaviour
     {
         if (damage <= 0) { return; }
         health -= damage;
-        if (health <= 0) { OnDeath(); }
+        if (health <= 0) { Die(); }
         Debug.Log(entityName + " took damage");
     }
 

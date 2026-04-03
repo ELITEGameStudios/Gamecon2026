@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,8 +16,6 @@ public class ProjectileAbilities : MonoBehaviour
     [HideInInspector] public UnityEvent dashPerformed = new();
     [HideInInspector] public UnityEvent recallStarted = new();
 
-
-    [SerializeField] WindManager windManager;
 
     [Header("References")]
     [SerializeField] private Projectile featherKnife;
@@ -59,7 +57,7 @@ public class ProjectileAbilities : MonoBehaviour
     public float blinkCooldownTime;
     public float blinkEffectTime = 0.33f;
     public float currentBlinkTimer;
-    public bool canBlink => windManager.HasEnoughWindForBlink() && featherKnife.currentState != Projectile.ProjectileState.Idle && featherKnife.currentState != Projectile.ProjectileState.Recalling;
+    public bool canBlink => currentBlinkTimer <= 0.0f && featherKnife.currentState != Projectile.ProjectileState.Idle && featherKnife.currentState != Projectile.ProjectileState.Recalling;
 
     public PlayerVFXManager playerVFXManager;
 
@@ -67,8 +65,30 @@ public class ProjectileAbilities : MonoBehaviour
     public string FMODParryEvent = "", FMODShootEvent = "", FMODBlinkEvent = "", FMODParryFailEvent = "";
     public FMOD.Studio.EventInstance parrySFX, parryFailSFX, shootSFX, blinkSFX;
 
+    [Header("Homing")]
+    /// <summary>
+    /// Maximum distance to consider trying to home towards the target. If exceeded, just treated as a straight shot
+    /// </summary>
+    [SerializeField] float maxHomingRange = 50.0f;
+    [SerializeField] float durationForKnifeToHitTargetDuringHome = 0.4f;
+    bool parryActive = false;
     public bool ParryActive { get; private set; } = false;
     bool blinkedThisFrame; // just used for the animator
+
+    List<EnemyType> enemiesToNotHomeTowards = new()
+    {
+        EnemyType.Banshee
+    };
+
+    bool homingPreviously;
+
+    HomeData homeData;
+    struct HomeData
+    {
+        public Vector3 knifeStart;
+        public Vector3 enemyPos;
+        public float elapsedTime;
+    }
 
     void Start()
     {
@@ -76,6 +96,8 @@ public class ProjectileAbilities : MonoBehaviour
         {
             originalProfile = postProcessVolume.profile;
         }
+
+        featherKnife.stateChanged.AddListener(OnKnifeStateChanged);
     }
 
     void Awake()
@@ -132,6 +154,48 @@ public class ProjectileAbilities : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        var manager = GameManager.Instance;
+        if (manager != null && featherKnife.currentState == Projectile.ProjectileState.Flying && !parryActive)
+        {
+            
+            var newTarget = manager.entityManager.GetClosestEnemyToPosition(featherKnife.rb.position, enemiesToNotHomeTowards);
+            var targetDistance = Vector3.Distance(newTarget.transform.position, featherKnife.rb.position);
+            if (targetDistance <= maxHomingRange)
+            {
+                if (!homingPreviously)
+                {
+                    StartHoming(featherKnife.rb.position, newTarget.collider.bounds.center);
+                }
+                HomeTowardsPosition();
+                homingPreviously = true;
+            }
+        }
+    }
+
+    void OnKnifeStateChanged(Projectile.ProjectileState state)
+    {
+        homingPreviously = false;
+    }
+    void HomeTowardsPosition()
+    {
+        homeData.elapsedTime += Time.deltaTime;
+        featherKnife.rb.position = Vector3.Slerp(homeData.knifeStart, homeData.enemyPos, homeData.elapsedTime / durationForKnifeToHitTargetDuringHome);
+        if (Vector3.Distance(featherKnife.rb.position, homeData.enemyPos) <= 0.1f)
+        {
+            featherKnife.rb.isKinematic = false;
+        }
+    }
+
+    void StartHoming(Vector3 knifePos, Vector3 enemyPos)
+    {
+        homeData.knifeStart = knifePos;
+        homeData.enemyPos = enemyPos;
+        homeData.elapsedTime = 0;
+
+        featherKnife.rb.isKinematic = true; //manual control;
+    }
     public void SetParryWindow(float totalDistance)
     {
         parryWindow = totalDistance * parryTiming;
@@ -162,7 +226,7 @@ public class ProjectileAbilities : MonoBehaviour
 
     private void OnRecallPressed(InputAction.CallbackContext ctx)
     {
-       if (featherKnife.currentState == Projectile.ProjectileState.Idle){return;}
+       if (featherKnife.currentState == Projectile.ProjectileState.Idle || currentRecallCooldown > 0.0f){return;}
         else
         {
             ParryActive = false;
@@ -185,6 +249,8 @@ public class ProjectileAbilities : MonoBehaviour
             {
                 playerMovement.parryTutorialEvent.TryActivate();
             }
+
+            currentRecallCooldown = recallCooldown;
         }
     }
     
@@ -237,8 +303,6 @@ public class ProjectileAbilities : MonoBehaviour
         
         if (cam == null) 
             return;
-
-        featherKnife.BouncesRemaining = featherKnife.MaxBounces;
         HUDManager.Instance.TriggerShootPrompt();
         
         Shoot(parry);
@@ -292,7 +356,6 @@ public class ProjectileAbilities : MonoBehaviour
             parrySFX.start();
             HUDManager.Instance.recallElement.Parry();
             featherKnife.OnParry();
-            playerMovement.hasDash = true;
         }
         else
         {
@@ -332,7 +395,7 @@ public class ProjectileAbilities : MonoBehaviour
         var parryImpulse = (transform.up - transform.forward).normalized * parryForce;
         parryImpulse = Vector3.Lerp(parryImpulse, new Vector3(0, parryForce, 0), upwardsBiasForParry);
         //Debug.Log("Applying parry impulse of " + parryImpulse);
-        Vector3 newVelocity = playerMovement.rigidbody.linearVelocity + parryImpulse;
+        Vector3 newVelocity = parryImpulse;
         if (newVelocity.y < parryForce) newVelocity.y = parryForce;
         playerMovement.rigidbody.linearVelocity = newVelocity;
         if (playerMovement.rigidbody.linearVelocity.y < 0)

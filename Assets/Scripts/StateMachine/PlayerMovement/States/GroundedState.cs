@@ -30,6 +30,8 @@ public class GroundedState : PlayerMovementState
         movement.hasDash = true;
         movement.lastGroundedPos = transform.position;
         if(movement.isConsideredMoving){OnStartWalking();}
+    
+        if(movement.currentState != movement.dashState) { movement.dashState.EndCooldown(); }
     }
 
     public override void Update()

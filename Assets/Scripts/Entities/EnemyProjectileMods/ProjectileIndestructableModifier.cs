@@ -27,7 +27,7 @@ public class ProjectileIndestructibleModifier : ProjectileModifier
     {
         if (!warpBackToSpawnOnContact) return;
        projectile.rb.MovePosition(spawnPos);
-       if (contactModifier != null) contactModifier.ResetIgnoredColliders();
+       if (contactModifier != null) contactModifier.ResetContactModifiers();
     }
 
     private void OnDestroy()

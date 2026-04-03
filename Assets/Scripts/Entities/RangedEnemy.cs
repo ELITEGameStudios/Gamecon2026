@@ -1,24 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class RangedEnemy : EnemyBase
 {
 
-    [SerializeField] float projectilePoolSize = 10;
-    [SerializeField] List<ProjectileFireInformation> projectileInfo;
-    [SerializeField] EntityDetector entityDetector;
+    [SerializeField] protected float projectilePoolSize = 10;
+    [SerializeField] protected List<ProjectileFireInformation> projectileInfo;
+    [SerializeField] protected EntityDetector entityDetector;
 
     [Header("Firing Attributes")]
-    [SerializeField] float cooldown = 20.0f;
-    [SerializeField] float delayBeforeFiring = 0.0f;
+    [SerializeField] protected float cooldown = 20.0f;
+    [SerializeField] protected float delayBeforeFiring = 0.0f;
 
    
-    float cooldownTracker = 0.0f;
+    protected float cooldownTracker = 0.0f;
 
-    bool firing = false;
+    protected bool firing = false;
 
-    Dictionary<ProjectileFireInformation, Queue<EnemyProjectile>> projectilePools = new();  
+    protected Dictionary<ProjectileFireInformation, Queue<EnemyProjectile>> projectilePools = new();  
     private void Start()
     {
         if (projectileInfo ==  null) 
@@ -29,7 +30,24 @@ public class RangedEnemy : EnemyBase
         InitProjectilePool();
     }
 
-    void InitProjectilePool()
+    protected EnemyProjectile GetProjectile(int poolIndex)
+    {
+        EnemyProjectile lowLifetimeProj = projectilePools[projectileInfo[poolIndex]].Peek();
+        foreach (EnemyProjectile proj in projectilePools[projectileInfo[poolIndex]])
+        {
+            if(!proj.Active){return proj;}
+            else
+            {
+                if(lowLifetimeProj == null || proj.currentLifetime <= lowLifetimeProj.currentLifetime)
+                {
+                    lowLifetimeProj = proj; 
+                }
+            }
+        }
+        return lowLifetimeProj;
+    }
+
+    protected void InitProjectilePool()
     {
         for (int i = 0; i < projectileInfo.Count; i++)
         {
@@ -54,12 +72,23 @@ public class RangedEnemy : EnemyBase
             {
                 if (entity is Player player )
                 {
-                   if (!firing && cooldownTracker <= 0.0f) StartCoroutine(FireProjectilesInBurst(player));
-                   transform.LookAt(player.transform);
+                   if (!firing && cooldownTracker <= 0.0f) Shoot(player.transform);
+                
+                    Vector3 lookTarget = new Vector3(
+                        player.transform.position.x,
+                        transform.position.y,
+                        player.transform.position.z
+                    );
+                   transform.LookAt(lookTarget);
                 }
             }
         }
     }
+
+    protected virtual void Shoot(Transform target)
+    {
+        StartCoroutine(FireProjectilesInBurst(target));
+    }  
 
     void Update()
     {
@@ -70,7 +99,7 @@ public class RangedEnemy : EnemyBase
         }
     }
 
-    IEnumerator FireProjectilesInBurst(Player player)
+    protected virtual IEnumerator FireProjectilesInBurst(Transform player)
     {
         if (projectileInfo == null) yield break;
         firing = true;
@@ -78,11 +107,11 @@ public class RangedEnemy : EnemyBase
         foreach (var info in projectileInfo)
         {
             EnemyProjectile projectile = projectilePools[info].Dequeue();
-            if (info.useTransformForOffset) 
-            {
-                info.offset = info.offsetTransform.localPosition;
-            }
-            projectile.Activate(player.transform, transform.position + info.offset);
+            // if (info.useTransformForOffset) 
+            // {
+            //     info.offset = info.offsetTransform.localPosition;
+            // }
+            projectile.Activate(player.transform, info.useTransformForOffset ? info.offsetTransform.position : transform.position);
             projectilePools[info].Enqueue(projectile);
            if (info != projectileInfo[^1]) yield return new WaitForSeconds(info.delayAfterShot);
         }
@@ -95,7 +124,7 @@ public class RangedEnemy : EnemyBase
         StartCoroutine(ClearEnemyFromMemory());
     }
 
-    IEnumerator ClearEnemyFromMemory()
+    protected IEnumerator ClearEnemyFromMemory()
     {
         foreach (var pool in projectilePools)
         {

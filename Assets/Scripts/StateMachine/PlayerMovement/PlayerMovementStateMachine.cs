@@ -8,7 +8,6 @@ using UnityEngine.InputSystem;
 public class PlayerMovementStateMachine : StateMachine
 {
     public static PlayerMovementStateMachine instance {get; private set;}
-    [SerializeField] WindManager windManager;
 
     [Header("Base Properties")]
     public float baseSpeed = 5f;
@@ -61,7 +60,7 @@ public class PlayerMovementStateMachine : StateMachine
     public bool hasDash;
 
     public bool isConsideredMoving => hasMovementInput && rigidbody.linearVelocity.magnitude > movingConsiderationDeadzone;
-    public bool canDash => currentState != dashState && hasDash && currentState != wallRunState;
+    public bool canDash => currentState != dashState && hasDash && currentState != wallRunState && dashState.CooldownTracker <= 0.0f;
     public bool wasMovingLastFrame;
 
     public InputActionReference move, jump, look, dash;
@@ -88,7 +87,7 @@ public class PlayerMovementStateMachine : StateMachine
         
         defaultState = airborneState;
 
-        dashState.Initialize(dash, windManager);
+        dashState.Initialize(dash);
         airborneState.OnReset();
         groundedState.OnReset();
         wallRunState.OnReset();
@@ -141,6 +140,7 @@ public class PlayerMovementStateMachine : StateMachine
             {
                 if(rigidbody.linearVelocity.y < groundedState.bigFallThreshold){armAnimator.SetTrigger("BigFall");}
                 SetState(groundedState);
+
                 playerLand.start();
             } 
         }
