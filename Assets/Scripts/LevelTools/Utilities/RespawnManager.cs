@@ -53,9 +53,10 @@ public class RespawnManager : MonoBehaviour
         respawn.action.performed -= OnRespawnRequest;
         var respawnPoint = GetRespawnLocation(PlayerMovementStateMachine.instance.lastGroundedPos);
         Player.instance.SpawnAtPosition(respawnPoint.position);
-        var rotateTowardsRespawn = Quaternion.LookRotation (respawnPoint.transform.forward).eulerAngles;
+        // var rotateTowardsRespawn = Quaternion.LookRotation (respawnPoint.transform.forward).eulerAngles;
        // rotateTowardsRespawn.y = 0;
-        player.transform.eulerAngles = rotateTowardsRespawn;
+        // player.transform.eulerAngles = rotateTowardsRespawn;
+        player.transform.rotation = respawnPoint.rotation;
 
         deathNotifier.SetActive(false);
         playerDead = false;

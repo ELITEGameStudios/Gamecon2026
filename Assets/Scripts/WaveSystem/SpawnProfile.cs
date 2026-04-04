@@ -20,8 +20,11 @@ public class SpawnProfile
 
     public virtual void StartProcess()
     {
+        Transform origin = GameManager.Instance.customLevelOrigin; 
         if(positionsParent == null){
-            positionsParent = Transform.Instantiate(positionsParentPrefab, Vector3.zero, Quaternion.identity);  
+            
+            if(origin != null){ positionsParent = Transform.Instantiate(positionsParentPrefab, origin); }
+            else { positionsParent = Transform.Instantiate(positionsParentPrefab, Vector3.zero, Quaternion.identity); }
         }
 
         List<Transform> spawnPosTempList = new();

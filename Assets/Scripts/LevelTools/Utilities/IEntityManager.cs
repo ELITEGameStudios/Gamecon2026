@@ -220,8 +220,11 @@ public class WaveManager : IEntityManager
 
         Debug.Log("Initializing Wave System...");
 
-        //waveIndex = 1;
-        //InitWave(waveData[0]);
+        if (GameManager.Instance.autoStartWaves)
+        {
+            waveIndex = 0;
+            InitWave(waveData[0]);
+        }
 
         if (sceneEnemies == null) return;
         foreach (var enemy in sceneEnemies)

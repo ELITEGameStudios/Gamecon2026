@@ -608,7 +608,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!65 &4738793807033465844
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -652,9 +652,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   stateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  knifeRicocheted:
     m_PersistentCalls:
       m_Calls: []
   targetLocalScale: {x: 500, y: 500, z: 500}
@@ -770,16 +767,12 @@ MonoBehaviour:
   centerTf: {fileID: 6029332407991259693}
   maxRecordingSlots: 0
   triggerList: []
-  maxBounces: 1
-  maxDistanceToEnableAutoaimBounce: 7
-  bounceToEmbedTransitionCooldown: 0
   windToRecallSpeed:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  windManager: {fileID: 0}
 --- !u!96 &3002411986993690705
 TrailRenderer:
   serializedVersion: 3

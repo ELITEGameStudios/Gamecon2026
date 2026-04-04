@@ -28,6 +28,11 @@ public class GameManager : MonoBehaviour
 
     public SettingsMenu GetSettingsMenu(){return settingsScreen;}
     bool gameOver = false;
+
+    [Header("Wave System Directors")]
+    public bool autoStartWaves;
+    public Transform customLevelOrigin;
+
     private async Task InitializeManager()
     {
         var handle = Addressables.LoadAssetAsync<LevelData>(currentLevel.ToString());

@@ -10,6 +10,7 @@ Shader "Clouds/MainCloudShader"
         _FogDensity("Additive Fog Per Step", Range(0, 100)) = 0.005
         _FogMaxDensity("Max Fog Density", Range(0, 1)) = 1
         _FogColor("Additive Fog color", Color) = (1, 1, 1, 1)
+        _ShadowmapTex("Shadowmap Render Texture", 2D) = "white" {}
         _FogNoiseTex("Noise texture", 3D) = "white" {}
         _FogNoiseTile("Noise Tiling", float) = 1
         _FogNoiseFactor("Noise Factor", Range(0, 10)) = 0.1
