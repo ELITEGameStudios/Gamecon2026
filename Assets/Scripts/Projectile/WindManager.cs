@@ -57,6 +57,7 @@ public class WindManager : MonoBehaviour
     ParticleSystem.MainModule wrapsMainModule;
 
     Material runtimeTattooMaterial;
+
     private void Start()
     {
         if (player == null) player = Player.instance;
@@ -77,8 +78,8 @@ public class WindManager : MonoBehaviour
     {
         if (info.pickupType != KnifeRetrievalType.Pickup)
         {
-            CurrentWind = 0;
-            UpdateWindDisplays();
+          //  CurrentWind = 0;
+         //  UpdateWindDisplays();
         }
     }
     private void FixedUpdate()
@@ -122,8 +123,8 @@ public class WindManager : MonoBehaviour
 
         if (tattooMaterial != null)
         {
-            var newColor = Color.Lerp(minWindTattooColor, maxWindTattooColor, colorTransitionCurve.Evaluate(windAsPercent));
-            runtimeTattooMaterial.SetColor("_EmissionColor", newColor);
+            var percentageToColor = colorTransitionCurve.Evaluate(windAsPercent);
+            runtimeTattooMaterial.SetFloat("_windPercentage", percentageToColor);
         }
     }
 

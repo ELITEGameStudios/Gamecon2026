@@ -918,6 +918,115 @@ Transform:
   - {fileID: 8119220002350158406}
   m_Father: {fileID: 3202496505788235161}
   m_LocalEulerAnglesHint: {x: 10.70927, y: 99.00469, z: -2.443252}
+--- !u!1 &1263512550513741843
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6910538864823998812}
+  - component: {fileID: 6962342920853624269}
+  m_Layer: 3
+  m_Name: WindManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6910538864823998812
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1263512550513741843}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6450713759936305123}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6962342920853624269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1263512550513741843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a46d112506ae2a947a28f96af80a8d6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 4860485282995713151}
+  playerRB: {fileID: 5386588365858552040}
+  knife: {fileID: 6373491937540632380}
+  speedToWind:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.30356807
+      outSlope: 0.30356807
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.17000002
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  windDisplay: {fileID: 0}
+  speedDisplay: {fileID: 0}
+  minSpeedForWind: 5
+  maxSpeedForWind: 70
+  speedToWindRatio: 4
+  tattooMaterial: {fileID: 2100000, guid: df43ef19029af974f9d711b4d4a941e5, type: 2}
+  windWraps: {fileID: 727402662580572196}
+  maxWindWraps: 20
+  baseWindColor: {r: 1, g: 1, b: 1, a: 1}
+  maxWindColor: {r: 0, g: 0, b: 1, a: 1}
+  minWindTattooColor: {r: 1, g: 1, b: 1, a: 1}
+  maxWindTattooColor: {r: 0, g: 0, b: 1, a: 1}
+  leftArm: {fileID: 6358512309231767231}
+  colorTransitionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  pauseWindGeneration: 0
 --- !u!1 &1311131515746730604
 GameObject:
   m_ObjectHideFlags: 0
@@ -3696,6 +3805,7 @@ Transform:
   - {fileID: 1771104289695820870}
   - {fileID: 369942441406092580}
   - {fileID: 4835047968788394056}
+  - {fileID: 6910538864823998812}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 61.047, z: 0}
 --- !u!33 &986350710990813882
@@ -3961,12 +4071,12 @@ MonoBehaviour:
     FOVIncrease: 12.5
     FOVTweenDuration: 0.1
     FPSCamera: {fileID: 6280549147774990832}
-    empoweredDashDuration: 0
-    dashCooldown: 1.75
-    dashVelocity: 0
+    dashCooldown: 0.75
+    windManager: {fileID: 6962342920853624269}
+    dashVelocity: {x: 0, y: 0, z: 0}
     dashTime: 0.4
     additiveForceThreshold: 100
-    elapsedDashTime: 0
+    currentDashTimer: 0
     dashPower: 5
     minimumAdditiveVelocity: 0
     dashPowerOverSpeed:
