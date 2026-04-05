@@ -8,6 +8,8 @@ using UnityEngine.Rendering;
 // handles shooting, recalling, and parrying
 public class ProjectileAbilities : MonoBehaviour
 {
+
+    [SerializeField] WindManager windManager;
     [HideInInspector] public UnityEvent<KnifeThrowInfo> knifeThrown = new();
     /// <summary>
     /// Bool represents whether parry was successful
@@ -57,7 +59,7 @@ public class ProjectileAbilities : MonoBehaviour
     public float blinkCooldownTime;
     public float blinkEffectTime = 0.33f;
     public float currentBlinkTimer;
-    public bool canBlink => currentBlinkTimer <= 0.0f && featherKnife.currentState != Projectile.ProjectileState.Idle && featherKnife.currentState != Projectile.ProjectileState.Recalling;
+    public bool canBlink => windManager.HasEnoughWindForBlink() && featherKnife.currentState != Projectile.ProjectileState.Idle && featherKnife.currentState != Projectile.ProjectileState.Recalling;
 
     public PlayerVFXManager playerVFXManager;
 
@@ -80,7 +82,6 @@ public class ProjectileAbilities : MonoBehaviour
         EnemyType.Banshee
     };
 
-    bool homingPreviously;
 
     HomeData homeData;
     struct HomeData
@@ -96,7 +97,7 @@ public class ProjectileAbilities : MonoBehaviour
         {
             originalProfile = postProcessVolume.profile;
         }
-
+        if (windManager == null)  windManager = FindFirstObjectByType<WindManager>(); 
         featherKnife.stateChanged.AddListener(OnKnifeStateChanged);
     }
 
@@ -176,7 +177,7 @@ public class ProjectileAbilities : MonoBehaviour
 
     void OnKnifeStateChanged(Projectile.ProjectileState state)
     {
-        homingPreviously = false;
+        //homingPreviously = false;
     }
     void HomeTowardsPosition()
     {
