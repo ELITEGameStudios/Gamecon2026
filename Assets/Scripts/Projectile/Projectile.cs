@@ -212,6 +212,7 @@ public class Projectile : MonoBehaviour
 
                 rb.isKinematic = false;
                 col.isTrigger = false;
+                spaceRecordingData.Clear();
                 
                 if(oldState != ProjectileState.Recalling){
                     // animator.SetTrigger("Flying");
@@ -474,6 +475,19 @@ public class Projectile : MonoBehaviour
             return;
         }
         Vector3 travelDirection = rb.linearVelocity.normalized;
+
+        if(spaceRecordingData.Count > 0)
+        {
+            blinkSample = spaceRecordingData[spaceRecordingData.Count > 2 ? spaceRecordingData.Count-2 : 0];
+        }
+        else
+        {
+            SpaceSample sample;
+            sample.position = transform.position;
+            sample.direction = transform.forward;
+            sample.velocity = rb.linearVelocity;
+            blinkSample = sample;
+        }
 
         transform.position += travelDirection * (embedDepth * 0.1f);
 

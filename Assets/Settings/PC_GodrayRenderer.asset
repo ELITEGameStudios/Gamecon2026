@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
   m_Name: FullScreenPassRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 5
-  passMaterial: {fileID: 2100000, guid: 6ccaf7b5d60f6e1488791059374690f8, type: 2}
+  passMaterial: {fileID: 2100000, guid: b5221c49c09de9e46b431334858ba544, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
@@ -32,11 +32,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
   m_Name: CloudRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
-  injectionPoint: 550
+  m_Active: 1
+  injectionPoint: 600
   fetchColorBuffer: 1
   requirements: 5
-  passMaterial: {fileID: 2100000, guid: c57ba530fe1fa524c809ffd9c15d7599, type: 2}
+  passMaterial: {fileID: 2100000, guid: f691ca2378390634e8dd340f4763c043, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
@@ -85,10 +85,10 @@ MonoBehaviour:
     probeSamplingDebugTexture: {fileID: 2800000, guid: 24ec0e140fb444a44ab96ee80844e18e, type: 3}
     probeVolumeBlendStatesCS: {fileID: 7200000, guid: b9a23f869c4fd45f19c5ada54dd82176, type: 3}
   m_RendererFeatures:
-  - {fileID: -7874574962960007960}
   - {fileID: -3563471443946863893}
+  - {fileID: -7874574962960007960}
   - {fileID: -8697146461526159676}
-  m_RendererFeatureMap: e87c95dfcae3b792eb824c109a018ccec40e30695f874d87
+  m_RendererFeatureMap: eb824c109a018ccee87c95dfcae3b792c40e30695f874d87
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -109,7 +109,7 @@ MonoBehaviour:
   m_ShadowTransparentReceive: 1
   m_RenderingMode: 2
   m_DepthPrimingMode: 0
-  m_CopyDepthMode: 0
+  m_CopyDepthMode: 1
   m_DepthAttachmentFormat: 0
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0

@@ -11,10 +11,18 @@ Shader "Clouds/MainCloudShader"
         _FogMaxDensity("Max Fog Density", Range(0, 1)) = 1
         _FogColor("Additive Fog color", Color) = (1, 1, 1, 1)
         _ShadowmapTex("Shadowmap Render Texture", 2D) = "white" {}
+        _ShadowmapCamPos("Shadowmap Cam Pos", Vector) = (0, 0, 0)
+        _OrthoSize("Orphographic Size", float) = 500
         _FogNoiseTex("Noise texture", 3D) = "white" {}
         _FogNoiseTile("Noise Tiling", float) = 1
+        _FogNoiseSpeed("Noise Speed", float) = 1
         _FogNoiseFactor("Noise Factor", Range(0, 10)) = 0.1
         _FogLerp("Noise Lerp", Range(0, 1)) = 0
+
+
+        [Toggle] _ShadowmapUse("Use shadowmap", Float) = 0
+        [Toggle] _SetShadow("Test Volumetric Shadows", Float) = 0
+        // _ShadowmapMatrix("_ShadowmapMatrix", Matrix)
         
         _FogHeight("Height Y", float) = 0
         _FogFloor("Min Y", float) = -200
@@ -54,11 +62,22 @@ Shader "Clouds/MainCloudShader"
             TEXTURE3D(_FogNoiseTex);
             float _FogNoiseTile;
             float _FogNoiseFactor;
+            float _FogNoiseSpeed;
             float _FogHeight;
             float _FogFloor;
             float _FogHeightTransition;
             float _FogMaxDensity;
             float _FogLerp;
+            float _OrthoSize;
+            
+            TEXTURE2D(_ShadowmapTex);
+            float _ShadowmapUse;
+            float _SetShadow;
+
+            float4x4 _ShadowmapMatrix;
+            float3 _ShadowmapCamPos;
+
+            // sampler2D _CameraDepthTexture;
 
             float4 frag(Varyings IN) : SV_Target
             {
@@ -75,40 +94,89 @@ Shader "Clouds/MainCloudShader"
                 float finalColorFactor = 1;
                 float density = _FogDensity * 0.01;
                 float4 finalColor = _FogColor;
+                // float4 finalColor = _FogColor;
 
                 float currentDist = _MinRange + InterleavedGradientNoise(IN.texcoord * _BlitTexture_TexelSize.zw, (int)(_Time.y / max(HALF_EPS, unity_DeltaTime.x))) * _BandingNoiseIntensity;
+                
+                // [unroll(500)]
+                [loop]
                 while(currentDist < targetDistance){
                     float3 currentPosition = _WorldSpaceCameraPos + dir * currentDist;
                     
-                    
-                    float4 noiseValue = _FogNoiseTex.SampleLevel(sampler_TrilinearRepeat, (currentPosition * 0.01 * _FogNoiseTile) + _Time * 0.01, 0);
+                    float4 noiseValue = _FogNoiseTex.SampleLevel(sampler_TrilinearRepeat, (currentPosition * 0.01 * _FogNoiseTile) + _Time * 0.01 * _FogNoiseSpeed, 0);
                     // float noiseDensity = saturate(dot(noiseValue, noiseValue) - _FogNoiseFactor) * _FogDensity * lerp(1, 0, pow(currentPosition.y - _FogHeight, _FogHeightExp) );
                     float noiseDensity = saturate(
                         (dot(noiseValue, noiseValue) - _FogNoiseFactor) * density);
-                    
-                    float heightFactorA =  (currentPosition.y - _FogHeight);
-                    float heightFactorB =  (_FogFloor - currentPosition.y);
-                    float heightFactor;
-
-                    if(abs(heightFactorA) > abs(heightFactorB)){
-                        heightFactor = heightFactorB;
-                    }
-                    else{
-                        heightFactor = heightFactorA;
-                    }
-
-
-                    float inputDensity = 
-                    lerp(noiseDensity, density, _FogLerp)
-                    * lerp(1, 0, heightFactor / _FogHeightTransition)
-                    * _FogMaxDensity;
+                        
+                        float heightFactorA =  (currentPosition.y - _FogHeight);
+                        float heightFactorB =  (_FogFloor - currentPosition.y);
+                        float heightFactor;
+                        
+                        if(abs(heightFactorA) > abs(heightFactorB)){
+                            heightFactor = heightFactorB;
+                        }
+                        else{
+                            heightFactor = heightFactorA;
+                        }
+                        
+                        
+                        float inputDensity = 
+                        lerp(noiseDensity, density, _FogLerp)
+                        * lerp(1, 0, heightFactor / _FogHeightTransition)
+                        * _FogMaxDensity;
                         
                     if(inputDensity > 0){
+                        float shadowAttenuation = 1;
+                        float3 colorTst = float3(0, 0, 0);
+                        if(_ShadowmapUse == 1){
+                            float3 shadowLocalPos = currentPosition; 
+                            shadowLocalPos -= _ShadowmapCamPos;
+                            shadowLocalPos = mul(shadowLocalPos, _ShadowmapMatrix);
+
+                            float2 shadowTexCoords = 
+                                float2( 
+                                    shadowLocalPos.x/_OrthoSize + 0.5,
+                                    shadowLocalPos.y/_OrthoSize + 0.5 
+                                );
+
+                                // colorTst = float3(1, 0, 0);
+                                
+                            colorTst = clamp(shadowLocalPos.z/350, 0, 1);
+                            float inputDepth = shadowLocalPos.z/350;
+                            // shadowAttenuation = saturate(shadowLocalPos.x/_OrthoSize + 0.5);
+                            float shadowDepthIn = SAMPLE_TEXTURE2D(_ShadowmapTex, sampler_LinearClamp, shadowTexCoords).r;
+
+                            // shadowAttenuation = 1-shadowDepthIn;
+                            // if(shadowDepthIn < inputDepth){
+                            //     shadowAttenuation = 0;
+                            // }
+                            // shadowAttenuation = shadowDepthIn - inputDepth;
+                            // shadowAttenuation = ;
+                            // shadowAttenuation = inputDepth - shadowDepthIn;
+                            // shadowAttenuation = shadowDepthIn;
+                            if(1-shadowDepthIn < inputDepth ){
+                                // continue;
+                                shadowAttenuation = 0;
+                            }
+                        }
+                        
+                        if(_SetShadow == 1){
+                            inputDensity = inputDensity - (shadowAttenuation * inputDensity);
+                        }
                         // half shadow = AdditionalLightRealtimeShadow(0, currentPosition);
-                        Light mainLight = GetAdditionalLight(0, currentPosition);
-                        finalColor.rgb += mainLight.color.rgb * _LightEffectColor.rgb * inputDensity * _Interval * mainLight.shadowAttenuation * mainLight.distanceAttenuation;
+                        // finalColor.rgb += colorTst.rgb * inputDensity * _Interval;
+                        
+                        if(_ShadowmapUse == 1){
+                            finalColor.rgb += _LightEffectColor.rgb * inputDensity * _Interval * shadowAttenuation;
+                        }
+                        else{
+                            Light mainLight = GetAdditionalLight(0, currentPosition);
+                            finalColor.rgb += mainLight.color.rgb * _LightEffectColor.rgb * inputDensity * _Interval * shadowAttenuation * mainLight.distanceAttenuation;
+                        }
                         finalColorFactor *= exp(-inputDensity);
+                        // finalColor.rgb = colorTst.rgb;
                         // Light mainLight = GetMainLight(TransformWorldToShadowCoord(currentPosition));
+                        // break;
                     }
                     
                     // if(final)
