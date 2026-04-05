@@ -9,6 +9,7 @@ public class RangedEnemy : EnemyBase
     [SerializeField] protected float projectilePoolSize = 10;
     [SerializeField] protected List<ProjectileFireInformation> projectileInfo;
     [SerializeField] protected EntityDetector entityDetector;
+    [SerializeField] protected Collider hurtbox;
 
     [Header("Firing Attributes")]
     [SerializeField] protected float cooldown = 20.0f;
@@ -19,7 +20,12 @@ public class RangedEnemy : EnemyBase
 
     protected bool firing = false;
 
-    protected Dictionary<ProjectileFireInformation, Queue<EnemyProjectile>> projectilePools = new();  
+    protected Dictionary<ProjectileFireInformation, Queue<EnemyProjectile>> projectilePools = new();
+
+    protected static LayerMask playerMask;
+
+    Collider[] playerCollider = new Collider[1];
+
     private void Start()
     {
         if (projectileInfo ==  null) 
@@ -28,6 +34,7 @@ public class RangedEnemy : EnemyBase
             Destroy(gameObject);
         }
         InitProjectilePool();
+        playerMask = LayerMask.GetMask("Player");
     }
 
     protected EnemyProjectile GetProjectile(int poolIndex)
@@ -83,6 +90,13 @@ public class RangedEnemy : EnemyBase
                 }
             }
         }
+
+        var overlappingColliders = Physics.OverlapBoxNonAlloc(hurtbox.bounds.center, hurtbox.bounds.extents, playerCollider, hurtbox.transform.rotation, playerMask);
+        if (overlappingColliders > 0)
+        {
+            Player.instance.Damage();
+        }
+
     }
 
     protected virtual void Shoot(Transform target)

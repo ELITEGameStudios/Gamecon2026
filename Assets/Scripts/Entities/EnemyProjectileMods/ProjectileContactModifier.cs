@@ -40,7 +40,9 @@ public class ProjectileContactModifier : ProjectileModifier
     }
     public void OnProjectileFired(EnemyProjectile projectile)
     {
+        Debug.Log("Projectile Fired, resetting contact modifiers");
         ResetContactModifiers();
+        previousProjectilePosition = projectile.rb.position;
     }
 
     public void ResetContactModifiers()
@@ -48,6 +50,7 @@ public class ProjectileContactModifier : ProjectileModifier
         ignoredColliders.Clear();
         ignoredColliders.Add(projectile.enemy.GetComponent<Collider>());
         hitsRemaining = numberOfHits;
+        previousProjectilePosition = projectile.rb.position;
     }
     public void CheckForContact()
     {
@@ -59,7 +62,7 @@ public class ProjectileContactModifier : ProjectileModifier
             {
                 OnPlayerCollision(player, hit);
             }
-            OnContact(projectile);
+            OnContact(terrainCheck);
         }
 
     }
@@ -70,7 +73,7 @@ public class ProjectileContactModifier : ProjectileModifier
         ignoredColliders.Add(hit);
         contactEvent.Invoke(projectile, player);
     }
-    public virtual void OnContact(EnemyProjectile projectile)
+    public virtual void OnContact(RaycastHit hit)
     {
         if (!hasLimitedHits) return;
         hitsRemaining -= 1;
@@ -103,5 +106,6 @@ public class ProjectileContactModifier : ProjectileModifier
         {
             CheckForContact();
         }
+        previousProjectilePosition = projectile.rb.position;
     }
 }

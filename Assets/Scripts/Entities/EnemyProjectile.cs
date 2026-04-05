@@ -89,6 +89,8 @@ public class EnemyProjectile : MonoBehaviour
         projectileActivated.Invoke(newTarget);
         meshObjects.SetActive(true);
         active = true;
+        projectileFired.Invoke(this);
+
     }
 
     public T GetProjectileModifier<T>() where T : ProjectileModifier
