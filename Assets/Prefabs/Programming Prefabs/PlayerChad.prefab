@@ -4171,6 +4171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3641decfe5b1dd8418f05a98b42bb1b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  windManager: {fileID: 0}
   knifeThrown:
     m_PersistentCalls:
       m_Calls: []
@@ -4262,8 +4263,8 @@ MonoBehaviour:
   FMODShootEvent: event:/ThrowNew
   FMODBlinkEvent: event:/BlinkEvent
   FMODParryFailEvent: event:/ParryWhiff
-  maxHomingRange: 4
-  durationForKnifeToHitTargetDuringHome: 0.25
+  maxHomingRange: -1
+  durationForKnifeToHitTargetDuringHome: 0
 --- !u!114 &4860485282995713151
 MonoBehaviour:
   m_ObjectHideFlags: 0
