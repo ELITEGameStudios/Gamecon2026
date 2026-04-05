@@ -32,8 +32,14 @@ public class PlayerTracker : MonoBehaviour
         knife.projectileAbilities.attemptedParry.AddListener(OnKnifeParryAttempt);
         knife.knifeRetrieved.AddListener(OnKnifeRetrieved);
         knife.projectileAbilities.dashPerformed.AddListener(OnDashPerformed);
+        player.entityKilled.AddListener((entity) => OnPlayerKilled());
 
         gameManager.gameEnding += OnGameOver;
+    }
+
+    void OnPlayerKilled()
+    {
+        trackerData.numberOfDeaths++;
     }
 
     void OnDashPerformed()
@@ -84,6 +90,7 @@ public class PlayerTracker : MonoBehaviour
 
     private void Update()
     {
+        if (trackerData.beatGame) return;
         float delta = Time.deltaTime;
         trackerData.timeElapsed += delta;
         elapsedMissingKnifeTime += delta;
@@ -156,7 +163,7 @@ public class PlayerTracker : MonoBehaviour
 
     void OnGameOver(float gameDuration)
     {
-        trackerData.beatGame = true;
+        trackerData.beatGame = gameDuration > 0.0f;
         trackerData.avgBlinkDistance = GetAverageBlinkDistance();
        
         int numberOfSaves = saveSystem.GetNumberOfFilesInDirectory(TrackerService.GetDataFolderPathForLevel(gameManager.CurrentLevel));
@@ -186,6 +193,7 @@ public struct TrackerData
     public int successfulParries;
     //Misc
     public float timeElapsed;
+    public int numberOfDeaths;
     public bool beatGame;
 }
 
