@@ -32,11 +32,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
   m_Name: CloudRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   injectionPoint: 550
   fetchColorBuffer: 1
   requirements: 5
-  passMaterial: {fileID: 2100000, guid: c57ba530fe1fa524c809ffd9c15d7599, type: 2}
+  passMaterial: {fileID: 2100000, guid: b5221c49c09de9e46b431334858ba544, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
@@ -285,10 +285,10 @@ MonoBehaviour:
     AfterOpaque: 0
     Source: 1
     NormalSamples: 1
-    Intensity: 2
-    DirectLightingStrength: 0.854
-    Radius: 0.1
+    Intensity: 2.5
+    DirectLightingStrength: 1
+    Radius: 0.8
     Samples: 1
     BlurQuality: 0
-    Falloff: 50
+    Falloff: 200
     SampleCount: -1

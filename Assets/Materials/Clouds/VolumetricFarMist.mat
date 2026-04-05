@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CloudBlueMist 1
+  m_Name: VolumetricFarMist
   m_Shader: {fileID: 4800000, guid: 1d3c414db8442a8409e765d7d13c3876, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -39,11 +39,11 @@ Material:
     m_Ints: []
     m_Floats:
     - _BandingNoiseIntensity: 3
-    - _FogDensity: 0.1
+    - _FogDensity: 0.15
     - _FogFloor: 71.6
-    - _FogHeight: 284.9
+    - _FogHeight: 265
     - _FogHeightExp: 3.6
-    - _FogHeightTransition: 2
+    - _FogHeightTransition: 1
     - _FogLerp: 0.238
     - _FogMaxDensity: 1
     - _FogNoiseFactor: 1.33
@@ -53,13 +53,13 @@ Material:
     - _FogNoiseTileY: 2.57
     - _Interval: 3
     - _MaxRange: 200
-    - _MinRange: 10
+    - _MinRange: 87.5
     - _OrthoSize: 600
     - _SetShadow: 0
     - _ShadowmapUse: 1
     m_Colors:
-    - _FogColor: {r: 0.019983165, g: 0, b: 0.3490566, a: 0}
-    - _LightEffectColor: {r: 0, g: 0.15802188, b: 0.42872506, a: 1}
+    - _FogColor: {r: 0.34901962, g: 0.13067442, b: 0.12549022, a: 0}
+    - _LightEffectColor: {r: 0, g: 0.07901094, b: 0.21436253, a: 1}
     - _ShadowmapCamPos: {r: -331.71356, g: 216.19704, b: 363.80014, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
