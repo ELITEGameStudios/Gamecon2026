@@ -213,7 +213,10 @@ public class PlayerMovementStateMachine : StateMachine
         // }
 
         transform.position = targetPos;
-        rigidbody.linearVelocity = rigidbody.linearVelocity.magnitude * blinkVector.normalized;
+        if(featherKnife.currentState != Projectile.ProjectileState.Embedded)
+        {
+            rigidbody.linearVelocity = rigidbody.linearVelocity.magnitude * blinkVector.normalized;
+        }
         
         CheckWallViaRay(ignoreWallRunTimer: true, fromBlink: true);
     }
