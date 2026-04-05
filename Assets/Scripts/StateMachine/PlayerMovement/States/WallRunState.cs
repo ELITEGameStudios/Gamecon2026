@@ -40,20 +40,14 @@ public class WallRunState : PlayerMovementState
     float currentWallRunSleepTimer;
     public bool canWallRun => currentWallRunSleepTimer <= 0;// && movement.currentVelocity >= wallRunMinSpeed;
 
-    float baseDrag;
 
-    float elaspedWallrunTIme = 0;
-
-    float startingSpeed;
     public WallRunState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
     {
         name = "Wall Running";
-        baseDrag = rigidbody.linearDamping;
     }
 
     public override void Start()
     {
-        elaspedWallrunTIme = 0;
         movement.hasDash = true;
         movement.OnStopWalking();
         // Vector3 closestPoint = storedCollision.collider.ClosestPoint(transform.position);
@@ -78,11 +72,11 @@ public class WallRunState : PlayerMovementState
 
 
             float currentSpeed = movement.current2DVelocity;
-            if(currentSpeed < wallRunMinSpeed){currentSpeed = wallRunMinSpeed; return;} // Sets to the min wall run speed if your speed is slower. (May be obselete since wall run might reqire you tp be this speed)
+            if(currentSpeed < wallRunMinSpeed){currentSpeed = wallRunMinSpeed;} // Sets to the min wall run speed if your speed is slower. (May be obselete since wall run might reqire you tp be this speed)
             
             currentWallRunSpeed = currentSpeed;
-            startingSpeed = currentSpeed;
 
+            Debug.Log("Initial wall run speed == " + currentWallRunSpeed);
 
             // (Legacy) Speed will be between the current speed and the minimum wall run speed, determined by the angle of your entry velocity and the wall's run direction
             // currentWallRunSpeed = Mathf.Lerp(
@@ -153,7 +147,6 @@ public class WallRunState : PlayerMovementState
 
 
             // if(Vector3.Distance(transform.position, hitPoint) > wallRunMaxDist) { transform.position = hitPoint + hitInfo.normal * movement.bodyRadius; } This was causing a bug where the player moves abnormally fast when facing away from the wall at a certain angle. Meant to be a way to ensure the player is confined to be against the wall
-            currentWallRunSpeed = startingSpeed * dragOverTime.Evaluate(elaspedWallrunTIme);
             rigidbody.linearVelocity = wallRunDirection * currentWallRunSpeed;
             Debug.DrawRay(hitInfo.point, hitInfo.normal);
             Debug.Log("Wallrun was fine");
@@ -166,7 +159,6 @@ public class WallRunState : PlayerMovementState
         }
         
         movement.CalculateLookRotation();
-        elaspedWallrunTIme += Time.fixedDeltaTime;
         
     }
 
@@ -215,6 +207,5 @@ public class WallRunState : PlayerMovementState
         movement.armAnimator.SetBool("OnWall", false);
         StartWallrunCooldown();
         base.End(interrupted);
-        rigidbody.linearDamping = baseDrag;
     }
 }
