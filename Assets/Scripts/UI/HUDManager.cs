@@ -14,7 +14,7 @@ public class HUDManager : MonoBehaviour
     [Header("Gameplay UI Elements")]
     public DashHUDElement dashElement; 
     public RecallHUD recallElement; 
-    public FillTimerHudElement blinkElement;
+    public BlinkHUDElement blinkElement;
     
     [Space(20)] 
     // public GameUIPopup dashTutPrompt;

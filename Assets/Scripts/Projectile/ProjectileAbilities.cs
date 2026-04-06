@@ -150,6 +150,7 @@ public class ProjectileAbilities : MonoBehaviour
             if (HUDManager.Instance.blinkElement != null)
             {
                 HUDManager.Instance.blinkElement.SetReady(canBlink);
+                HUDManager.Instance.blinkElement.SetTimer(  currentBlinkTimer);
             }
         }
     }

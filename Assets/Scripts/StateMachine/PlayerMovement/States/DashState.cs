@@ -178,7 +178,7 @@ public class DashState : PlayerMovementState
 
     public void EndCooldown()
     {
-               CooldownTracker = 0;
+        CooldownTracker = 0;
     }
     public override void End(bool interrupted = false)
     {
