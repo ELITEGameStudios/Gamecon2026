@@ -144,12 +144,12 @@ public class Projectile : MonoBehaviour
             if(HUDManager.Instance.recallElement != null)
             {
                 if( projectileAbilities.currentRecallCooldown <= 0 && currentState != ProjectileState.Recalling && currentState != ProjectileState.Idle) {
-                    HUDManager.Instance.recallElement.SetFillFactor(1);
+                    HUDManager.Instance.recallElement.SetTimer(0);
                     HUDManager.Instance.recallElement.SetReady(true);
                 }
                 else
                 {
-                    HUDManager.Instance.recallElement.SetFillFactor(( projectileAbilities.recallCooldown - projectileAbilities.currentRecallCooldown) / projectileAbilities.recallCooldown);
+                    HUDManager.Instance.recallElement.SetTimer(( projectileAbilities.currentRecallCooldown) );
                     HUDManager.Instance.recallElement.SetReady(false);
                 }
             }

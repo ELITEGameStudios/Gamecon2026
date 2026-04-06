@@ -1,12 +1,22 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RecallHUD : FillTimerHudElement
+public class RecallHUD : HUDElement
 {
 
     public bool isActive;
     public string isActiveString = "Active";
     public float speed;
+    [SerializeField] protected TMP_Text countdownText;
+
+    public virtual void SetTimer(float time)
+    {
+        
+        animator.SetFloat("Timer", time);
+        countdownText.text = ((int)time+1).ToString();
+    }
+    
 
     public override void Activate()
     {

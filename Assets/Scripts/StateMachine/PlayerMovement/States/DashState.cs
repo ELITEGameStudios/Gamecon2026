@@ -178,11 +178,13 @@ public class DashState : PlayerMovementState
 
     public void EndCooldown()
     {
-               CooldownTracker = 0;
+        CooldownTracker = 0;
     }
     public override void End(bool interrupted = false)
     {
         base.End(interrupted);
+
+        HUDManager.Instance.dashElement.Deactivate();
         windManager.pauseWindGeneration = false;
         windManager.SetUsingWind(false);
         tweenTracker = 0;
