@@ -27,6 +27,7 @@ public class CrosshairManager : MonoBehaviour
         if (updateTracker <= 0 && crosshairImage.enabled)
         {
             updateTracker = UPDATE_RATE;
+            if (Camera.main == null) return;
             Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f));
             var Raycast = Physics.Raycast(ray, out RaycastHit hit, raycastRange, raycastMask, QueryTriggerInteraction.Collide);
             if (hit.collider == null) crosshairImage.color = baseColor;

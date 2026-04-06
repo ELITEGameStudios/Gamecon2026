@@ -13,6 +13,7 @@ public class LevelDatabase : ScriptableObject
         TestLevel,
         DevRoom_Temi,
         MapSystemTestLevel,
+        LitUpperLevelBlockout
     }
 
 
