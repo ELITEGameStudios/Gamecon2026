@@ -103,5 +103,6 @@ public class ProjectileContactModifier : ProjectileModifier
         {
             CheckForContact();
         }
+        previousProjectilePosition = projectile.rb.position;
     }
 }

@@ -488,6 +488,7 @@ public class Projectile : MonoBehaviour
         if (!projectileAbilities.ParryActive) EmbedKnife(); 
         
         ReportCollision(hitEnemy: true, normal, "Enemy");
+        windManager.RestoreWindOnKill();
     }        
     void EmbedKnife()
     {

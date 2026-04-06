@@ -14,7 +14,7 @@ public class RespawnManager : MonoBehaviour
     [SerializeField] Projectile knife;
 
     [SerializeField] GameObject deathNotifier;
-    bool playerDead = false;
+    public static bool PlayerDead { private set; get; } = false;
 
     public InputActionReference respawn;
 
@@ -24,6 +24,7 @@ public class RespawnManager : MonoBehaviour
         player.entityKilled.AddListener(OnPlayerKilled);
         deathNotifier.SetActive(false);
         respawnPoint.position = player.transform.position;
+        PlayerDead = false;
 
         var checkpoints = checkpointHolder.GetComponentsInChildren<PlayerCheckpoint>();
         foreach (PlayerCheckpoint checkpoint in checkpoints)
@@ -32,7 +33,7 @@ public class RespawnManager : MonoBehaviour
         }
         if (entityManager is WaveManager waveManager)
         {
-           // ConfigureWavePausingOnDeath(waveManager);
+           ConfigureWavePausingOnDeath(waveManager);
         }
     }
 
@@ -43,13 +44,14 @@ public class RespawnManager : MonoBehaviour
     protected void OnPlayerKilled(EntityBase player)
     {
         deathNotifier.SetActive(true);
-        playerDead = true;
+        PlayerDead = true;
         respawn.action.performed += OnRespawnRequest;
+        Time.timeScale = 0.0f;
     }
 
     void OnRespawnRequest(InputAction.CallbackContext ctx)
     {
-        if (!playerDead) return;
+        if (!PlayerDead || SettingsMenu.Paused) return;
         respawn.action.performed -= OnRespawnRequest;
         var respawnPoint = GetRespawnLocation(PlayerMovementStateMachine.instance.lastGroundedPos);
         Player.instance.SpawnAtPosition(respawnPoint.position);
@@ -58,17 +60,19 @@ public class RespawnManager : MonoBehaviour
         player.transform.eulerAngles = rotateTowardsRespawn;
 
         deathNotifier.SetActive(false);
-        playerDead = false;
+        PlayerDead = false;
 
         if (knife != null)
         {
             knife.Pickup();
         }
+
+        Time.timeScale = 1.0f;
     }
 
     public bool IsPlayerDead()
     {
-        return playerDead;
+        return PlayerDead;
     }
 
     protected void OnCheckpointReached(PlayerCheckpoint checkpoint)

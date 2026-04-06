@@ -31,7 +31,7 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] TMP_InputField horizSensInputField;
     [SerializeField] TMP_InputField vertSensInputField;
 
-    bool paused = false;
+    public static bool Paused { private set; get; } =  false;
     bool pausable = true;
     bool changesMade = false;
 
@@ -44,7 +44,7 @@ public class SettingsMenu : MonoBehaviour
     private void Awake()
     {
         pauseInput.action.performed += OnPausePressed;
-        paused = false;
+        Paused = false;
         saveButton.gameObject.SetActive(false);
         InitSettings();
 
@@ -155,10 +155,17 @@ public class SettingsMenu : MonoBehaviour
     public void OnPausePressed(InputAction.CallbackContext ctx)
     {
         if (!pausable) return;
-        paused = !paused;
-        settingsDisplay.SetActive(paused);
-        Time.timeScale = paused ? 0.0f : 1.0f;
-        Cursor.lockState = paused ? CursorLockMode.None : CursorLockMode.Locked;
+        Paused = !Paused;
+        settingsDisplay.SetActive(Paused);
+        if (Paused)
+        {
+            Time.timeScale = 0.0f;
+        }
+        else
+        {
+            Time.timeScale = RespawnManager.PlayerDead ? 0.0f : 1.0f;
+        }
+        Cursor.lockState = Paused ? CursorLockMode.None : CursorLockMode.Locked;
     }
 
     public void OnFullscreenToggled(bool isOn)
