@@ -14,7 +14,7 @@ public class RespawnManager : MonoBehaviour
     [SerializeField] Projectile knife;
 
     [SerializeField] GameObject deathNotifier;
-    bool playerDead = false;
+    static public bool PlayerDead { private set; get; } = false;
 
     public InputActionReference respawn;
 
@@ -32,7 +32,7 @@ public class RespawnManager : MonoBehaviour
         }
         if (entityManager is WaveManager waveManager)
         {
-           // ConfigureWavePausingOnDeath(waveManager);
+           ConfigureWavePausingOnDeath(waveManager);
         }
     }
 
@@ -43,13 +43,15 @@ public class RespawnManager : MonoBehaviour
     protected void OnPlayerKilled(EntityBase player)
     {
         deathNotifier.SetActive(true);
-        playerDead = true;
+        PlayerDead = true;
         respawn.action.performed += OnRespawnRequest;
+
+        Time.timeScale = 0.0f;
     }
 
     void OnRespawnRequest(InputAction.CallbackContext ctx)
     {
-        if (!playerDead) return;
+        if (!PlayerDead) return;
         respawn.action.performed -= OnRespawnRequest;
         var respawnPoint = GetRespawnLocation(PlayerMovementStateMachine.instance.lastGroundedPos);
         Player.instance.SpawnAtPosition(respawnPoint.position);
@@ -59,17 +61,19 @@ public class RespawnManager : MonoBehaviour
         player.transform.rotation = respawnPoint.rotation;
 
         deathNotifier.SetActive(false);
-        playerDead = false;
+        PlayerDead = false;
 
         if (knife != null)
         {
             knife.Pickup();
         }
+
+        Time.timeScale = 1.0f;
     }
 
     public bool IsPlayerDead()
     {
-        return playerDead;
+        return PlayerDead;
     }
 
     protected void OnCheckpointReached(PlayerCheckpoint checkpoint)

@@ -161,6 +161,7 @@ public class ProjectileAbilities : MonoBehaviour
         {
             
             var newTarget = manager.entityManager.GetClosestEnemyToPosition(featherKnife.rb.position, enemiesToNotHomeTowards);
+            if (newTarget == null) return;
             var targetDistance = Vector3.Distance(newTarget.transform.position, featherKnife.rb.position);
             if (targetDistance <= maxHomingRange)
             {

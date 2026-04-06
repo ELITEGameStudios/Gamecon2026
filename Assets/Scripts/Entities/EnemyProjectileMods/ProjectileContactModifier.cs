@@ -27,11 +27,14 @@ public class ProjectileContactModifier : ProjectileModifier
 
     bool overrideCollisionLogic = false;// Other mods can set this to true to override the default collision logic and just use the raycast check for contact
 
+
+    Collider enemyCollider;
     bool HasLimitedHits() => hasLimitedHits;
     public override void InitModifier(EnemyProjectile projectile)
     {
         base.InitModifier(projectile);
         projectile.projectileFired.AddListener(OnProjectileFired);
+        enemyCollider = projectile.enemy.GetComponent<Collider>();
     }
 
     public void OverrideCollisionLogic()
@@ -48,7 +51,7 @@ public class ProjectileContactModifier : ProjectileModifier
     public void ResetContactModifiers()
     {
         ignoredColliders.Clear();
-        ignoredColliders.Add(projectile.enemy.GetComponent<Collider>());
+        ignoredColliders.Add(projectile.projectileCollider);
         hitsRemaining = numberOfHits;
         previousProjectilePosition = projectile.rb.position;
     }
@@ -58,20 +61,20 @@ public class ProjectileContactModifier : ProjectileModifier
         if (terrainCheck.collider != null)
         {
             var hit = terrainCheck.collider;
-            if (hit.TryGetComponent(out Player player))
+            if (hit.gameObject.CompareTag("Player"))
             {
-                OnPlayerCollision(player, hit);
+                OnPlayerCollision(hit);
             }
             OnContact(terrainCheck);
         }
 
     }
 
-    public void OnPlayerCollision(Player player, Collider hit)
+    public void OnPlayerCollision(Collider hit)
     {
-        player.Damage(damage);
+        Player.instance.Damage(damage);
         ignoredColliders.Add(hit);
-        contactEvent.Invoke(projectile, player);
+        contactEvent.Invoke(projectile, Player.instance);
     }
     public virtual void OnContact(RaycastHit hit)
     {
@@ -95,6 +98,8 @@ public class ProjectileContactModifier : ProjectileModifier
         {
             if (!ignoredColliders.Contains(hit.collider))
             {
+                Debug.Log("Hit " + hit.collider.name);
+               
                 return hit;
             }
         }

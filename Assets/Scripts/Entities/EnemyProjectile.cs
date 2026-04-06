@@ -54,7 +54,6 @@ public class EnemyProjectile : MonoBehaviour
         }
         projectileModifiers = projectileModifiers.OrderByDescending(x => x.priority).ToList();
     }
-
     public virtual void DestroyProjectile()
     {
         projectileCollider.enabled = false;
@@ -100,15 +99,6 @@ public class EnemyProjectile : MonoBehaviour
             if (mod is T) return mod as T;
         }
         return null;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.attachedRigidbody == Player.instance.mainRb)
-        {
-        // Debug.Log("Hit Player");
-            Player.instance.Die();
-        }
     }
 }
 [System.Serializable]
