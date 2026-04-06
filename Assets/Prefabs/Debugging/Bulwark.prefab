@@ -129,6 +129,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2138415374352791910, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
+      propertyPath: hurtbox
+      value: 
+      objectReference: {fileID: 2687166013161052019}
+    - target: {fileID: 2138415374352791910, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
       propertyPath: cooldown
       value: 10
       objectReference: {fileID: 0}
@@ -244,6 +248,11 @@ PrefabInstance:
       addedObject: {fileID: 4740535419586273680}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
+--- !u!65 &2687166013161052019 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 477430370269892625, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
+  m_PrefabInstance: {fileID: 2588047117190432610}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7985979950359556352 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5564603403382732386, guid: fe503f679b4b9154b9eb705806ade8e3, type: 3}
