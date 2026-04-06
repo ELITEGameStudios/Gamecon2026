@@ -181,6 +181,8 @@ public class DashState : PlayerMovementState
     public override void End(bool interrupted = false)
     {
         base.End(interrupted);
+
+        HUDManager.Instance.dashElement.Deactivate();
         windManager.pauseWindGeneration = false;
         tweenTracker = 0;
         movement.rigidbody.linearDamping = baseDrag;

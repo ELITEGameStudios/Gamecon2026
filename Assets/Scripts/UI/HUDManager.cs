@@ -12,7 +12,7 @@ public class HUDManager : MonoBehaviour
     public ScreenDimmer screenDimmer;
     
     [Header("Gameplay UI Elements")]
-    public FillTimerHudElement dashElement; 
+    public DashHUDElement dashElement; 
     public RecallHUD recallElement; 
     public FillTimerHudElement blinkElement;
     
@@ -53,6 +53,13 @@ public class HUDManager : MonoBehaviour
         victoryCondition.defeatAchieved += OnLevelLost;
     }
 
+
+    public void UpdateDashSoarState(float windAsPercent)
+    {
+        if(dashElement != null){
+            dashElement.SetSoarTime(windAsPercent);
+        }
+    }
 
     void OnWaveChanged(int index)
     {
