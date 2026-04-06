@@ -168,7 +168,7 @@ public class WallRunState : PlayerMovementState
 
     public override void Jump()
     {   
-
+        
         float xJumpDirection = 
             jumpWithOffset 
                 ? (isRight ? -jumpXStrength : jumpXStrength )
@@ -188,6 +188,8 @@ public class WallRunState : PlayerMovementState
         //    (currentWallRunSpeed + wallRunAdditiveSpeed * wallRunAdditiveForceOverSpeed.Evaluate(currentWallRunSpeed));
 
         float lateralMovement = new Vector2(rigidbody.linearVelocity.x, rigidbody.linearVelocity.z).magnitude;
+        
+        HUDManager.Instance.OnWalljump();
 
         Debug.Log("Velocity after jump: " + lateralMovement);
         movement.SetState(movement.airborneState);

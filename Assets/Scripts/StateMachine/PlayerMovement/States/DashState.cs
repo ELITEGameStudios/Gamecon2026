@@ -122,7 +122,7 @@ public class DashState : PlayerMovementState
         if (currentDashTimer > 0) { currentDashTimer -= Time.fixedDeltaTime; }
         else
         {
-            if (windManager.CurrentWind > 0 && dashButton.action.IsPressed())
+            if (windManager.CurrentWind > 0 && dashButton.action.IsPressed() && movement.soarDashEnabled)
             {
                 EmpowerDash();
             }
@@ -162,7 +162,9 @@ public class DashState : PlayerMovementState
         if (empowered) return;
         Debug.Log("Empowering dash");
         empowered = true;
+        HUDManager.Instance.OnSoar();
         windManager.pauseWindGeneration = true;
+        windManager.SetUsingWind(true);
         initialSpeedWhenEmpowered = rigidbody.linearVelocity.magnitude;
     }
     public override void Jump()
@@ -182,6 +184,7 @@ public class DashState : PlayerMovementState
     {
         base.End(interrupted);
         windManager.pauseWindGeneration = false;
+        windManager.SetUsingWind(false);
         tweenTracker = 0;
         movement.rigidbody.linearDamping = baseDrag;
     }

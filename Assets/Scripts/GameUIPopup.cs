@@ -13,6 +13,7 @@ public class GameUIPopup : MonoBehaviour
     
     public bool sendTimeCommandOnActive;
     public float targetTimescale = 0;
+    public float toTimescaleKp = 1;
 
     public bool locked;
 
@@ -27,6 +28,22 @@ public class GameUIPopup : MonoBehaviour
     {
         if(!active){return;}
         Toggle();
+    }
+
+    void Update()
+    {
+        if(active && sendTimeCommandOnActive)
+        {
+            if(Time.timeScale != targetTimescale && toTimescaleKp < 1)
+            {
+                PerformTimescaleIteration();
+            }
+        }
+    }
+
+    void PerformTimescaleIteration()
+    {
+        Time.timeScale = Mathf.Lerp(Time.timeScale, targetTimescale, toTimescaleKp);
     }
 
     public void Toggle()
@@ -48,7 +65,12 @@ public class GameUIPopup : MonoBehaviour
         }
 
         if (sendTimeCommandOnActive){
-            Time.timeScale = active ? targetTimescale : 1;
+            if(toTimescaleKp <= 0 || !active)
+            {
+                Time.timeScale = active ? targetTimescale : 1;
+                return;
+            }
+            PerformTimescaleIteration();
         }
     }
     

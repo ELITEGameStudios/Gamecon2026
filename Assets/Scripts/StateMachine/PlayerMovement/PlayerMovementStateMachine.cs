@@ -62,6 +62,7 @@ public class PlayerMovementStateMachine : StateMachine
     public bool isConsideredMoving => hasMovementInput && rigidbody.linearVelocity.magnitude > movingConsiderationDeadzone;
     public bool canDash => currentState != dashState && hasDash && currentState != wallRunState && dashState.CooldownTracker <= 0.0f;
     public bool wasMovingLastFrame;
+    public bool soarDashEnabled = true;
 
     public InputActionReference move, jump, look, dash;
 
@@ -170,6 +171,12 @@ public class PlayerMovementStateMachine : StateMachine
             Debug.Log("Caught an error");
         }
     }
+
+    public void EnableSoarDash()
+    {
+        soarDashEnabled = true;
+    }
+    
     protected override void OnSetState()
     {
         stateName = currentState.name;

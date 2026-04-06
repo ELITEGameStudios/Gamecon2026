@@ -100,6 +100,19 @@ public class EnemyProjectile : MonoBehaviour
         }
         return null;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.attachedRigidbody == Player.instance.mainRb)
+        {
+            Player.instance.Die();
+        }
+        else
+        {
+            Debug.Log("Did not hit player");
+            DestroyProjectile();
+        }
+    }
 }
 [System.Serializable]
 public class ProjectileFireInformation

@@ -21,6 +21,8 @@ public class HUDManager : MonoBehaviour
     public GameUIPopup blinkPrompt;
     public GameUIPopup shootPrompt;
     public GameUIPopup recallPrompt;
+    public GameUIPopup jumpPrompt;
+    public GameUIPopup soarPrompt;
     
 
     public static HUDManager Instance { get; private set;}
@@ -95,6 +97,8 @@ public class HUDManager : MonoBehaviour
         }
     }
 
+    public void OnSoar() {if(soarPrompt.active) {soarPrompt.Deactivate(); soarPrompt.locked = true;} }
+    public void OnWalljump() {jumpPrompt.Deactivate();}
     public void TriggerBlinkPrompt() {blinkPrompt.Deactivate(); blinkPrompt.locked = true;}
     public void TriggerRecallPrompt() {recallPrompt.Deactivate(); recallPrompt.locked = true;}
     public void TriggerShootPrompt() { 
