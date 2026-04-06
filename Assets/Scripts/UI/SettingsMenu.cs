@@ -157,7 +157,14 @@ public class SettingsMenu : MonoBehaviour
         if (!pausable) return;
         paused = !paused;
         settingsDisplay.SetActive(paused);
-        Time.timeScale = paused ? 0.0f : 1.0f;
+        if (paused)
+        {
+            Time.timeScale = 0.0f;
+        }
+        else
+        {
+            Time.timeScale = RespawnManager.PlayerDead ? 0.0f : 1.0f;
+        }
         Cursor.lockState = paused ? CursorLockMode.None : CursorLockMode.Locked;
     }
 

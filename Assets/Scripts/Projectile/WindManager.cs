@@ -14,22 +14,23 @@ public class WindManager : MonoBehaviour
     [SerializeField] float minSpeedForWind;
     [SerializeField] float maxSpeedForWind;
     [SerializeField] float speedToWindRatio = 4.0f;
+    [SerializeField] float wallrunAdditivePerSecond = 0.01f;
 
     [Header("VFX")]
-    [SerializeField] Material tattooMaterial;
     [SerializeField] ParticleSystem windWraps;
     [SerializeField] float maxWindWraps = 20.0f;
     [SerializeField] Color baseWindColor = Color.white;
     [SerializeField] Color maxWindColor = Color.blue;
+    [SerializeField, ColorUsage(true, true)] Color windChargeCol, windUseCol;
     [SerializeField, ColorUsage (true, true)] Color minWindTattooColor = Color.white;
     [SerializeField, ColorUsage(true, true)] Color maxWindTattooColor = Color.blue;
-    [SerializeField] SkinnedMeshRenderer leftArm;
+    [SerializeField] SkinnedMeshRenderer leftArm, rightArm;
     [SerializeField] AnimationCurve colorTransitionCurve;
     float currentWind = 0;
     public float CurrentWind
     {
         get => currentWind;
-        set => currentWind = Mathf.Clamp (value, 0, 100);
+        set => currentWind = Mathf.Clamp (value, 0, 1);
     }
 
     public float MaxSpeed
@@ -56,7 +57,7 @@ public class WindManager : MonoBehaviour
     ParticleSystem.EmissionModule wrapsEmission;
     ParticleSystem.MainModule wrapsMainModule;
 
-    Material runtimeTattooMaterial;
+    Material[] runtimeTattooMaterials;
 
     private void Start()
     {
@@ -70,8 +71,12 @@ public class WindManager : MonoBehaviour
         wrapsEmission = windWraps.emission;
         wrapsMainModule = windWraps.main;
 
-        runtimeTattooMaterial = new(tattooMaterial);
-        leftArm.material = runtimeTattooMaterial;
+        runtimeTattooMaterials = new Material[]
+        {
+            leftArm.material,
+            rightArm.material
+        };
+        SetUsingWind(false);
 
     }
     void OnKnifeRetrieved(KnifeRetrievalInfo info)
@@ -97,8 +102,9 @@ public class WindManager : MonoBehaviour
         if (speed < minSpeedSquared) return;
 
         var speedAsProgress = speed / maxSpeedSquared;
-        if (speedAsProgress > 1.0f) speedAsProgress = 1.0f;
-        float windToAdd = speedToWind.Evaluate(speedAsProgress) * speedToWindRatio;
+        if (speedAsProgress > 0.1f) speedAsProgress = 0.1f;
+        float wallRunAdditive = PlayerMovementStateMachine.instance.currentState == PlayerMovementStateMachine.instance.wallRunState ? wallrunAdditivePerSecond * Time.fixedDeltaTime : 0; 
+        float windToAdd = speedToWind.Evaluate(speedAsProgress) * speedToWindRatio + wallRunAdditive;
 
         CurrentWind += windToAdd;
     }
@@ -106,7 +112,8 @@ public class WindManager : MonoBehaviour
     {
         if (windDisplay != null) windDisplay.text = "Wind: " + Mathf.RoundToInt(CurrentWind);
         if (speedDisplay != null) speedDisplay.text = "Speed: " + Mathf.RoundToInt(new Vector2(playerRB.linearVelocity.x, playerRB.linearVelocity.z).magnitude) + "u/s";
-        float windAsPercent = CurrentWind / 100.0f;
+        float windAsPercent = CurrentWind;
+        HUDManager.Instance.UpdateDashSoarState(windAsPercent);
         if (windWraps.gameObject.activeSelf)
         {
             wrapsEmission.rateOverTime = Mathf.Lerp(0, maxWindWraps, windAsPercent);
@@ -121,10 +128,26 @@ public class WindManager : MonoBehaviour
 
         }
 
-        if (tattooMaterial != null)
+        foreach (Material tatooMaterial in runtimeTattooMaterials)
         {
-            var percentageToColor = colorTransitionCurve.Evaluate(windAsPercent);
-            runtimeTattooMaterial.SetFloat("_windPercentage", percentageToColor);
+            if (tatooMaterial != null)
+            {
+                var percentageToColor = colorTransitionCurve.Evaluate(windAsPercent);
+                tatooMaterial.SetFloat("_windPercentage", percentageToColor);
+            }
+        }
+    }
+
+    public void SetUsingWind(bool usingWind)
+    {
+            Debug.Log("Method called");
+        foreach (Material tatooMaterial in runtimeTattooMaterials)
+        {
+            if (tatooMaterial != null)
+            {
+                Debug.Log("Mat is here");
+                tatooMaterial.SetColor("_EmissionCol", usingWind ? windUseCol : windChargeCol);
+            }
         }
     }
 

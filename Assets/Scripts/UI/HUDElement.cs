@@ -28,7 +28,7 @@ public class HUDElement : MonoBehaviour
 
     public virtual void SetReady(bool isReady)
     {
-        this.isReady = true;
+        this.isReady = isReady;
         animator.SetBool(ReadyStateString, isReady);
     }
 

@@ -12,15 +12,17 @@ public class HUDManager : MonoBehaviour
     public ScreenDimmer screenDimmer;
     
     [Header("Gameplay UI Elements")]
-    public FillTimerHudElement dashElement; 
+    public DashHUDElement dashElement; 
     public RecallHUD recallElement; 
-    public FillTimerHudElement blinkElement;
+    public BlinkHUDElement blinkElement;
     
     [Space(20)] 
     // public GameUIPopup dashTutPrompt;
     public GameUIPopup blinkPrompt;
     public GameUIPopup shootPrompt;
     public GameUIPopup recallPrompt;
+    public GameUIPopup jumpPrompt;
+    public GameUIPopup soarPrompt;
     
 
     public static HUDManager Instance { get; private set;}
@@ -53,6 +55,13 @@ public class HUDManager : MonoBehaviour
         victoryCondition.defeatAchieved += OnLevelLost;
     }
 
+
+    public void UpdateDashSoarState(float windAsPercent)
+    {
+        if(dashElement != null){
+            dashElement.SetSoarTime(windAsPercent);
+        }
+    }
 
     void OnWaveChanged(int index)
     {
@@ -95,6 +104,8 @@ public class HUDManager : MonoBehaviour
         }
     }
 
+    public void OnSoar() {if(soarPrompt.active) {soarPrompt.Deactivate(); soarPrompt.locked = true;} }
+    public void OnWalljump() {jumpPrompt.Deactivate();}
     public void TriggerBlinkPrompt() {blinkPrompt.Deactivate(); blinkPrompt.locked = true;}
     public void TriggerRecallPrompt() {recallPrompt.Deactivate(); recallPrompt.locked = true;}
     public void TriggerShootPrompt() { 

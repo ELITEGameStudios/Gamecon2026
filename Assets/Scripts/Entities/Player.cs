@@ -10,6 +10,10 @@ public class Player : EntityBase
 
     //lets the property be seralized
     [SerializeField] EntityDetectionSystem feds;
+
+    [SerializeField] float invincibilityDuration = 0.5f;
+
+    float invincibilityTimer = 0f;
     protected override void Init()
     {
         if(instance == null){ instance = this; }
@@ -41,11 +45,25 @@ public class Player : EntityBase
     public override void Damage(int damage = 1)
     {
         // Before damage event is internally processed 
-
+        if (invincibilityTimer > 0) return;
         base.Damage(damage);
         // after damage event is internally processed 
 
 
+    }
+
+    public void OnRespawn()
+    {
+        invincibilityTimer = invincibilityDuration;
+    }
+
+    protected override void OnUpdate()
+    {
+        base.OnUpdate();
+        if (invincibilityTimer > 0)
+        {
+            invincibilityTimer -= Time.deltaTime;
+        }
     }
 
 }

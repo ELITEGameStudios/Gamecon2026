@@ -9,6 +9,7 @@ public class RangedEnemy : EnemyBase
     [SerializeField] protected float projectilePoolSize = 10;
     [SerializeField] protected List<ProjectileFireInformation> projectileInfo;
     [SerializeField] protected EntityDetector entityDetector;
+    [SerializeField] protected Collider hurtbox;
 
     [Header("Firing Attributes")]
     [SerializeField] protected float cooldown = 20.0f;
@@ -19,33 +20,26 @@ public class RangedEnemy : EnemyBase
 
     protected bool firing = false;
 
-    protected Dictionary<ProjectileFireInformation, Queue<EnemyProjectile>> projectilePools = new();  
-    private void Start()
+    protected Dictionary<ProjectileFireInformation, Queue<EnemyProjectile>> projectilePools = new();
+
+    protected static LayerMask playerMask;
+
+    Collider[] playerCollider = new Collider[1];
+
+    protected UnityEvent startedFiring = new UnityEvent();
+
+    protected override void Init()
     {
-        if (projectileInfo ==  null) 
+        base.Init();
+        if (projectileInfo == null)
         {
             Debug.LogWarning("Could not find velocity manager on projectile " + name);
             Destroy(gameObject);
         }
         InitProjectilePool();
+        playerMask = LayerMask.GetMask("Player");
     }
 
-    protected EnemyProjectile GetProjectile(int poolIndex)
-    {
-        EnemyProjectile lowLifetimeProj = projectilePools[projectileInfo[poolIndex]].Peek();
-        foreach (EnemyProjectile proj in projectilePools[projectileInfo[poolIndex]])
-        {
-            if(!proj.Active){return proj;}
-            else
-            {
-                if(lowLifetimeProj == null || proj.currentLifetime <= lowLifetimeProj.currentLifetime)
-                {
-                    lowLifetimeProj = proj; 
-                }
-            }
-        }
-        return lowLifetimeProj;
-    }
 
     protected void InitProjectilePool()
     {
@@ -83,6 +77,13 @@ public class RangedEnemy : EnemyBase
                 }
             }
         }
+
+        var overlappingColliders = Physics.OverlapBoxNonAlloc(hurtbox.bounds.center, hurtbox.bounds.extents, playerCollider, hurtbox.transform.rotation, playerMask);
+        if (overlappingColliders > 0)
+        {
+            Player.instance.Damage();
+        }
+
     }
 
     protected virtual void Shoot(Transform target)
@@ -103,6 +104,7 @@ public class RangedEnemy : EnemyBase
     {
         if (projectileInfo == null) yield break;
         firing = true;
+        startedFiring.Invoke();
         yield return new WaitForSeconds(delayBeforeFiring);
         foreach (var info in projectileInfo)
         {
