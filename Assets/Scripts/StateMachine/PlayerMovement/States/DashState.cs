@@ -183,6 +183,8 @@ public class DashState : PlayerMovementState
     public override void End(bool interrupted = false)
     {
         base.End(interrupted);
+
+        HUDManager.Instance.dashElement.Deactivate();
         windManager.pauseWindGeneration = false;
         windManager.SetUsingWind(false);
         tweenTracker = 0;
