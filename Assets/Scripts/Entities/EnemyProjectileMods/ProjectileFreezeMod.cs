@@ -39,7 +39,7 @@ public class ProjectileFreezeMod : ProjectileModifier
                 contactModifier = projectile.GetComponent<ProjectileContactModifier>();
                 if (contactModifier != null)
                 {
-                    contactModifier.contactEvent.AddListener(OnPlayerStruck);
+                    Player.instance.entityKilled.AddListener(OnPlayerStruck);
                 }
                 else
                 {
@@ -51,7 +51,7 @@ public class ProjectileFreezeMod : ProjectileModifier
         }
     }
 
-    void OnPlayerStruck(EnemyProjectile projectile, Player player)
+    void OnPlayerStruck(EntityBase player)
     {
         if (player == null || freezeType != FreezeType.FreezeWhenPlayerDead) return;
         playerDead = true;

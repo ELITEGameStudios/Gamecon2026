@@ -26,9 +26,12 @@ public class RangedEnemy : EnemyBase
 
     Collider[] playerCollider = new Collider[1];
 
-    private void Start()
+    protected UnityEvent startedFiring = new UnityEvent();
+
+    protected override void Init()
     {
-        if (projectileInfo ==  null) 
+        base.Init();
+        if (projectileInfo == null)
         {
             Debug.LogWarning("Could not find velocity manager on projectile " + name);
             Destroy(gameObject);
@@ -37,22 +40,6 @@ public class RangedEnemy : EnemyBase
         playerMask = LayerMask.GetMask("Player");
     }
 
-    protected EnemyProjectile GetProjectile(int poolIndex)
-    {
-        EnemyProjectile lowLifetimeProj = projectilePools[projectileInfo[poolIndex]].Peek();
-        foreach (EnemyProjectile proj in projectilePools[projectileInfo[poolIndex]])
-        {
-            if(!proj.Active){return proj;}
-            else
-            {
-                if(lowLifetimeProj == null || proj.currentLifetime <= lowLifetimeProj.currentLifetime)
-                {
-                    lowLifetimeProj = proj; 
-                }
-            }
-        }
-        return lowLifetimeProj;
-    }
 
     protected void InitProjectilePool()
     {
@@ -117,6 +104,7 @@ public class RangedEnemy : EnemyBase
     {
         if (projectileInfo == null) yield break;
         firing = true;
+        startedFiring.Invoke();
         yield return new WaitForSeconds(delayBeforeFiring);
         foreach (var info in projectileInfo)
         {
