@@ -161,6 +161,13 @@ public class WaveManager : IEntityManager
         InitWave(currentWave);
     }
 
+    public void StartSystem()
+    {
+        GameManager.Instance.SetInitialized(true);
+        waveIndex = 0;
+        InitWave(waveData[0]);
+    }
+
     // public void InitGate(GateData data)
     // {
     //     foreach (var enemy in data.enemiesInGate)
@@ -226,9 +233,7 @@ public class WaveManager : IEntityManager
 
         if (GameManager.Instance.autoStartWaves)
         {
-            GameManager.Instance.SetInitialized(true);
-            waveIndex = 0;
-            InitWave(waveData[0]);
+            StartSystem();
         }
 
         if (sceneEnemies == null) return;

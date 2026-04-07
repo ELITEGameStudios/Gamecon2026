@@ -110,6 +110,12 @@ public class GameManager : MonoBehaviour
         Initialized = true;
     }
 
+    public void ManualStartWaveSystem()
+    {
+        if(entityManager is WaveManager){(entityManager as WaveManager).StartSystem();}
+        SetInitialized(true);
+    }
+
     void OnVictory()
     {   
         if (gameOver) return;

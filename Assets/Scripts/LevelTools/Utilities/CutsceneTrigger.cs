@@ -40,7 +40,8 @@ public class CutsceneTrigger : MonoBehaviour
     public void OnCutsceneOver()
     {
         Debug.Log("cutscene done");
-        SceneManager.LoadScene(LevelDatabase.LevelNames.LitUpperLevelBlockout.ToString());
+        SceneManager.LoadScene("UpperLevelBlockout");
+        GameManager.Instance.ManualStartWaveSystem();
     }
 
     void PlayBansheeCutscene()

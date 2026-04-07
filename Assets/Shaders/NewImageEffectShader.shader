@@ -22,6 +22,7 @@ Shader "Clouds/MainCloudShader"
 
         [Toggle] _ShadowmapUse("Use shadowmap", Float) = 0
         [Toggle] _SetShadow("Test Volumetric Shadows", Float) = 0
+        [Toggle] _SetEnabled("Enabled", Float) = 1
         // _ShadowmapMatrix("_ShadowmapMatrix", Matrix)
         
         _FogHeight("Height Y", float) = 0
@@ -73,6 +74,7 @@ Shader "Clouds/MainCloudShader"
             TEXTURE2D(_ShadowmapTex);
             float _ShadowmapUse;
             float _SetShadow;
+            float _SetEnabled;
 
             float4x4 _ShadowmapMatrix;
             float3 _ShadowmapCamPos;
@@ -83,6 +85,8 @@ Shader "Clouds/MainCloudShader"
             {
                 Texture2D inputTexture = _BlitTexture;
                 float4 inputColor = SAMPLE_TEXTURE2D(inputTexture, sampler_LinearClamp, IN.texcoord);
+                if(_SetEnabled == 0){return inputColor;}
+
                 float depth = SampleSceneDepth(IN.texcoord);
                 float3 position = ComputeWorldSpacePosition(IN.texcoord, depth, UNITY_MATRIX_I_VP);
                 

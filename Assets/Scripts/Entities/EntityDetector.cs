@@ -8,7 +8,7 @@ public class EntityDetector : MonoBehaviour
 
     [SerializeField] LayerMask detectionMask;
 
-    List<EntityBase> entities = new();
+    [SerializeField] List<EntityBase> entities = new();
 
     public  IReadOnlyList<EntityBase> DetectedEntities  => entities;
 

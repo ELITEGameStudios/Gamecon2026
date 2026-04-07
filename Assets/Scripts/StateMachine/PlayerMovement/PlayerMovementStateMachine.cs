@@ -359,7 +359,10 @@ public class PlayerMovementStateMachine : StateMachine
     }
     
     void OnCollisionStay(Collision collision){
-        currentState.OnCollisionStay(collision);
+        if(currentState != null)
+        {        
+            currentState.OnCollisionStay(collision);
+        }
 
         if(currentState != wallRunState && currentState != groundedState){
             CheckWallViaRay(collision);

@@ -64,21 +64,16 @@ public class RangedEnemy : EnemyBase
         bool foundPlayer = false;
         if (entityDetector.DetectedEntities.Count > 0)
         {
-            foreach (var entity in entityDetector.DetectedEntities)
-            {
-                if (entity is Player player )
-                {
-                   if (!firing && cooldownTracker <= 0.0f) Shoot(player.transform);
-                
-                    Vector3 lookTarget = new Vector3(
-                        player.transform.position.x,
-                        transform.position.y,
-                        player.transform.position.z
-                    );
-                   transform.LookAt(lookTarget);
-                    foundPlayer = true;
-                }
-            }
+            Player player = Player.instance; 
+            if (!firing && cooldownTracker <= 0.0f) Shoot(player.transform);
+        
+            Vector3 lookTarget = new Vector3(
+                player.transform.position.x,
+                transform.position.y,
+                player.transform.position.z
+            );
+            transform.LookAt(lookTarget);
+            foundPlayer = true;
         }
         playerNearby = foundPlayer;
 
@@ -97,6 +92,7 @@ public class RangedEnemy : EnemyBase
 
     void Update()
     {
+        // SearchForPlayer();
         if (cooldownTracker > 0.0f)
         {
             cooldownTracker -= Time.deltaTime;
