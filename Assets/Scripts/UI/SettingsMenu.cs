@@ -8,9 +8,9 @@ using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
 {
-    [SerializeField] GameObject settingsDisplay;
+    [SerializeField] GameObject pauseDisplay, settingsMenu;
     [SerializeField] PageManager pageManager;
-    [SerializeField] InputActionReference pauseInput;
+    [SerializeField] InputActionReference pauseInput, backInput;
     [SerializeField] Button saveButton;
     [SerializeField] GameObject fpsDisplay;
     [SerializeField] CrosshairManager crosshairManager;
@@ -31,6 +31,7 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] TMP_InputField horizSensInputField;
     [SerializeField] TMP_InputField vertSensInputField;
 
+    bool settingsIsOpen = false;
     bool paused = false;
     bool pausable = true;
     bool changesMade = false;
@@ -44,6 +45,7 @@ public class SettingsMenu : MonoBehaviour
     private void Awake()
     {
         pauseInput.action.performed += OnPausePressed;
+        backInput.action.performed += OnBackPressed;
         paused = false;
         saveButton.gameObject.SetActive(false);
         InitSettings();
@@ -73,7 +75,7 @@ public class SettingsMenu : MonoBehaviour
         InitVideoSettings();
         InitAudioSettings();
         InitInputSettings();
-        settingsDisplay.SetActive(false);
+        pauseDisplay.SetActive(false);
         ApplyNewSettings();
     }
 
@@ -151,21 +153,39 @@ public class SettingsMenu : MonoBehaviour
         //need to sit up audio mixers
     }
 
-
-    public void OnPausePressed(InputAction.CallbackContext ctx)
+    public void SetPaused(bool pause)
     {
         if (!pausable) return;
-        paused = !paused;
-        settingsDisplay.SetActive(paused);
+        paused = pause;
+        pauseDisplay.SetActive(paused);
         if (paused)
         {
             Time.timeScale = 0.0f;
         }
         else
         {
+            SetSettings(false);
             Time.timeScale = RespawnManager.PlayerDead ? 0.0f : 1.0f;
         }
         Cursor.lockState = paused ? CursorLockMode.None : CursorLockMode.Locked;
+    }
+
+
+    public void OnBackPressed(InputAction.CallbackContext ctx)
+    {
+        if(settingsIsOpen){SetSettings(false);}
+        else if(paused) {SetPaused(!paused);}
+    }
+
+    public void SetSettings(bool settings)
+    {
+        settingsIsOpen = settings;
+        settingsMenu.SetActive(settings);
+    }
+
+    public void OnPausePressed(InputAction.CallbackContext ctx)
+    {
+        SetPaused(!paused);
     }
 
     public void OnFullscreenToggled(bool isOn)

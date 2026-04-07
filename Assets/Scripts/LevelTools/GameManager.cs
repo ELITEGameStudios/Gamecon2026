@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
     [Header("Wave System Directors")]
     public bool autoStartWaves;
     public Transform customLevelOrigin;
+    public WaveCounter waveCounter;
+    public WinScreen victoryScreen;
 
     private async Task InitializeManager()
     {
@@ -94,12 +96,16 @@ public class GameManager : MonoBehaviour
 
     }
 
-
+    public void SetInitialized(bool initialized) // wave system calls this
+    {
+        Initialized = true;
+    }
 
     void OnVictory()
     {   
         if (gameOver) return;
         gameOver = true;
+        if(victoryScreen != null){victoryScreen.OpenWinScreen(timerManager.GetDisplayText());}
         gameEnding?.Invoke(timerManager.GetCurrentLevelTime());
     }
     void OnDefeat()
@@ -121,6 +127,8 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         if(!Initialized) return;
+
+        Debug.Log("Initialized");
         OnTimerUpdated();
         if(entityManager is WaveManager){(entityManager as WaveManager).UpdateWaves();}
     }

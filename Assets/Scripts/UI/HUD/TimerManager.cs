@@ -10,7 +10,7 @@ public class TimerManager : MonoBehaviour
     [SerializeField, Range(0.01f, 1.0f)] float spaceBetweenCharacters = 0.7f;
 
     float timerTracker = 0.0f;
-    bool runTimer = false;
+    [SerializeField] bool runTimer = false;
     TimeSpan timerTimespan;
 
     bool playerSpawned = false;
@@ -30,9 +30,16 @@ public class TimerManager : MonoBehaviour
     private void Update()
     {
         if (!runTimer || !GameManager.Instance.Initialized) return;
+        Debug.Log("Timer Running");
+     
         timerTracker += Time.deltaTime;
         timerTimespan = TimeSpan.FromSeconds(timerTracker);
         timerDisplay.text = $"<mspace={spaceBetweenCharacters}em >{timerTimespan.ToString("mm\\:ss")}</mspace>";
+    }
+
+    public string GetDisplayText()
+    {
+        return timerDisplay.text;
     }
 
     void OnPlayerKilled()

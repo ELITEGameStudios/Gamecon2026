@@ -14,16 +14,18 @@ public class LeaderboardManager : MonoBehaviour
     [SerializeField] GameObject leaderboardDisplay;
     [SerializeField] GameObject entriesHolder;
     [SerializeField] LeaderboardEntry entryPrefab;
+    [SerializeField] LeaderboardEntry[] firstThreeEntries;
     [SerializeField] TMP_InputField attemptNamer;
     [SerializeField] Button saveAttemptButton;
  
+    [SerializeField] WinScreen winScreen;
     LeaderboardService leaderboardService;
     LevelDatabase.LevelNames currentLevel;
     SaveSystem saveSystem;
 
     float completionTime = 0;
 
-    List<LevelAttempt> levelCompletions = new();
+    public List<LevelAttempt> levelCompletions {get; private set; } = new();
 
     private void Awake()
     {
@@ -55,29 +57,38 @@ public class LeaderboardManager : MonoBehaviour
         Debug.Log("Loaded previous attempts");
         if (levelCompletions.Count == 0) return;
         levelCompletions = leaderboardService.SortAttemptsByTime(levelCompletions);
-        foreach (var data in levelCompletions)
+        for (int i = 0; i < levelCompletions.Count; i++)
         {
-            LeaderboardEntry newEntry = Instantiate(entryPrefab, entriesHolder.transform);
-            newEntry.InitEntry(data.name, leaderboardService.GetFormattedTime(data.time));
+            if(i < firstThreeEntries.Length)
+            {
+                firstThreeEntries[i].InitEntry(levelCompletions[i].name, leaderboardService.GetFormattedTime(levelCompletions[i].time), i+1);
+            }
+            else
+            {
+                LeaderboardEntry newEntry = Instantiate(entryPrefab, entriesHolder.transform);
+                newEntry.InitEntry(levelCompletions[i].name, leaderboardService.GetFormattedTime(levelCompletions[i].time), i+1);
+            }
         }
         Debug.Log("Finished leaderboard manager init");
     }
 
     void ClearExistingEntryGameObjects()
     {
+        int i = 0;
         foreach (Transform entry in entriesHolder.transform)
         {
-            Destroy(entry.gameObject);
+            if(i >= firstThreeEntries.Length)
+            {
+                Destroy(entry.gameObject);
+            }
+            i++;
         }
     }
 
     public void OnLevelOver(float time)
     {
         completionTime = time;
-        leaderboardDisplay.SetActive(true);
-        Cursor.lockState = CursorLockMode.None;
-        saveAttemptButton.interactable = (time != FAILURE_LEVEL_TIME);
-        attemptNamer.interactable = (time != FAILURE_LEVEL_TIME);
+
     }
     public void SaveNewAttempt()
     {
@@ -93,6 +104,27 @@ public class LeaderboardManager : MonoBehaviour
         InitManager(currentLevel);
     }
 
+    public int GetProjectedPlacement(float time)
+    {
+        int projectedPos = 1;
+        for (int i = 0; i < levelCompletions.Count; i++)
+        {
+            if(levelCompletions[i].time > time)
+            {
+                projectedPos = i+1;
+                break;
+            }
+        }
+        return projectedPos;
+    }
+
+    public void OpenLeaderboard()
+    {
+        leaderboardDisplay.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        saveAttemptButton.interactable = (completionTime != FAILURE_LEVEL_TIME);
+        attemptNamer.interactable = (completionTime != FAILURE_LEVEL_TIME);
+    }
     public void CloseLeaderboard()
     {
         leaderboardDisplay.SetActive(false);
