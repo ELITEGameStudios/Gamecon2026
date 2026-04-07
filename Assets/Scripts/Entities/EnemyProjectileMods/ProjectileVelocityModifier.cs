@@ -25,6 +25,7 @@ public class ProjectileVelocityModifier : ProjectileModifier
     {
         projectile.projectileSpeed = dir * projectileSpeed;
         projectile.projectileCollider.enabled = true;
+        projectile.meshObjects.transform.rotation = Quaternion.LookRotation(dir);
     }
     void StopMovement()
     {

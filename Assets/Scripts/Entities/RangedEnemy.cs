@@ -27,6 +27,7 @@ public class RangedEnemy : EnemyBase
     Collider[] playerCollider = new Collider[1];
 
     protected UnityEvent startedFiring = new UnityEvent();
+    protected bool playerNearby = false;
 
     protected override void Init()
     {
@@ -58,8 +59,9 @@ public class RangedEnemy : EnemyBase
         }
     }
 
-    private void FixedUpdate()
+    protected virtual void SearchForPlayer()
     {
+        bool foundPlayer = false;
         if (entityDetector.DetectedEntities.Count > 0)
         {
             foreach (var entity in entityDetector.DetectedEntities)
@@ -74,9 +76,11 @@ public class RangedEnemy : EnemyBase
                         player.transform.position.z
                     );
                    transform.LookAt(lookTarget);
+                    foundPlayer = true;
                 }
             }
         }
+        playerNearby = foundPlayer;
 
         var overlappingColliders = Physics.OverlapBoxNonAlloc(hurtbox.bounds.center, hurtbox.bounds.extents, playerCollider, hurtbox.transform.rotation, playerMask);
         if (overlappingColliders > 0)
