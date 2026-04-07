@@ -149,6 +149,10 @@ public class WaveManager : IEntityManager
         // gateTracker = currentWave.timeBeforeFirstGate;
         // spawnedFirstGate = false;
         // gateIndex = 0;
+        if(GameManager.Instance.waveCounter != null)
+        {
+            GameManager.Instance.waveCounter.OnStartWave(waveIndex);
+        }
         waveStarted?.Invoke(waveIndex);
     }
 
@@ -199,7 +203,7 @@ public class WaveManager : IEntityManager
     public void OnWaveEnd()
     {
         // bool anotherGateInWave = gateIndex < currentWave.enemyGates.Count;
-        bool anotherWaveInLevel = waveIndex < waveData.Count;
+        bool anotherWaveInLevel = waveIndex < waveData.Count-1;
 
         // if (anotherGateInWave) StartNextGate();
         /* else */ if (anotherWaveInLevel)
@@ -222,6 +226,7 @@ public class WaveManager : IEntityManager
 
         if (GameManager.Instance.autoStartWaves)
         {
+            GameManager.Instance.SetInitialized(true);
             waveIndex = 0;
             InitWave(waveData[0]);
         }

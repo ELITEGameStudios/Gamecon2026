@@ -12,6 +12,7 @@ public class Player : EntityBase
     [SerializeField] EntityDetectionSystem feds;
 
     [SerializeField] float invincibilityDuration = 0.5f;
+    public int deathsCount;
 
     float invincibilityTimer = 0f;
     protected override void Init()
@@ -31,6 +32,7 @@ public class Player : EntityBase
         health = maxHealth;
         // Put all your death event code here BEFORE base.Death()
         entityDeath.start();
+        deathsCount++;
 
         // Will Handle the destruction of the object. 
         // If you dont want the object to dissappear or want to "delay" its true death for an animation or smth, consider Invoke() or coroutines to delay it
