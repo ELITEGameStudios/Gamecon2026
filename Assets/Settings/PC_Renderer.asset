@@ -154,19 +154,20 @@ MonoBehaviour:
   - {fileID: -7874574962960007960}
   - {fileID: -3563471443946863893}
   - {fileID: -8697146461526159676}
+  - {fileID: 2822260568594649704}
   - {fileID: -2626721928087114695}
   - {fileID: 4420000783766948475}
-  m_RendererFeatureMap: ad6b866f10d7b46cf2ba44aba5c705bfcde5198c6bcd9969e87c95dfcae3b792eb824c109a018ccec40e30695f874d87396ca3c852028cdb7b8a606f4bff563d
+  m_RendererFeatureMap: ad6b866f10d7b46cf2ba44aba5c705bfcde5198c6bcd9969e87c95dfcae3b792eb824c109a018ccec40e30695f874d876812adbe08af2a27396ca3c852028cdb7b8a606f4bff563d
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   m_AssetVersion: 2
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 68343
+    m_Bits: 199415
   m_TransparentLayerMask:
     serializedVersion: 2
-    m_Bits: 759
+    m_Bits: 131831
   m_DefaultStencilState:
     overrideStencilState: 0
     stencilReference: 1
@@ -182,6 +183,26 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
+--- !u!114 &2822260568594649704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
+  m_Name: FullScreenPassRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  injectionPoint: 550
+  fetchColorBuffer: 1
+  requirements: 5
+  passMaterial: {fileID: 2100000, guid: a9cceef99a96da142a09c5a5888c3ed1, type: 2}
+  passIndex: 0
+  bindDepthStencilAttachment: 0
+  m_Version: 1
 --- !u!114 &4420000783766948475
 MonoBehaviour:
   m_ObjectHideFlags: 0
