@@ -3,6 +3,8 @@ using UnityEngine;
 [RequireComponent (typeof(ProjectileVelocityModifier))]
 public class ProjectileHomingModifier : ProjectileModifier
 {
+
+    [SerializeField] Vector3 rotationOffset;
     public float projectileHoming = 7.0f;
     public float maxRange = 100.0f;
 
@@ -57,6 +59,7 @@ public class ProjectileHomingModifier : ProjectileModifier
             }
         }
         projectile.projectileSpeed = Vector3.Lerp(projectile.projectileSpeed, desired, projectileHoming * proximityModifier * Time.fixedDeltaTime);
+        projectile.meshObjects.transform.rotation = Quaternion.LookRotation(projectile.projectileSpeed.normalized) * Quaternion.Euler(rotationOffset);
     }
 
     public override void UpdateModifier()

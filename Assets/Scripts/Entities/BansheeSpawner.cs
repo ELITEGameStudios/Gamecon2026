@@ -4,22 +4,22 @@ using UnityEngine;
 public class BansheeSpawner : EnemyBase
 {
 
-    [SerializeField] EnemyProjectile bansheePrefab;
-
+    [SerializeField] BansheeProjectile bansheePrefab;
+    [SerializeField] Projectile knife;
     static Player player;
 
 
     private void Start()
     {
-        if (player == null) player = FindFirstObjectByType<Player>();
+        if (player == null) player = Player.instance;
         if (player == null)
         {
             Debug.LogError("No player found in scene for " + name);
             return;
         }
 
-        EnemyProjectile projectile = Instantiate(bansheePrefab);
-        projectile.InitProjectile(transform);
+        BansheeProjectile projectile = Instantiate(bansheePrefab);
+        projectile.InitProjectile(transform, knife);
         projectile.Activate(player.transform, transform.position);
     }
 }

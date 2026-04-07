@@ -1,5 +1,6 @@
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 /// <summary>
@@ -8,6 +9,7 @@ using UnityEngine;
 [RequireComponent(typeof(ProjectileVelocityModifier))]
 public class ProjectileClampModifier : ProjectileModifier
 {
+    [HideInInspector] public UnityEvent teleportPerformed = new UnityEvent();
 
     public enum ClampMode
     {
@@ -44,6 +46,7 @@ public class ProjectileClampModifier : ProjectileModifier
     ProjectileVelocityModifier velocityModifier;
 
     float warpTracker = 0.0f;
+
     void Start()
     {
         if (minSpeedIncreaseIfMaxDistanceExceeded > maxSpeedIncreaseIfMaxDistanceExceeded)
@@ -106,5 +109,6 @@ public class ProjectileClampModifier : ProjectileModifier
         Vector3 targetDirectionToProjectile = (projectile.transform.position - target.position).normalized;
         projectile.rb.MovePosition(target.position + targetDirectionToProjectile * maxDistanceBeforeClampAttempt);
         warpTracker = 0;
+        teleportPerformed.Invoke();
     }
 }

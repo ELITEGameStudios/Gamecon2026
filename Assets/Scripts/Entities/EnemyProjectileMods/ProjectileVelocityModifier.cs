@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class ProjectileVelocityModifier : ProjectileModifier
 {
-
+    [SerializeField] Vector3 rotationOffset = Vector3.zero;
     public float projectileSpeed;
     public override void InitModifier(EnemyProjectile projectile)
     {
@@ -25,7 +25,8 @@ public class ProjectileVelocityModifier : ProjectileModifier
     {
         projectile.projectileSpeed = dir * projectileSpeed;
         projectile.projectileCollider.enabled = true;
-        projectile.meshObjects.transform.rotation = Quaternion.LookRotation(dir);
+        projectile.meshObjects.transform.rotation = Quaternion.LookRotation(dir) * Quaternion.Euler(rotationOffset);
+        Debug.Log("Moving projectile in direction: " + dir);
     }
     void StopMovement()
     {

@@ -22,7 +22,7 @@ public class EnemyProjectile : MonoBehaviour
     public Collider projectileCollider;
     public GameObject meshObjects;
     public Rigidbody rb;
-    public Transform enemy;
+   [HideInInspector]    public Transform enemy;
 
    bool active = false;
 
@@ -40,7 +40,7 @@ public class EnemyProjectile : MonoBehaviour
            Destroy(gameObject);
        }
     } 
-    public void InitProjectile(Transform e)
+    public  virtual void InitProjectile(Transform e)
     {
         enemy = e;
         var mods = GetComponents<ProjectileModifier>();
@@ -60,6 +60,11 @@ public class EnemyProjectile : MonoBehaviour
     }
 
     private void FixedUpdate()
+    {
+        UpdateModifiers();
+    }
+
+    protected void UpdateModifiers()
     {
         foreach (var mod in projectileModifiers)
         {
