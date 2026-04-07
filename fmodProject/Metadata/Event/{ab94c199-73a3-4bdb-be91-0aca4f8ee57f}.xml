@@ -101,7 +101,10 @@
 	</object>
 	<object class="SingleSound" id="{f8f5ce86-9569-410d-8826-5a28521fea97}">
 		<property name="length">
-			<value>0.80000000000000004</value>
+			<value>1.0800000000000001</value>
+		</property>
+		<property name="timelockedOffset">
+			<value>0.059999999999999998</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{27037370-5f01-469e-b84c-b03280dddcae}</destination>
@@ -153,10 +156,7 @@
 			<value>-80</value>
 		</property>
 		<property name="attackTime">
-			<value>0</value>
-		</property>
-		<property name="peakValue">
-			<value>0.577777863</value>
+			<value>20</value>
 		</property>
 		<property name="finalValue">
 			<value>-80</value>
@@ -164,7 +164,11 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{25aa6de3-f40d-4966-9b1f-64ce50dad449}">
 		<relationship name="effects">
+			<destination>{f68a4de3-242b-4590-bc7c-4d4881ad19a8}</destination>
 			<destination>{b5327e2a-aad3-41d4-a269-3b027426462f}</destination>
+			<destination>{2283fb64-b528-4dff-962a-67c8f99a3e1b}</destination>
+			<destination>{f8f93709-261e-482c-9dbf-ee1a9ef3720c}</destination>
+			<destination>{4fa4aa28-bd3e-4dfc-bcc3-356f8a44efc5}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{ab3d6050-fcbd-451e-9a97-92750d375ee4}" />
@@ -178,13 +182,39 @@
 			<destination>{dcd960e8-5984-4932-959c-6aaf906d9ba7}</destination>
 		</relationship>
 	</object>
+	<object class="DistortionEffect" id="{f68a4de3-242b-4590-bc7c-4d4881ad19a8}">
+		<property name="level">
+			<value>0.269999981</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{b5327e2a-aad3-41d4-a269-3b027426462f}" />
+	<object class="FlangerEffect" id="{2283fb64-b528-4dff-962a-67c8f99a3e1b}">
+		<property name="rate">
+			<value>0.319999993</value>
+		</property>
+		<property name="delay">
+			<value>0.25</value>
+		</property>
+	</object>
+	<object class="CompressorEffect" id="{f8f93709-261e-482c-9dbf-ee1a9ef3720c}">
+		<property name="attackTime">
+			<value>14</value>
+		</property>
+		<property name="gain">
+			<value>2.5</value>
+		</property>
+	</object>
+	<object class="PitchShifterEffect" id="{4fa4aa28-bd3e-4dfc-bcc3-356f8a44efc5}">
+		<property name="pitch">
+			<value>1.03999996</value>
+		</property>
+	</object>
 	<object class="AutomationPoint" id="{e768ebdd-08bc-4fef-bdb8-fea5022eb6d9}">
 		<property name="position">
 			<value>0.40000000000000002</value>
 		</property>
 		<property name="value">
-			<value>1</value>
+			<value>4.5</value>
 		</property>
 		<property name="curveShape">
 			<value>0.226943359</value>
@@ -195,7 +225,7 @@
 			<value>1.2000000000000002</value>
 		</property>
 		<property name="value">
-			<value>-40</value>
+			<value>-33</value>
 		</property>
 	</object>
 </objects>
