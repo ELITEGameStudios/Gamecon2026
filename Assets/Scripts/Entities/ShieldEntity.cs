@@ -9,8 +9,13 @@ public class ShieldEntity : EntityBase
     [SerializeField] LayerMask knifeMask;
     public override void Damage(int damage = 1)
     {
+        //can't be damaged by normal attacks
     }
 
+    public void Damage(bool parryDamage)
+    {
+        if (parryDamage) OnDeath();
+    }
     private void FixedUpdate()
     {
         var overlap = Physics.OverlapBox(shieldCollider.bounds.center, shieldCollider.bounds.extents, shieldCollider.transform.rotation, knifeMask);

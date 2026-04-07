@@ -62,6 +62,11 @@ public class KnifeHitbox : MonoBehaviour
             {
                 if (struckShields.Contains(shield)) continue;
                 struckShields.Add(shield);
+
+                if (knife.projectileAbilities.ParryActive)
+                {
+                    shield.Damage(knife.projectileAbilities.ParryActive);
+                }
             }
             else if (obj.transform.parent.TryGetComponent(out EnemyBase enemy))
             {
