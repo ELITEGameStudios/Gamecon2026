@@ -128,6 +128,6 @@ public class LeaderboardManager : MonoBehaviour
     public void CloseLeaderboard()
     {
         leaderboardDisplay.SetActive(false);
-        Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.lockState = CursorLockMode.Locked;
     }
 }

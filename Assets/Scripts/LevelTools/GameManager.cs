@@ -96,6 +96,15 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void RestartGame()
+    {
+        SceneSystem.Instance.GameInitializationFunction();
+    }
+    public void ToMenu()
+    {
+        SceneSystem.Instance.MenusInitializationFunction();
+    }
+
     public void SetInitialized(bool initialized) // wave system calls this
     {
         Initialized = true;

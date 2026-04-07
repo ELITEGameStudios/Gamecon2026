@@ -11,6 +11,6 @@ public class LeaderboardEntry : MonoBehaviour
     {
         this.playerName.text = playerName;
         this.levelTime.text = levelTime;
-        this.rankNum.text = rankNum.ToString();
+        this.rankNum.text = rank.ToString();
     }
 }

@@ -186,7 +186,8 @@ MonoBehaviour:
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
-  Parameters: []
+  Parameters:
+  - {fileID: -963507429588729664}
   MinDistance: 1
   MaxDistance: 20
   Length: 1200
@@ -583,6 +584,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 300
+--- !u!114 &-963507429588729664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/LandEvent/In Cave
+  m_EditorClassIdentifier: 
+  Name: In Cave
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2183111878
+    data2: 317707328
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-310266289938729983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -610,6 +635,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2104
+--- !u!114 &-89199985290028971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/BansheeAmbientEvent
+  m_EditorClassIdentifier: 
+  Path: event:/BansheeAmbientEvent
+  Guid:
+    Data1: 1183147893
+    Data2: 1339985927
+    Data3: -913493326
+    Data4: 1211312778
+  Banks:
+  - {fileID: 1405720437415962997}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 28392
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -646,12 +698,14 @@ MonoBehaviour:
   - {fileID: 1465602905077908361}
   - {fileID: 7438716868053830418}
   - {fileID: 2969732986804010587}
+  - {fileID: 6403253142074065557}
+  - {fileID: -89199985290028971}
   EditorParameters: []
   MasterBanks:
   - {fileID: 1405720437415962997}
   StringsBanks:
   - {fileID: 9114747985906268585}
-  cacheTime: 639107037351309978
+  cacheTime: 639107412303696523
   cacheVersion: 131634
 --- !u!114 &10998266041711469
 MonoBehaviour:
@@ -695,10 +749,10 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639107037351299431
+  lastModified: 639107412303641285
   FileSizes:
   - Name: Desktop
-    Value: 3944256
+    Value: 5538048
   Exists: 1
 --- !u!114 &1465602905077908361
 MonoBehaviour:
@@ -889,6 +943,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 10599
+--- !u!114 &4531969452438628053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/JumpEvent/In Cave
+  m_EditorClassIdentifier: 
+  Name: In Cave
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 2183111878
+    data2: 317707328
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &4600795868130799903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1017,6 +1095,33 @@ MonoBehaviour:
   - Name: Desktop
     Value: 1973248
   Exists: 1
+--- !u!114 &6403253142074065557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/BansheeSpawnEvent
+  m_EditorClassIdentifier: 
+  Path: event:/BansheeSpawnEvent
+  Guid:
+    Data1: -1306690555
+    Data2: 1263119066
+    Data3: 419116203
+    Data4: 398683289
+  Banks:
+  - {fileID: 1405720437415962997}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5000
 --- !u!114 &7045179086079469740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1151,7 +1256,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 800
+  Length: 1080
 --- !u!114 &8446719338376094541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1175,7 +1280,8 @@ MonoBehaviour:
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
-  Parameters: []
+  Parameters:
+  - {fileID: 4531969452438628053}
   MinDistance: 1
   MaxDistance: 20
   Length: 1108
@@ -1221,8 +1327,8 @@ MonoBehaviour:
   Path: fmodProject/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639107037351309978
+  lastModified: 639107412303696523
   FileSizes:
   - Name: Desktop
-    Value: 1748
+    Value: 1862
   Exists: 1
