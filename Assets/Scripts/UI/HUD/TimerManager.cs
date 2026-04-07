@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TimerManager : MonoBehaviour
 {
-    [SerializeField] TMP_Text timerDisplay;
+    [SerializeField] TMP_Text timerDisplay, pauseTimerDisplay;
 
     [SerializeField, Range(0.01f, 1.0f)] float spaceBetweenCharacters = 0.7f;
 
@@ -35,6 +35,7 @@ public class TimerManager : MonoBehaviour
         timerTracker += Time.deltaTime;
         timerTimespan = TimeSpan.FromSeconds(timerTracker);
         timerDisplay.text = $"<mspace={spaceBetweenCharacters}em >{timerTimespan.ToString("mm\\:ss")}</mspace>";
+        pauseTimerDisplay.text = $"<mspace={spaceBetweenCharacters}em >{timerTimespan.ToString("mm\\:ss")}</mspace>";
     }
 
     public string GetDisplayText()
