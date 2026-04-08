@@ -6,7 +6,7 @@ using FMOD;
 [System.Serializable]
 public class GroundedState : PlayerMovementState
 {
-    public bool walking => movement.movementInput.magnitude > 0.1f && rigidbody.linearVelocity.magnitude > 0.1f;
+//    public bool walking => movement.movementInput.magnitude > 0.1f && rigidbody.linearVelocity.magnitude > 0.1f;
     public float overshootKp;
     public float rampupKp;
     public float desiredSpeed;
@@ -45,14 +45,15 @@ public class GroundedState : PlayerMovementState
         if (!movement.CheckGrounded()){ movement.SetState(movement.airborneState); }
         
         movement.CalculateLookRotation();
-        if(movement.movementInput.magnitude > 1){movement.movementInput.Normalize();}
+
+        var movementInput = inputManager.GetMovementDirection();
 
 
         desiredSpeed = Mathf.Lerp(movement.current2DVelocity, movement.liveMaxSpeed , movement.currentVelocity > movement.liveMaxSpeed  ? overshootKp : rampupKp);
         desiredVelocity =             
             (
-                (transform.right * movement.movementInput.x) +
-                (transform.forward * movement.movementInput.y)
+                (transform.right * movementInput.x) +
+                (transform.forward * movementInput.y)
             ) * desiredSpeed;
 
         if(Vector3.Angle(desiredVelocity, rigidbody.linearVelocity) > turnThresholdAngle)

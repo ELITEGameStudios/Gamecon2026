@@ -114,6 +114,7 @@ public class SettingsMenu : MonoBehaviour
         SFXSlider.value = currentSettings.sfxVolume;
         BGMSlider.value = currentSettings.bgmVolume;
 
+
     }
     void InitInputSettings()
     {

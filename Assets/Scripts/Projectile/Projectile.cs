@@ -19,6 +19,7 @@ public class Projectile : MonoBehaviour
 
     [Header("Managers")]
     [SerializeField] KnifeParticleManager knifeParticleManager;
+    [SerializeField] InputManager inputManager;
     [Header("Flying Settings")]
     public float speed = 30f;
     public float lifetime = 5f;
@@ -405,6 +406,7 @@ public class Projectile : MonoBehaviour
         gameObject.SetActive(true);
         SetState(ProjectileState.Idle);
         if(HUDManager.Instance != null) HUDManager.Instance.recallElement.Deactivate();
+        inputManager.ClearPickupBuffers();
     }
 
     void OnTriggerEnter(Collider other)

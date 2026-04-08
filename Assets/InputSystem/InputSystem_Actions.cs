@@ -653,6 +653,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""b17de966-d472-4293-b29e-ebe79758b025"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""74f5ad72-bb30-4edf-9676-8a1116fb7a87"",
                     ""path"": ""<Keyboard>/minus"",
                     ""interactions"": """",

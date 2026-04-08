@@ -3,6 +3,8 @@ using UnityEngine;
 public class PlayerSettings 
 {
 
+    const float DEFAULT_MOVEMENT_DEADZONE = 0.1f;
+
  
     //Video
     public Vector2Int resolution = new Vector2Int(1920, 1080);
@@ -17,6 +19,7 @@ public class PlayerSettings
     //Input
     public float horizontalSensitivity = 0.5f;
     public float verticalSensitivity = 0.5f;
+    public float movementDeadzone = DEFAULT_MOVEMENT_DEADZONE;
 
     public bool IsEqual(PlayerSettings other)
     {

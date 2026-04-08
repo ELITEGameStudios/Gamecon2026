@@ -65,9 +65,10 @@ public class AirborneState : PlayerMovementState
 
 
         if (airStrafeForce > 0){
-            
+
+            Vector2 movementInput = inputManager.GetMovementDirection();
             velocity2D += 
-                ((right2D * movement.movementInput.x * airStrafeForce) + (forward2D * movement.movementInput.y * airStrafeForwardForce)) * Time.fixedDeltaTime;
+                ((right2D * movementInput.x * airStrafeForce) + (forward2D * movementInput.y * airStrafeForwardForce)) * Time.fixedDeltaTime;
             
             if(previousVel > strafeThresholdVel && velocity2D.magnitude >= previousVel) { 
                 velocity2D = velocity2D.normalized * previousVel;

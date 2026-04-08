@@ -6,10 +6,9 @@ public class Player : EntityBase
 
     public Rigidbody mainRb;
     public EntityDetectionSystem entityDetectionSystem {get; private set;}
-
-
-    //lets the property be seralized
+    //lets the property be serialized
     [SerializeField] EntityDetectionSystem feds;
+    [SerializeField] InputManager inputManager;
 
     [SerializeField] float invincibilityDuration = 0.5f;
     public int deathsCount;

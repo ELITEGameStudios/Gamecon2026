@@ -193,6 +193,7 @@ public class WallRunState : PlayerMovementState
 
         Debug.Log("Velocity after jump: " + lateralMovement);
         movement.SetState(movement.airborneState);
+        inputManager.OnJumpPerformed();
     }
 
     public void StartWallrunCooldown()

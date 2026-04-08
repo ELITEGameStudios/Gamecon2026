@@ -51,20 +51,18 @@ public class PlayerMovementStateMachine : StateMachine
 
 
     [Header("Movement Input")]
-    public Vector2 movementInput;
-    public Vector2 lookInput;
     public Vector2 rotSensitivity;
 
-    public bool hasMovementInput => movementInput.magnitude > movingConsiderationDeadzone;
-    public bool hadMovementInputLastFrame;
+    //public bool hasMovementInput => movementInput.magnitude > movingConsiderationDeadzone;
     public bool hasDash;
 
-    public bool isConsideredMoving => hasMovementInput && rigidbody.linearVelocity.magnitude > movingConsiderationDeadzone;
+    public bool isConsideredMoving => inputManager.GetMovementDirection() != Vector2.zero && rigidbody.linearVelocity.magnitude > movingConsiderationDeadzone;
+    //    public bool isConsideredMoving => hasMovementInput && rigidbody.linearVelocity.magnitude > movingConsiderationDeadzone;
+
     public bool canDash => currentState != dashState && hasDash && currentState != wallRunState && dashState.CooldownTracker <= 0.0f;
     public bool wasMovingLastFrame;
     public bool soarDashEnabled = true;
 
-    public InputActionReference move, jump, look, dash;
 
     public ParryTutorialEvent parryTutorialEvent;
     
@@ -80,6 +78,7 @@ public class PlayerMovementStateMachine : StateMachine
     public Projectile featherKnife;
     public GroundedHelper groundedHelper;
     public Animator armAnimator;
+   [SerializeField]  InputManager inputManager;
 
     void Awake(){ 
 
@@ -87,8 +86,7 @@ public class PlayerMovementStateMachine : StateMachine
         else if(instance != this){Destroy(this);}
         
         defaultState = airborneState;
-
-        dashState.Initialize(dash);
+        dashState.Initialize();
         airborneState.OnReset();
         groundedState.OnReset();
         wallRunState.OnReset();
@@ -105,18 +103,6 @@ public class PlayerMovementStateMachine : StateMachine
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    protected override void OnUnityEnable()
-    {
-        jump.action.started += Jump;
-        dash.action.performed += OnDashInput;
-    }
-
-    protected override void OnUnityDisable()
-    {
-        jump.action.started -= Jump;
-        dash.action.performed -= OnDashInput;
-    }
-
     protected override void OnUpdate()
     {
         HUDManager.Instance.dashElement.SetReady(canDash);
@@ -126,16 +112,29 @@ public class PlayerMovementStateMachine : StateMachine
 
         FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerJump, transform);
         FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerLand, transform);
-    }
 
+        InputLogic();
+    }
+    void InputLogic()
+    {
+        wasMovingLastFrame = isConsideredMoving;
+        if (inputManager.IsDashBuffered() && canDash)
+        {
+            Dash();
+        }
+        if (inputManager.IsJumpBuffered())
+        {
+            currentState.Jump();
+        }
+    }
     protected override void OnFixedUpdate()
     {
-        movementInput = move.action.ReadValue<Vector2>();
 
         if(!wasMovingLastFrame && isConsideredMoving) { OnStartWalking(); }
         if(wasMovingLastFrame && !isConsideredMoving) { OnStopWalking(); }
-        
-        mainCol.material = hasMovementInput ? slipMat : frictionMat;
+
+        //mainCol.material = hasMovementInput ? slipMat : frictionMat;
+        mainCol.material = inputManager.MovementInputLastFrame ? slipMat : frictionMat;
         if(currentState != groundedState){
             if (CheckGrounded() && currentState != dashState)
             {
@@ -145,16 +144,12 @@ public class PlayerMovementStateMachine : StateMachine
                 playerLand.start();
             } 
         }
-
-        wasMovingLastFrame = isConsideredMoving;
-        hadMovementInputLastFrame = hasMovementInput; 
     }
 
     protected override void PostStateFixedUpdate()
     {
         previousCurrentVelocity = currentVelocity;
     }
-
     public void OnStartWalking()
     {
         currentState.OnStartWalking();
@@ -182,9 +177,6 @@ public class PlayerMovementStateMachine : StateMachine
         stateName = currentState.name;
     }
 
-    public void Jump(InputAction.CallbackContext ctx){
-        currentState.Jump();
-    }
 
     public void OnDashInput(InputAction.CallbackContext ctx){
         if (canDash)
@@ -226,6 +218,7 @@ public class PlayerMovementStateMachine : StateMachine
         }
         
         CheckWallViaRay(ignoreWallRunTimer: true, fromBlink: true);
+        inputManager.OnBlinkPerformed();
     }
 
     public void CalculateLookRotation()
@@ -250,9 +243,9 @@ public class PlayerMovementStateMachine : StateMachine
             return;
                 
         }
-        
-        
-        lookInput = look.action.ReadValue<Vector2>();
+
+
+        var lookInput = inputManager.GetLookDirection();
         headTf.Rotate(new Vector3(-lookInput.y * rotSensitivity.y, 0, 0));
 
         if(Mathf.Abs(Vector3.SignedAngle(headTf.forward, transform.forward, transform.right)) > 85){
@@ -320,13 +313,13 @@ public class PlayerMovementStateMachine : StateMachine
         {
             return;
         }
-
+        Vector3 movementInput = inputManager.GetMovementDirection();
         Vector3 movementRelativeInput = (transform.forward * movementInput.y) + (transform.right * movementInput.x);
 
         if(currentState != dashState && !fromBlink){
-            if(
+            if (
                 Vector3.Angle(movementRelativeInput, testWallRunDir) > wallRunState.maxMovementInputAngleDifference && currentState != dashState
-                || !hasMovementInput
+                || !inputManager.MovementInputLastFrame
             )
             {return;}
         }

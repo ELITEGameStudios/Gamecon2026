@@ -17,11 +17,14 @@ public class ProjectileAbilities : MonoBehaviour
     [HideInInspector] public UnityEvent recallStarted = new();
 
 
+
+
     [Header("References")]
     [SerializeField] private Projectile featherKnife;
     [SerializeField] private Transform projectileFirePoint;
     [SerializeField] private PlayerMovementStateMachine playerMovement;
     [SerializeField] private Animator armAnimator;
+    [SerializeField] InputManager inputManager;
     [SerializeField] private Camera cam => Camera.main;
     public ApplyShake camShaker;
 
@@ -108,20 +111,19 @@ public class ProjectileAbilities : MonoBehaviour
         if(FMODBlinkEvent != "")    { blinkSFX = FMODUnity.RuntimeManager.CreateInstance(FMODBlinkEvent); }
     }
 
-    void OnEnable()
-    {
-        fireAction.action.started += OnFirePressed;
-        recallAction.action.performed += OnRecallPressed;
-        blinkAction.action.performed += OnBlinkPressed;
-        
-    }
+    //void OnEnable()
+    //{
+    //    fireAction.action.started += OnFirePressed;
+    //    recallAction.action.performed += OnRecallPressed;
+    //    blinkAction.action.performed += OnBlinkPressed;
+    //}
 
-    void OnDisable()
-    {
-        fireAction.action.started -= OnFirePressed;
-        recallAction.action.performed -= OnRecallPressed;
-        // blinkAction.action.performed -= OnBlinkPressed;
-    }
+    //void OnDisable()
+    //{
+    //    fireAction.action.started -= OnFirePressed;
+    //    recallAction.action.performed -= OnRecallPressed;
+    //    // blinkAction.action.performed -= OnBlinkPressed;
+    //}
 
 
     void Update()
@@ -153,8 +155,21 @@ public class ProjectileAbilities : MonoBehaviour
                 HUDManager.Instance.blinkElement.SetTimer(  currentBlinkTimer);
             }
         }
+       
+        if (RecallAvailable() && inputManager.IsRecallBuffered())
+        {
+            PerformRecall();
+        }
+        if (KnifeFireable() && inputManager.IsFireBuffered())
+        {
+            PerformFire();
+        }
+        if (canBlink && inputManager.IsBlinkBuffered())
+        {
+            StartCoroutine(BlinkCoroutine());
+        }
+        
     }
-
     private void FixedUpdate()
     {
         var manager = GameManager.Instance;
@@ -205,6 +220,15 @@ public class ProjectileAbilities : MonoBehaviour
             parryWindow = minParryWindow;
         }
     }
+
+    bool RecallAvailable()
+    {
+        return featherKnife.currentState != Projectile.ProjectileState.Idle && currentRecallCooldown <= 0.0f;
+    }
+    public bool KnifeFireable()
+    {
+        return featherKnife.currentState != Projectile.ProjectileState.Flying && featherKnife.currentState != Projectile.ProjectileState.Embedded;
+    }
     public bool IsParryable()
     {
         if (featherKnife.currentState != Projectile.ProjectileState.Recalling) return false;
@@ -212,10 +236,8 @@ public class ProjectileAbilities : MonoBehaviour
 
         return currentDistance <= parryWindow;
     }
-    private void OnFirePressed(InputAction.CallbackContext ctx)
+    void PerformFire()
     {
-        if (featherKnife.currentState == Projectile.ProjectileState.Flying || featherKnife.currentState == Projectile.ProjectileState.Embedded) return;
-
         bool parryable = IsParryable();
         if (featherKnife.currentState == Projectile.ProjectileState.Recalling)
         {
@@ -225,44 +247,32 @@ public class ProjectileAbilities : MonoBehaviour
         TryShoot(parryable);
     }
 
-    private void OnRecallPressed(InputAction.CallbackContext ctx)
+    void PerformRecall()
     {
-       if (featherKnife.currentState == Projectile.ProjectileState.Idle || currentRecallCooldown > 0.0f){return;}
-        else
+        ParryActive = false;
+        if (featherKnife.currentState == Projectile.ProjectileState.Flying) { featherKnife.SetEmbeddedPos(); }
+
+        recallStarted.Invoke();
+        featherKnife.SetState(Projectile.ProjectileState.Recalling);
+        currentRecallCooldown = recallCooldown;
+
+
+        if (armAnimator != null) { armAnimator.SetTrigger("Recall"); }
+
+        if (HUDManager.Instance != null)
         {
-            ParryActive = false;
-            if (featherKnife.currentState == Projectile.ProjectileState.Flying) { featherKnife.SetEmbeddedPos(); }
-
-            recallStarted.Invoke();
-            featherKnife.SetState(Projectile.ProjectileState.Recalling);
-            currentRecallCooldown = recallCooldown;
-            
-            
-            if(armAnimator != null){armAnimator.SetTrigger("Recall");}
-
-            if (HUDManager.Instance != null) 
-            { 
-                HUDManager.Instance.UpdateRecallCooldown(currentRecallCooldown, recallCooldown);
-                HUDManager.Instance.TriggerRecallPrompt();
-                HUDManager.Instance.recallElement.Activate();
-            }
-            if(playerMovement.parryTutorialEvent != null)
-            {
-                playerMovement.parryTutorialEvent.TryActivate();
-            }
-
-            currentRecallCooldown = recallCooldown;
+            HUDManager.Instance.UpdateRecallCooldown(currentRecallCooldown, recallCooldown);
+            HUDManager.Instance.TriggerRecallPrompt();
+            HUDManager.Instance.recallElement.Activate();
         }
-    }
-    
-    private void OnBlinkPressed(InputAction.CallbackContext context)
-    {
-        if (canBlink)
+        if (playerMovement.parryTutorialEvent != null)
         {
-            StartCoroutine(BlinkCoroutine());
+            playerMovement.parryTutorialEvent.TryActivate();
         }
-    }
 
+        currentRecallCooldown = recallCooldown;
+        inputManager.OnRecallPerformed();
+    }
     private void Blink()
     {
         blinkedThisFrame = true;
@@ -304,6 +314,8 @@ public class ProjectileAbilities : MonoBehaviour
         
         if (cam == null) 
             return;
+
+        inputManager.OnFirePerformed();
         HUDManager.Instance.TriggerShootPrompt();
         
         Shoot(parry);

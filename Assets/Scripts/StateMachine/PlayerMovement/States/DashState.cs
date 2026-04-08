@@ -10,12 +10,12 @@ public class DashState : PlayerMovementState
     [SerializeField] Camera FPSCamera;
     [SerializeField] float dashCooldown;
     [SerializeField] WindManager windManager;
+    [SerializeField] InputActionReference dashButton;
 
 
     public float CooldownTracker { get; private set; }
     float tweenTracker = 0.0f;
 
-    InputActionReference dashButton;
     public Vector3 dashVelocity;
     public float dashTime;
     public float additiveForceThreshold = 75;
@@ -37,9 +37,8 @@ public class DashState : PlayerMovementState
         name = "Dash State";
     }
 
-    public void Initialize(InputActionReference button)
+    public void Initialize()
     {
-        dashButton = button;
         baseFOV = FPSCamera.fieldOfView;
         baseDrag = movement.rigidbody.linearDamping;
     }
@@ -63,12 +62,13 @@ public class DashState : PlayerMovementState
         tweenTracker = 0;
         movement.rigidbody.linearDamping = 0;
         CooldownTracker = dashCooldown;
+        inputManager.OnDashPerformed();
     }
 
     private void SetDashVelocity()
     {
 
-        Vector2 input = movement.movementInput;
+        Vector2 input = inputManager.GetMovementDirection();
         if (input == Vector2.zero) { input = Vector2.up; }
 
         Vector2 currentVelocity = new Vector2(
