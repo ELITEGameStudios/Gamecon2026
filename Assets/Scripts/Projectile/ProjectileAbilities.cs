@@ -160,7 +160,8 @@ public class ProjectileAbilities : MonoBehaviour
         var manager = GameManager.Instance;
         if (manager != null && featherKnife.currentState == Projectile.ProjectileState.Flying && !parryActive)
         {
-            
+            Debug.Log(manager.entityManager == null);
+            Debug.Log(featherKnife == null);
             var newTarget = manager.entityManager.GetClosestEnemyToPosition(featherKnife.rb.position, enemiesToNotHomeTowards);
             if (newTarget == null) return;
             var targetDistance = Vector3.Distance(newTarget.transform.position, featherKnife.rb.position);
