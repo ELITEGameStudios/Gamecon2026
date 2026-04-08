@@ -13,7 +13,6 @@ public class ProjectileVelocityModifier : ProjectileModifier
         projectile.projectileActivated.AddListener(OnProjectileFired);
         projectile.projectileDestroyed.AddListener((projectile) => StopMovement());
     }
-
      void OnProjectileFired(EnemyProjectile.ProjectileTarget target)
     {
         var dir = (target.targetTransform.position - projectile.rb.position).normalized;
@@ -23,14 +22,17 @@ public class ProjectileVelocityModifier : ProjectileModifier
 
     void StartMovement(Vector3 dir)
     {
-        projectile.projectileSpeed = dir * projectileSpeed;
-        projectile.projectileCollider.enabled = true;
+        projectile.projectileVelocity.Speed = projectileSpeed;
         projectile.meshObjects.transform.rotation = Quaternion.LookRotation(dir) * Quaternion.Euler(rotationOffset);
-        Debug.Log("Moving projectile in direction: " + dir);
     }
     void StopMovement()
     {
-       projectile.projectileSpeed = Vector3.zero;
+        projectile.projectileVelocity.Speed = 0.0f;
     }
 
+    public override void UpdateModifier()
+    {
+        base.UpdateModifier();
+        Debug.Log("Projectile speed: " + projectile.projectileVelocity.Speed);
+    }
 }

@@ -18,6 +18,10 @@ public class BansheeSpawner : EnemyBase
             return;
         }
 
+        if (knife == null)
+        {
+           knife = FindFirstObjectByType<Projectile>();
+        }
         BansheeProjectile projectile = Instantiate(bansheePrefab);
         projectile.InitProjectile(transform, knife);
         projectile.Activate(player.transform, transform.position);

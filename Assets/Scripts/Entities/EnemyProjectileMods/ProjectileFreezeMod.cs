@@ -18,6 +18,7 @@ public class ProjectileFreezeMod : ProjectileModifier
     [SerializeField, ShowIf(nameof(FreezesWhilePlayerDead))] int freezeDurationWhenPlayerDies = 300;
 
     [SerializeField] FreezeType freezeType;
+    [SerializeField] bool fireOnUnfreeze = true;
 
     bool FreezesWhilePlayerDead() => freezeType == FreezeType.FreezeWhenPlayerDead;
 
@@ -27,7 +28,7 @@ public class ProjectileFreezeMod : ProjectileModifier
 
     RespawnManager respawnManager;
 
-    Vector3 previousVelocity;
+    float previousVelocity;
 
     bool playerDead = false;
     public override void InitModifier(EnemyProjectile projectile)
@@ -55,7 +56,7 @@ public class ProjectileFreezeMod : ProjectileModifier
     {
         if (player == null || freezeType != FreezeType.FreezeWhenPlayerDead) return;
         playerDead = true;
-        previousVelocity = projectile.projectileSpeed;
+        previousVelocity = projectile.projectileVelocity.Speed;
         duration = freezeDurationWhenPlayerDies;
         if (respawnManager != null)
         {
@@ -84,9 +85,17 @@ public class ProjectileFreezeMod : ProjectileModifier
             Debug.LogWarning("Could not find respawn manager");
             return;
         }
-        if (!playerDead) duration--;
-        if (duration == 0) projectile.projectileSpeed = previousVelocity;
-        else projectile.projectileSpeed = Vector3.zero;
+        if (!playerDead)
+        {
+            duration--;
+            Debug.Log("Freezing projectile for " + duration + " more frames");
+        }
+        if (duration == 0)
+        {
+            if (!fireOnUnfreeze) projectile.projectileVelocity.Speed = previousVelocity;
+            else projectile.Activate(projectile.enemy, projectile.rb.position);
+        }
+        else projectile.projectileVelocity.Speed = 0.0f;
     }
 
     void OnPlayerRespawned(UnityEngine.InputSystem.InputAction.CallbackContext ctx)

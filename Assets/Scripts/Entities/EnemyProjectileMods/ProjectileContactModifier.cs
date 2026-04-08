@@ -26,15 +26,11 @@ public class ProjectileContactModifier : ProjectileModifier
 
 
     bool overrideCollisionLogic = false;// Other mods can set this to true to override the default collision logic and just use the raycast check for contact
-
-
-    Collider enemyCollider;
     bool HasLimitedHits() => hasLimitedHits;
     public override void InitModifier(EnemyProjectile projectile)
     {
         base.InitModifier(projectile);
         projectile.projectileFired.AddListener(OnProjectileFired);
-        enemyCollider = projectile.enemy.GetComponent<Collider>();
     }
 
     public void OverrideCollisionLogic()
@@ -43,9 +39,9 @@ public class ProjectileContactModifier : ProjectileModifier
     }
     public void OnProjectileFired(EnemyProjectile projectile)
     {
-        Debug.Log("Projectile Fired, resetting contact modifiers");
         ResetContactModifiers();
         previousProjectilePosition = projectile.rb.position;
+        projectile.projectileCollider.enabled = true;
     }
 
     public void ResetContactModifiers()
@@ -67,9 +63,7 @@ public class ProjectileContactModifier : ProjectileModifier
             }
             OnContact(terrainCheck);
         }
-
     }
-
     public void OnPlayerCollision(Collider hit)
     {
         Player.instance.Damage(damage);
@@ -78,9 +72,9 @@ public class ProjectileContactModifier : ProjectileModifier
     }
     public virtual void OnContact(RaycastHit hit)
     {
-        if (!hasLimitedHits) return;
+        if (!hasLimitedHits || hitsRemaining <= 0) return;
         hitsRemaining -= 1;
-        if (hitsRemaining == 0 && !overrideCollisionLogic)
+        if (hitsRemaining <= 0 && !overrideCollisionLogic)
         {
             projectile.DestroyProjectile();
         }
@@ -97,10 +91,12 @@ public class ProjectileContactModifier : ProjectileModifier
         foreach (var hit in hits)
         {
             if (!ignoredColliders.Contains(hit.collider))
-            {
-                Debug.Log("Hit " + hit.collider.name);
-               
+            {               
                 return hit;
+            }
+            else
+            {
+                Debug.Log("Ignoring collider " + hit.collider);
             }
         }
         return new RaycastHit();

@@ -16,19 +16,5 @@ public class ShieldEntity : EntityBase
     {
         if (parryDamage) OnDeath();
     }
-    private void FixedUpdate()
-    {
-        var overlap = Physics.OverlapBox(shieldCollider.bounds.center, shieldCollider.bounds.extents, shieldCollider.transform.rotation, knifeMask);
-        foreach (var col in overlap)
-        {
-            if (col.TryGetComponent(out Projectile knife))
-            {
-                if (knife.projectileAbilities.ParryActive && knife.currentState == Projectile.ProjectileState.Flying)
-                {
-                    OnDeath();
-                }
-            }
-        }
 
-    }
 }

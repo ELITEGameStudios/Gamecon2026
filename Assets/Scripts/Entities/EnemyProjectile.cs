@@ -22,13 +22,22 @@ public class EnemyProjectile : MonoBehaviour
     public Collider projectileCollider;
     public GameObject meshObjects;
     public Rigidbody rb;
-   [HideInInspector]    public Transform enemy;
+    [HideInInspector]    public Transform enemy;
 
    bool active = false;
 
     public bool Active { private set => active = value; get => active; }
 
-    [HideInInspector] public Vector3 projectileSpeed;
+    public struct ProjectileVelocity
+    {
+        public float Speed;
+
+        public Vector3 Direction { get => direction; set => direction = value.normalized; }
+
+        Vector3 direction;
+    }
+
+    public ProjectileVelocity projectileVelocity;
 
     private void Awake()
     {
@@ -46,6 +55,7 @@ public class EnemyProjectile : MonoBehaviour
         var mods = GetComponents<ProjectileModifier>();
         foreach (var mod in mods)
         {
+            if (!mod.enabled) continue;
             projectileModifiers.Add(mod);
             mod.InitModifier(this);
         }
@@ -68,9 +78,9 @@ public class EnemyProjectile : MonoBehaviour
     {
         foreach (var mod in projectileModifiers)
         {
-            mod.UpdateModifier();
+            if (mod.enabled) mod.UpdateModifier();
         }
-        rb.linearVelocity = projectileSpeed;
+        rb.linearVelocity = projectileVelocity.Speed * projectileVelocity.Direction;
     }
 
     public void Activate(Transform target, Vector3 spawnPos)

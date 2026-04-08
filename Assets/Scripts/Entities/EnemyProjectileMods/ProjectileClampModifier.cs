@@ -79,7 +79,7 @@ public class ProjectileClampModifier : ProjectileModifier
                 case ClampMode.SpeedIncrease:
                     float distanceAsPercent = Mathf.Lerp(0, 1, distanceToTarget / maxDistanceToTryClamp);
                     float speedIncrease = Mathf.Lerp(minSpeedIncreaseIfMaxDistanceExceeded, maxSpeedIncreaseIfMaxDistanceExceeded, distanceAsPercent);
-                    projectile.projectileSpeed = projectile.projectileSpeed.normalized * ( velocityModifier.projectileSpeed * speedIncrease);
+                    projectile.projectileVelocity.Speed = velocityModifier.projectileSpeed * speedIncrease;
                     break;
                 case ClampMode.WarpBack:
                     if (warpTracker != 0) warpTracker = timeUntilWarp;
