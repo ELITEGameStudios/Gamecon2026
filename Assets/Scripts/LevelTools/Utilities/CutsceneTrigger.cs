@@ -25,7 +25,6 @@ public class CutsceneTrigger : MonoBehaviour
         if (overlap.Length > 0 && !startedBansheeCutscene)
         {
             startedBansheeCutscene = true;
-            Debug.Log("starting cutscene");
             PlayBansheeCutscene();
         }
         if (cutsceneDuration > 0.0f && startedBansheeCutscene)
@@ -39,7 +38,6 @@ public class CutsceneTrigger : MonoBehaviour
     }
     public void OnCutsceneOver()
     {
-        Debug.Log("cutscene done");
         SceneManager.LoadScene("UpperLevelBlockout");
         GameManager.Instance.ManualStartWaveSystem();
     }

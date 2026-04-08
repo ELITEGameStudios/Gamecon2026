@@ -50,6 +50,7 @@ public class ProjectileFreezeMod : ProjectileModifier
                 break;
                 
         }
+        duration = 0;
     }
 
     void OnPlayerStruck(EntityBase player)
@@ -62,6 +63,7 @@ public class ProjectileFreezeMod : ProjectileModifier
         {
             respawnManager.respawn.action.performed += OnPlayerRespawned;
         }
+        Debug.Log("Player struck, freezing projectile for " + duration + " frames");
     }
 
     public override void UpdateModifier()
@@ -76,6 +78,7 @@ public class ProjectileFreezeMod : ProjectileModifier
                     break;
             }
         }
+        Debug.Log("Duration: " + duration);
     }
 
     void ManageDurationWhenPlayerDead()
@@ -90,7 +93,7 @@ public class ProjectileFreezeMod : ProjectileModifier
             duration--;
             Debug.Log("Freezing projectile for " + duration + " more frames");
         }
-        if (duration == 0)
+        if (duration <= 0)
         {
             if (!fireOnUnfreeze) projectile.projectileVelocity.Speed = previousVelocity;
             else projectile.Activate(projectile.enemy, projectile.rb.position);

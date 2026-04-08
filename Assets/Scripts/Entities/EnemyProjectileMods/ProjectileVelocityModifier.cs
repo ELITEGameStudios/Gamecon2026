@@ -33,6 +33,5 @@ public class ProjectileVelocityModifier : ProjectileModifier
     public override void UpdateModifier()
     {
         base.UpdateModifier();
-        Debug.Log("Projectile speed: " + projectile.projectileVelocity.Speed);
     }
 }

@@ -94,10 +94,6 @@ public class ProjectileContactModifier : ProjectileModifier
             {               
                 return hit;
             }
-            else
-            {
-                Debug.Log("Ignoring collider " + hit.collider);
-            }
         }
         return new RaycastHit();
     }

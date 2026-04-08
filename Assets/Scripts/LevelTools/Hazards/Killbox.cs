@@ -8,6 +8,7 @@ public class Killbox : MonoBehaviour
     [SerializeField] bool isPlayAreaLimiter = false;
     private void OnTriggerEnter(Collider other)
     {
+        if (isPlayAreaLimiter) return;
         if (other.TryGetComponent(out EntityBase entity))
         {
             entity.Die();
