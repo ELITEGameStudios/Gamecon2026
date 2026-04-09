@@ -46,7 +46,7 @@ public class HUDManager : MonoBehaviour
         if (waveDisplay == null) return;
         if (entityManager is WaveManager waveManager)
         {
-            waveDisplay.text = "Wave 1";
+            waveDisplay.text = "1";
             waveDisplay.gameObject.SetActive(true);
             waveManager.waveStarted += OnWaveChanged;
         }
@@ -75,18 +75,18 @@ public class HUDManager : MonoBehaviour
     }
     void OnWaveChanged(int index)
     {
-        waveDisplay.text = "Wave " + index;
+        waveDisplay.text = index.ToString();
         enemiesRemainingDisplay.text = entityManager.GetEnemiesRemaining().ToString();
     }
 
     void OnLevelWon()
     {
-        waveDisplay.text = "VICTORY";
+        waveDisplay.text = "X";
     }
 
     void OnLevelLost()
     {
-        waveDisplay.text = "DEFEAT";
+        waveDisplay.text = "X";
     }
     public void UpdateRecallCooldown(float currentCooldown, float maxCooldown)
     {

@@ -51387,6 +51387,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1497611867482942510, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2506066010100849665, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -0.00024414062
@@ -51427,6 +51431,10 @@ PrefabInstance:
       propertyPath: customLevelOrigin
       value: 
       objectReference: {fileID: 1277454025}
+    - target: {fileID: 6222325317013893555, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
+      propertyPath: waveDisplay
+      value: 
+      objectReference: {fileID: 1584964304}
     - target: {fileID: 6963293153596921731, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: m_Value
       value: 0
@@ -51584,6 +51592,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
+--- !u!114 &1584964304 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8501821415083984207, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
+  m_PrefabInstance: {fileID: 1584964303}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1589570625
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -65547,6 +65566,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayAreaLimiter: 1
+  affectKnife: 1
 --- !u!64 &2140314550
 MeshCollider:
   m_ObjectHideFlags: 0
