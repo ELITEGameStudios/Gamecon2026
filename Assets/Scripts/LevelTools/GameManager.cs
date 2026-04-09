@@ -136,7 +136,6 @@ public class GameManager : MonoBehaviour
     {
         var time = timerManager.GetCurrentLevelTime();
         victoryCondition?.TimerLogic(time);
-        entityManager?.TimerLogic(time);
     }
     private void Update()
     {

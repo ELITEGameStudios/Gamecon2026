@@ -15,6 +15,7 @@ public class HUDManager : MonoBehaviour
     public DashHUDElement dashElement; 
     public RecallHUD recallElement; 
     public BlinkHUDElement blinkElement;
+    [SerializeField] TMP_Text enemiesRemainingDisplay;
     
     [Space(20)] 
     // public GameUIPopup dashTutPrompt;
@@ -26,6 +27,8 @@ public class HUDManager : MonoBehaviour
     
 
     public static HUDManager Instance { get; private set;}
+
+    IEntityManager entityManager;
 
     void Awake()
     {
@@ -51,6 +54,9 @@ public class HUDManager : MonoBehaviour
         {
             waveDisplay.gameObject.SetActive(false);
         }
+        enemiesRemainingDisplay.text = entityManager.GetEnemiesRemaining().ToString() ;
+        entityManager.enemyDefeated += OnEnemyDefeated;
+        this.entityManager = entityManager;
         victoryCondition.victoryAchieved += OnLevelWon;
         victoryCondition.defeatAchieved += OnLevelLost;
     }
@@ -63,15 +69,18 @@ public class HUDManager : MonoBehaviour
         }
     }
 
+    void OnEnemyDefeated(EnemyBase enemy)
+    {
+        enemiesRemainingDisplay.text = entityManager.GetEnemiesRemaining().ToString();
+    }
     void OnWaveChanged(int index)
     {
-        Debug.Log("Wave changed");
         waveDisplay.text = "Wave " + index;
+        enemiesRemainingDisplay.text = entityManager.GetEnemiesRemaining().ToString();
     }
 
     void OnLevelWon()
     {
-        Debug.Log("Level complete");
         waveDisplay.text = "VICTORY";
     }
 

@@ -8,6 +8,7 @@ public interface IEntityManager
      bool spawnEnemies { set; get; }
      event Action allEnemiesDefeated;
 
+    event Action<EnemyBase> enemyDefeated;
     void Initialize(List<EnemyBase> sceneEnemies);
 
     void OnEnemyDefeated(EnemyBase enemy);
@@ -15,6 +16,8 @@ public interface IEntityManager
     void TimerLogic(float tracker);
 
     EnemyBase GetClosestEnemyToPosition(Vector3 position, List<EnemyType> blacklist);
+
+    int GetEnemiesRemaining();
 }
 /// <summary>
 /// Class for preset enemies in the scene instead of wave based combat
@@ -26,8 +29,7 @@ public class ArenaManager : IEntityManager
     public bool spawnEnemies { get => false; set { } }
 
     public event Action allEnemiesDefeated;
-
-   
+    public event Action<EnemyBase> enemyDefeated;
 
     List<EnemyBase> arenaEnemies = new();
     public EnemyBase GetClosestEnemyToPosition(Vector3 position, List<EnemyType> blacklist)
@@ -70,12 +72,18 @@ public class ArenaManager : IEntityManager
         {
             arenaEnemies.Remove(defeatedEnemy);
             defeatedEnemy.entityKilled.RemoveListener((entity) => OnEnemyDefeated(defeatedEnemy));
+            enemyDefeated.Invoke(defeatedEnemy);
         }
     }
 
     public void TimerLogic(float tracker)
     {
         //doesn't need a timer
+    }
+
+    public int GetEnemiesRemaining()
+    {
+        return arenaEnemies.Count;
     }
 }
 public class WaveManager : IEntityManager
@@ -85,6 +93,8 @@ public class WaveManager : IEntityManager
     public event Action waveEnded;
     public event Action spawnedGate;
     public event Action allEnemiesDefeated;
+    public event Action<EnemyBase> enemyDefeated;
+
     bool IEntityManager.spawnEnemies { get => spawnEnemies; set => spawnEnemies = value; }
 
 
@@ -126,15 +136,6 @@ public class WaveManager : IEntityManager
             }
         }
     }
-
-    // public void StartNextGate()
-    // {
-    //     int nextGateIndex = currentWave.enemyGates.IndexOf(currentGate) + 1;
-    //     var nextGate = currentWave.enemyGates[nextGateIndex];
-    //     InitGate(nextGate);
-    //     gateIndex++;
-    //     spawnedGate?.Invoke();
-    // }
     
     public void InitWave(WaveBase data)
     {
@@ -146,9 +147,6 @@ public class WaveManager : IEntityManager
 
         Debug.Log(currentWave);
         currentWave.InternalStart();
-        // gateTracker = currentWave.timeBeforeFirstGate;
-        // spawnedFirstGate = false;
-        // gateIndex = 0;
         if(GameManager.Instance.waveCounter != null)
         {
             GameManager.Instance.waveCounter.OnStartWave(waveIndex);
@@ -168,16 +166,6 @@ public class WaveManager : IEntityManager
         InitWave(waveData[0]);
     }
 
-    // public void InitGate(GateData data)
-    // {
-    //     foreach (var enemy in data.enemiesInGate)
-    //     {
-    //         var newEnemy = UnityEngine.Object.Instantiate(enemy);
-    //         newEnemy.transform.position = data.spawnPos;
-
-    //     }
-    // }
-
     public int GetCurrentWaveIndex()
     {
         return waveData.IndexOf(currentWave);
@@ -190,20 +178,24 @@ public class WaveManager : IEntityManager
         defeatedEnemy.entityKilled.RemoveListener((entity) => OnEnemyDefeated(defeatedEnemy));
         enemiesInWaveRemaining.Remove(defeatedEnemy);
         CheckUniversalEndCondition();
+        enemyDefeated.Invoke(defeatedEnemy);
     }
 
     public void CheckUniversalEndCondition() // This ensures that no matter which type of wave this is, the wave can only end once this final condition passes
     {
-        if(enemiesInWaveRemaining.Count == 0 && currentWave.finishedProcesses){
+        if (enemiesInWaveRemaining.Count == 0 && currentWave.finishedProcesses)
+        {
             currentWave.EndWave();
         }    
     }
 
-    public void AddActiveSpawnProcess(SpawnProfile profile){
+    public void AddActiveSpawnProcess(SpawnProfile profile)
+    {
         activeProfiles.Add(profile);
     }
 
-    public void RemoveActiveSpawnProcess(SpawnProfile profile){
+    public void RemoveActiveSpawnProcess(SpawnProfile profile)
+    {
         activeProfiles.Remove(profile);
     }
 
@@ -250,15 +242,7 @@ public class WaveManager : IEntityManager
 
     public void TimerLogic(float timer)
     {
-        // if (initiatedWave) return;
-        // gateTracker = timer;
-        // if (gateTracker > currentWave.timeBeforeFirstGate)
-        // {
-        //     initiatedWave = true;
-        //     // InitGate(currentWave.enemyGates[0]);
-        //     gateIndex = 1;
-            
-        // }
+
     }
 
     public EntityBase SpawnEntity(EntityBase enemyBase, Transform position)
@@ -308,6 +292,11 @@ public class WaveManager : IEntityManager
 
 
         return closest;
+    }
+
+    public int GetEnemiesRemaining()
+    {
+        return enemiesInWaveRemaining.Count;
     }
 
     public WaveManager(LevelData data)
