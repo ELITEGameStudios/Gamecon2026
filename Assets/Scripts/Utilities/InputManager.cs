@@ -13,7 +13,6 @@ public class InputManager : MonoBehaviour
     [Header("Input Action References")]
     [SerializeField] InputActionReference movementAxis;
     [SerializeField] InputActionReference lookAxis;
-    [SerializeField] InputActionReference fireReference;
 
 
     SettingsMenu settingsMenu;
@@ -59,8 +58,6 @@ public class InputManager : MonoBehaviour
     private void FixedUpdate()
     {
         MovementInputLastFrame = GetMovementDirection() != Vector2.zero;
-
-        Debug.Log("Fire pressed == " + fireReference.action.IsPressed());
     }
 }
 

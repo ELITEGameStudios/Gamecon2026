@@ -78,7 +78,6 @@ public class ProjectileFreezeMod : ProjectileModifier
                     break;
             }
         }
-        Debug.Log("Duration: " + duration);
     }
 
     void ManageDurationWhenPlayerDead()
@@ -91,7 +90,6 @@ public class ProjectileFreezeMod : ProjectileModifier
         if (!playerDead)
         {
             duration--;
-            Debug.Log("Freezing projectile for " + duration + " more frames");
         }
         if (duration <= 0)
         {

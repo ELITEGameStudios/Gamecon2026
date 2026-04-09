@@ -32301,7 +32301,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2506066010100849665, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -481567.34
+      value: -492934.4
       objectReference: {fileID: 0}
     - target: {fileID: 2523980194605957991, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: tracker
@@ -32499,6 +32499,10 @@ PrefabInstance:
       propertyPath: feds
       value: 
       objectReference: {fileID: 1610688471}
+    - target: {fileID: 6175379885568709908, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
+      propertyPath: currentLevel
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6175379885568709908, guid: 601f77305503ddd448f4730d94f2e9b3, type: 3}
       propertyPath: autoStartWaves
       value: 0
@@ -41243,6 +41247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c32b725df03c93418f1967f73772045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayAreaLimiter: 0
 --- !u!64 &2140314550
 MeshCollider:
   m_ObjectHideFlags: 0

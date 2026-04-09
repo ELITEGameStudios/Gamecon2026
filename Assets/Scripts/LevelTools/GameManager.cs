@@ -43,8 +43,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Couldn't find current level " + currentLevel.ToString() + ": " + handle.OperationException);
             return;
-        }        
-       // var preExistingEnemies = FindObjectsByType<EnemyBase>(FindObjectsSortMode.InstanceID).ToList();
+        }
         switch (levelObject.levelType)
         {
             case LevelData.LevelType.KillTargets:

@@ -24,7 +24,7 @@ public class EntityDetectionSystem : MonoBehaviour
 
     private void Update()
     {
-
+       
         if (!init)
         {
             return;
@@ -38,6 +38,7 @@ public class EntityDetectionSystem : MonoBehaviour
         {
             return;
         }
+
         var enemy = entityManager.GetClosestEnemyToPosition(knife.transform.position, blacklistedEnemies);
         if (enemy != null)
         {
@@ -52,6 +53,10 @@ public class EntityDetectionSystem : MonoBehaviour
             knifeProjectedLookingAtEnemyProjectedEulerAngles.z = 0;
             knifeProjectedLookingAtEnemyProjected.eulerAngles = knifeProjectedLookingAtEnemyProjectedEulerAngles;
             knifeTf.transform.rotation = Quaternion.Slerp(knifeTf.transform.rotation, knifeProjectedLookingAtEnemyProjected, Kp);
+        }
+        else
+        {
+            Debug.Log("No enemy found");
         }
     }
 

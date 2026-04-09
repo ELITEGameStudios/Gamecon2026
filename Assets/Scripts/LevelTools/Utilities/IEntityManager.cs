@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public interface IEntityManager
@@ -54,7 +55,6 @@ public class ArenaManager : IEntityManager
         }
         return closest;
     }
-
     public void Initialize(List<EnemyBase> sceneEnemies)
     {
         arenaEnemies = sceneEnemies;
@@ -274,8 +274,7 @@ public class WaveManager : IEntityManager
             EnemyBase newEnemy = newEntity as EnemyBase;
             newEnemy.entityKilled.AddListener((entity) => OnEnemyDefeated(newEnemy));
             enemiesInWaveRemaining.Add(newEnemy);
-            // enemiesInWaveRemaining.Add(newEnemy);
-            
+            // enemiesInWaveRemaining.Add(newEnemy);            
         }
 
         return newEntity;
