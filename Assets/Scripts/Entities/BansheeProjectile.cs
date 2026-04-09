@@ -39,7 +39,7 @@ public class BansheeProjectile : EnemyProjectile
             groundCheckCounter = timeBetweenGroundChecks;
             animator.SetBool("IsGrounded", Physics.Raycast(groundChecker.bounds.center, Vector3.down, groundChecker.bounds.extents.y + 0.1f, terrainMask));
         }
-        if (Vector3.Distance(transform.position, enemy.transform.position) < distanceToBeConsideredCloseToPlayer) animator.SetTrigger("PlayerNearby");
+        if (Vector3.Distance(transform.position, enemy.transform.position) < distanceToBeConsideredCloseToPlayer) animator.SetTrigger("PlayerNear");
         
         if (Vector3.Distance(transform.position, knife.transform.position) < distanceToBeConsideredCloseToPlayer && knife.currentState == Projectile.ProjectileState.Flying)
         {
