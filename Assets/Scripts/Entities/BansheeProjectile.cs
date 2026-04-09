@@ -43,7 +43,7 @@ public class BansheeProjectile : EnemyProjectile
         
         if (Vector3.Distance(transform.position, knife.transform.position) < distanceToBeConsideredCloseToPlayer && knife.currentState == Projectile.ProjectileState.Flying)
         {
-            knife.CastProjectile(enemy.transform.position - transform.position);
+            knife.CastProjectile((enemy.transform.position - transform.position).normalized);
             animator.SetTrigger("StruckByKnife");
         }
     }
