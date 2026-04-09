@@ -18,10 +18,13 @@ public class RespawnManager : MonoBehaviour
 
     public InputActionReference respawn;
 
+    bool gameOver = false;
+
     public void InitManager(IVictoryCondition victoryCondition, IEntityManager entityManager)
     {
         if (player == null) player = FindFirstObjectByType<Player>();
         player.entityKilled.AddListener(OnPlayerKilled);
+        victoryCondition.victoryAchieved += OnGameOver;
         deathNotifier.SetActive(false);
         respawnPoint.position = player.transform.position;
 
@@ -36,12 +39,18 @@ public class RespawnManager : MonoBehaviour
         }
     }
 
+    void OnGameOver()
+    {
+        gameOver = true;
+    }
+
     void ConfigureWavePausingOnDeath(WaveManager waveManager)
     {
         playerRespawned.AddListener(waveManager.RestartWave);
     }
     protected void OnPlayerKilled(EntityBase player)
     {
+        if (gameOver) return;
         deathNotifier.SetActive(true);
         PlayerDead = true;
         respawn.action.performed += OnRespawnRequest;
@@ -55,9 +64,6 @@ public class RespawnManager : MonoBehaviour
         respawn.action.performed -= OnRespawnRequest;
         var respawnPoint = GetRespawnLocation(PlayerMovementStateMachine.instance.lastGroundedPos);
         Player.instance.SpawnAtPosition(respawnPoint.position);
-        // var rotateTowardsRespawn = Quaternion.LookRotation (respawnPoint.transform.forward).eulerAngles;
-       // rotateTowardsRespawn.y = 0;
-        // player.transform.eulerAngles = rotateTowardsRespawn;
         player.transform.rotation = respawnPoint.rotation;
 
         deathNotifier.SetActive(false);
