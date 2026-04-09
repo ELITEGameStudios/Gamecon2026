@@ -32,7 +32,7 @@ public class EntityDetectionSystem : MonoBehaviour
 
         if (cinematics != null)
         {
-            if (cinematics.inCinematic)  return;
+            // if (cinematics.inCinematic)  return;
         }
         if (knife.currentState != Projectile.ProjectileState.Idle)
         {
@@ -53,6 +53,9 @@ public class EntityDetectionSystem : MonoBehaviour
             knifeProjectedLookingAtEnemyProjectedEulerAngles.z = 0;
             knifeProjectedLookingAtEnemyProjected.eulerAngles = knifeProjectedLookingAtEnemyProjectedEulerAngles;
             knifeTf.transform.rotation = Quaternion.Slerp(knifeTf.transform.rotation, knifeProjectedLookingAtEnemyProjected, Kp);
+
+
+            Debug.Log("Executed feds");
         }
         else
         {

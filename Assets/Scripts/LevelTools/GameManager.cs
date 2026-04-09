@@ -44,18 +44,19 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Couldn't find current level " + currentLevel.ToString() + ": " + handle.OperationException);
             return;
         }
+        var enemies = FindObjectsByType<EnemyBase>(FindObjectsSortMode.InstanceID).ToList();
         switch (levelObject.levelType)
         {
             case LevelData.LevelType.KillTargets:
                 victoryCondition = new KillTargets(levelObject.levelDuration);
                 entityManager = new WaveManager(levelObject);
+                // entityManager.Initialize(enemies);
                 entityManager.Initialize(null);
                 entityManager.allEnemiesDefeated += victoryCondition.OnEnemiesDefeated;
                 break;
             case LevelData.LevelType.Survive:
                 victoryCondition = new KillTargets(levelObject.levelDuration);
                 entityManager = new ArenaManager();
-                var enemies = FindObjectsByType<EnemyBase>(FindObjectsSortMode.InstanceID).ToList();
                 entityManager.Initialize(enemies);
                 entityManager.allEnemiesDefeated += victoryCondition.OnEnemiesDefeated;
                 break;

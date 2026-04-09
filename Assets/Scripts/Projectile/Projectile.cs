@@ -68,6 +68,7 @@ public class Projectile : MonoBehaviour
 
     [Header("Wind Data")]
     [SerializeField] AnimationCurve windToRecallSpeed;
+    [System.Serializable]
     public struct SpaceSample
     {
         public Vector3 position, direction, velocity;
@@ -112,9 +113,14 @@ public class Projectile : MonoBehaviour
             currentState == ProjectileState.Flying || 
             (currentState == ProjectileState.Recalling && !inCollision)
         )
+        {
+            Debug.Log("Returned position");   
             return transform.position;
+        }
 
-        else{return blinkSample.position;}
+        else{
+            Debug.Log("Returned Sample");   
+            return blinkSample.position;}
     }
     
     void Update()
@@ -170,7 +176,7 @@ public class Projectile : MonoBehaviour
     {
 
         // Preserving position data
-        if(currentState == ProjectileState.Idle || currentState == ProjectileState.Embedded){return;}
+        if(currentState == ProjectileState.Embedded){return;}
         
         SpaceSample spaceSample;
         
@@ -180,11 +186,9 @@ public class Projectile : MonoBehaviour
 
         // debugObj.transform.position = transform.position;
 
-        if(currentState != ProjectileState.Embedded || spaceRecordingData.Count < maxRecordingSlots)
-        {
-            spaceRecordingData.Add(spaceSample);
-            if(spaceRecordingData.Count > maxRecordingSlots) spaceRecordingData.RemoveAt(0);
-        }
+        if(spaceRecordingData.Count <= maxRecordingSlots) spaceRecordingData.Add(spaceSample);
+        if(spaceRecordingData.Count > maxRecordingSlots)  spaceRecordingData.RemoveAt(0);
+        if(currentState == ProjectileState.Flying) blinkSample = spaceRecordingData[spaceRecordingData.Count-1];
     }
 
     public void SetState(ProjectileState newState)
@@ -490,6 +494,7 @@ public class Projectile : MonoBehaviour
             sample.velocity = rb.linearVelocity;
             blinkSample = sample;
         }
+
 
         transform.position += travelDirection * (embedDepth * 0.1f);
 

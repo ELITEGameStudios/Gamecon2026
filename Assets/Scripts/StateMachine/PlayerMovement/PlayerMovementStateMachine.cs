@@ -19,6 +19,7 @@ public class PlayerMovementStateMachine : StateMachine
     public float groundedCheckDist = 0.15f;
     public float speedMultiplier = 1f;
     public float bodyRadius = 0.5f;
+    public float blinkMinOutVelocity;
     public Vector3 blinkBoxSize;
     public LayerMask blinkBoxLayerMask;
     public PhysicsMaterial frictionMat, slipMat;
@@ -202,6 +203,7 @@ public class PlayerMovementStateMachine : StateMachine
         };
         featherKnife.knifeRetrieved.Invoke(info);
         Quaternion rot = featherKnife.transform.rotation;
+        
         // for (float i = 0; i < 0.5f; i += 0.1f)
         // {
         //     targetPos = featherKnife.transform.position - featherKnife.throwDirection * i;
@@ -214,7 +216,7 @@ public class PlayerMovementStateMachine : StateMachine
         transform.position = targetPos;
         if(featherKnife.currentState != Projectile.ProjectileState.Embedded)
         {
-            rigidbody.linearVelocity = rigidbody.linearVelocity.magnitude * blinkVector.normalized;
+            rigidbody.linearVelocity = Mathf.Clamp(rigidbody.linearVelocity.magnitude, blinkMinOutVelocity, Mathf.Infinity) * blinkVector.normalized;
         }
         
         CheckWallViaRay(ignoreWallRunTimer: true, fromBlink: true);
