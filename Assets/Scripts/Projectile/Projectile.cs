@@ -45,6 +45,7 @@ public class Projectile : MonoBehaviour
     public LayerMask mainIdleCull, mainFlyingCull;
 
     [Header("RecallData")]
+    public Vector3 throwBegin {get; private set;}
     public Vector3 embeddedPos {get; private set;}
     public Vector3 throwDirection {get; private set;}
     [SerializeField] private AnimationCurve recallAnimationCurve;
@@ -80,6 +81,7 @@ public class Projectile : MonoBehaviour
     
     // [SerializeField] private Animator animator;
     private Transform embedParent;
+    [SerializeField] private LayerMask layerMask;
 
     float timeElaspedWithoutKnife = 0.0f;
 
@@ -188,7 +190,29 @@ public class Projectile : MonoBehaviour
 
         if(spaceRecordingData.Count <= maxRecordingSlots) spaceRecordingData.Add(spaceSample);
         if(spaceRecordingData.Count > maxRecordingSlots)  spaceRecordingData.RemoveAt(0);
-        if(currentState == ProjectileState.Flying) blinkSample = spaceRecordingData[spaceRecordingData.Count-1];
+        if(currentState == ProjectileState.Flying)
+        {
+            
+            blinkSample = spaceRecordingData[spaceRecordingData.Count-1];
+
+
+            Vector3 rayOrigin = spaceRecordingData.Count > 1 ? spaceRecordingData[spaceRecordingData.Count - 2].position : throwBegin;
+
+            Ray ray = new Ray(rayOrigin, transform.forward);
+            if(Physics.Raycast(ray, out RaycastHit hit, Vector3.Distance(transform.position, rayOrigin) * 2, layerMask, QueryTriggerInteraction.Ignore))
+            {
+                Debug.Log("Caught");
+                transform.position = hit.point;
+                EmbedKnife();
+            }
+            
+            // float speedFactor = speed;
+            // float dist
+            // if ()
+            // {
+                
+            // }
+        }
     }
 
     public void SetState(ProjectileState newState)
@@ -361,12 +385,25 @@ public class Projectile : MonoBehaviour
 
     public void CastProjectile(Vector3 direction)
     {
+        var rayOrigin = transform.position - direction * 0.5f;
+        throwBegin = transform.position;
+        Ray ray = new Ray(rayOrigin, direction);
+
         transform.SetParent(null);
         transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(-90, 180, 0);
         transform.localScale = targetLocalScale;
         throwDirection = direction;
+        
+        
         SetState(ProjectileState.Flying);
         
+        if(Physics.Raycast(ray, out RaycastHit hit, 2, layerMask, QueryTriggerInteraction.Ignore))
+        {
+            transform.position = hit.point;
+            EmbedKnife();
+            return;
+        }
+
         rb.linearVelocity = direction * speed;
     }
 
