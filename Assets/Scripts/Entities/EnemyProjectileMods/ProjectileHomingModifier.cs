@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 [RequireComponent (typeof(ProjectileVelocityModifier))]
 public class ProjectileHomingModifier : ProjectileModifier
@@ -29,7 +28,6 @@ public class ProjectileHomingModifier : ProjectileModifier
         base.InitModifier(projectile);
         projectile.projectileActivated.AddListener(OnProjectileActivated);
     }
-
     public void OnProjectileActivated(EnemyProjectile.ProjectileTarget target)
     {
         this.target = target.targetTransform;

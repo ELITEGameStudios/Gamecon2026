@@ -61,12 +61,8 @@ public class EntityDetectionSystem : MonoBehaviour
             knifeTf.transform.rotation = Quaternion.Slerp(knifeTf.transform.rotation, knifeProjectedLookingAtEnemyProjected, Kp);
 
 
-            Debug.Log("Executed feds");
         }
-        else
-        {
-            Debug.Log("No enemy found");
-        }
+
     }
 
     void OnDisable()
