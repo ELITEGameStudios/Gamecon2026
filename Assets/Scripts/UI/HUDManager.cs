@@ -30,7 +30,7 @@ public class HUDManager : MonoBehaviour
 
     IEntityManager entityManager;
 
-    TimerManager
+    // TimerManager
     void Awake()
     {
         if(Instance == null){Instance = this;}
