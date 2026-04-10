@@ -4,13 +4,14 @@ using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
 {
     [SerializeField] GameObject pauseDisplay, settingsMenu;
     [SerializeField] PageManager pageManager;
-    [SerializeField] InputActionReference pauseInput, backInput;
+    [SerializeField] InputActionReference pauseInput, backInput, restartInput;
     [SerializeField] Button saveButton;
     [SerializeField] GameObject fpsDisplay;
     [SerializeField] CrosshairManager crosshairManager;
@@ -152,6 +153,15 @@ public class SettingsMenu : MonoBehaviour
     void ApplyAudioSettings()
     {
         //need to sit up audio mixers
+    }
+
+    private void Update()
+    {
+        if (restartInput.action.WasPerformedThisFrame() && paused)
+        {
+            Time.timeScale = 1.0f;
+            SceneManager.LoadScene("0MainMenu Updated");
+        }
     }
 
     public void SetPaused(bool pause)

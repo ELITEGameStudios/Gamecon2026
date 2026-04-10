@@ -1285,7 +1285,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 599516004368477125}
   m_HandleRect: {fileID: 936870712990486108}
   m_Direction: 3
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5835,14 +5835,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e5f0cab61b92454cb3becc0e8ad6860, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settingsDisplay: {fileID: 1828833183455053132}
+  pauseDisplay: {fileID: 0}
+  settingsMenu: {fileID: 0}
   pageManager: {fileID: 9043390839942438877}
   pauseInput: {fileID: -2849180525928482205, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  backInput: {fileID: 0}
   saveButton: {fileID: 1948930311796707948}
   fpsDisplay: {fileID: 358423783510232209}
+  crosshairManager: {fileID: 0}
   resolutionOptions: {fileID: 6448926531943398526}
   fullscreenToggle: {fileID: 7069070389223811707}
   FPSToggle: {fileID: 1868558636832655510}
+  crosshairToggle: {fileID: 0}
   BGMSlider: {fileID: 3219163665970475716}
   SFXSlider: {fileID: 3951620223203380387}
   horizSensSlider: {fileID: 2247084129325645847}
@@ -6120,7 +6124,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -702.49994, y: 259.99997}
+  m_AnchoredPosition: {x: -702.5, y: 260.00006}
   m_SizeDelta: {x: 1404, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &6795753419002173895

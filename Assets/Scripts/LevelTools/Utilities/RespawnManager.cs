@@ -53,15 +53,18 @@ public class RespawnManager : MonoBehaviour
         if (gameOver) return;
         deathNotifier.SetActive(true);
         PlayerDead = true;
-        respawn.action.performed += OnRespawnRequest;
 
         Time.timeScale = 0.0f;
     }
-
-    void OnRespawnRequest(InputAction.CallbackContext ctx)
+    private void Update()
     {
-        if (!PlayerDead) return;
-        respawn.action.performed -= OnRespawnRequest;
+        if (PlayerDead && respawn.action.WasPerformedThisFrame())
+        {
+            RespawnPlayer();
+        }
+    }
+    void RespawnPlayer()
+    {
         var respawnPoint = GetRespawnLocation(PlayerMovementStateMachine.instance.lastGroundedPos);
         Player.instance.SpawnAtPosition(respawnPoint.position);
         player.transform.rotation = respawnPoint.rotation;
@@ -77,10 +80,6 @@ public class RespawnManager : MonoBehaviour
         Time.timeScale = 1.0f;
     }
 
-    public bool IsPlayerDead()
-    {
-        return PlayerDead;
-    }
 
     protected void OnCheckpointReached(PlayerCheckpoint checkpoint)
     {
