@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5564603403382732386}
   - component: {fileID: 7576228598579739681}
   - component: {fileID: 2892170367723801008}
+  - component: {fileID: -4272395754825841576}
   m_Layer: 0
   m_Name: BansheeSpawner
   m_TagString: Enemy
@@ -83,3 +84,35 @@ MonoBehaviour:
   enemyShield: {fileID: 0}
   type: 3
   bansheePrefab: {fileID: 6323317550091730826, guid: 7c5c64969a20d2f4ab52abbeb48128d0, type: 3}
+  knife: {fileID: 0}
+--- !u!114 &-4272395754825841576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5076297836056734936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1306690555
+      Data2: 1263119066
+      Data3: 419116203
+      Data4: 398683289
+    Path: event:/BansheeSpawnEvent
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 1
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20

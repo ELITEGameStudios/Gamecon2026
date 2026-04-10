@@ -9,6 +9,7 @@ public class WaveCounter : MonoBehaviour
 
     public void OnStartWave(int waveNumber)
     {
+        gameObject.SetActive(true);
         // waveNumberTxt.text = waveNumber.ToString();
         for (int i = 0; i < numbers.Length; i++)
         {

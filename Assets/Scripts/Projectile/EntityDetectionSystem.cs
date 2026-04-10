@@ -48,7 +48,7 @@ public class EntityDetectionSystem : MonoBehaviour
             var knifeProjected = Vector3.ProjectOnPlane(knife.transform.position, knifeHolder.transform.up);
 
             var knifeProjectedLookingAtEnemyProjected = Quaternion.LookRotation(
-                (enemyProjected - knifeProjected).normalized + Vector3.up * Mathf.Clamp(enemyPosition.z - knifeHolder.transform.position.z, -0.5f, 0.5f) 
+                (enemyProjected - knifeProjected).normalized + Vector3.up * Mathf.Clamp((enemyPosition.z - knifeHolder.transform.position.z) / 50, -0.5f, 0.5f) 
                 , knifeHolder.transform.up
             );
 
