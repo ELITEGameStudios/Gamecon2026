@@ -68,7 +68,6 @@ public class EnemyProjectile : MonoBehaviour
         projectileDestroyed.Invoke(this);
         active = false;
     }
-
     private void FixedUpdate()
     {
         UpdateModifiers();

@@ -23,11 +23,14 @@ public class ProjectileVelocityModifier : ProjectileModifier
     void StartMovement(Vector3 dir)
     {
         projectile.projectileVelocity.Speed = projectileSpeed;
+        projectile.projectileVelocity.Direction = dir;
         projectile.meshObjects.transform.rotation = Quaternion.LookRotation(dir) * Quaternion.Euler(rotationOffset);
+        Debug.Log("Starting movement with speed of ");
     }
     void StopMovement()
     {
         projectile.projectileVelocity.Speed = 0.0f;
+        Debug.Log("ending movement");
     }
 
     public override void UpdateModifier()
