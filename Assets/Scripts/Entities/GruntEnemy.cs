@@ -18,10 +18,4 @@ public class GruntEnemy : RangedEnemy
         animator.SetTrigger("Throw");
     }
 
-    private void FixedUpdate()
-    {
-        SearchForPlayer();
-        
-    }
-
 }

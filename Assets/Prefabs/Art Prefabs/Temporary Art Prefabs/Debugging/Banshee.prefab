@@ -126,6 +126,7 @@ GameObject:
   - component: {fileID: 8525423786340817820}
   - component: {fileID: 5949575903253624087}
   - component: {fileID: 6323317550091730826}
+  - component: {fileID: 6613388300650559004}
   m_Layer: 0
   m_Name: Banshee
   m_TagString: Untagged
@@ -338,6 +339,37 @@ MonoBehaviour:
   groundChecker: {fileID: 4496909502411584043}
   timeBetweenGroundChecks: 8
   distanceToBeConsideredCloseToPlayer: 5
+--- !u!114 &6613388300650559004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5942817925007762328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1183147893
+      Data2: 1339985927
+      Data3: -913493326
+      Data4: 1211312778
+    Path: event:/BansheeAmbientEvent
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1001 &8949732705980609376
 PrefabInstance:
   m_ObjectHideFlags: 0

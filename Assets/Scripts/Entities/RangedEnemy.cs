@@ -44,6 +44,7 @@ public class RangedEnemy : EnemyBase
 
     protected void InitProjectilePool()
     {
+        Debug.Log("There are " + projectileInfo.Count + " projectile infos ");
         for (int i = 0; i < projectileInfo.Count; i++)
         {
             projectilePools[projectileInfo[i]] = new ();
@@ -54,9 +55,15 @@ public class RangedEnemy : EnemyBase
                 projectile.InitProjectile(transform);
                 projectile.DestroyProjectile();
                 projectilePools[projectileInfo[i]].Enqueue(projectile);
+                Debug.Log("Initialized " + i + " projectiles");
             }
 
         }
+    }
+
+    private void FixedUpdate()
+    {
+        SearchForPlayer();
     }
 
     protected virtual void SearchForPlayer()
@@ -138,4 +145,5 @@ public class RangedEnemy : EnemyBase
         }
         base.OnDeath();
     }
+
 }

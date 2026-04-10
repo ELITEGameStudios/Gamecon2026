@@ -263,7 +263,6 @@ public class WaveManager : IEntityManager
 
     public EnemyBase GetClosestEnemyToPosition(Vector3 position, List<EnemyType> blacklist)
     {
-        Debug.Log(enemiesInWaveRemaining.Count);
         if (enemiesInWaveRemaining == null) return null;
         if (enemiesInWaveRemaining.Count == 1) return enemiesInWaveRemaining[0];
         float distanceToBeat = float.MaxValue;

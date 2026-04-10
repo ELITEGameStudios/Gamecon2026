@@ -47,20 +47,22 @@ public class EntityDetectionSystem : MonoBehaviour
             var enemyProjected = Vector3.ProjectOnPlane(enemyPosition, knifeHolder.transform.up);
             var knifeProjected = Vector3.ProjectOnPlane(knife.transform.position, knifeHolder.transform.up);
 
-            var knifeProjectedLookingAtEnemyProjected = Quaternion.LookRotation(enemyProjected - knifeProjected, knifeHolder.transform.up);
+            var knifeProjectedLookingAtEnemyProjected = Quaternion.LookRotation(
+                (enemyProjected - knifeProjected).normalized + Vector3.up * Mathf.Clamp((enemyPosition.z - knifeHolder.transform.position.z) / 50, -0.5f, 0.5f) 
+                , knifeHolder.transform.up
+            );
+
             var knifeProjectedLookingAtEnemyProjectedEulerAngles = knifeProjectedLookingAtEnemyProjected.eulerAngles;
             knifeProjectedLookingAtEnemyProjectedEulerAngles.x += 90;
             knifeProjectedLookingAtEnemyProjectedEulerAngles.z = 0;
+            
             knifeProjectedLookingAtEnemyProjected.eulerAngles = knifeProjectedLookingAtEnemyProjectedEulerAngles;
+
             knifeTf.transform.rotation = Quaternion.Slerp(knifeTf.transform.rotation, knifeProjectedLookingAtEnemyProjected, Kp);
 
 
-            Debug.Log("Executed feds");
         }
-        else
-        {
-            Debug.Log("No enemy found");
-        }
+
     }
 
     void OnDisable()
