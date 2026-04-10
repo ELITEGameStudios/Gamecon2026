@@ -105,7 +105,7 @@ public class WindManager : MonoBehaviour
     {
         if (windDisplay != null) windDisplay.text = "Wind: " + Mathf.RoundToInt(CurrentWind);
         if (speedDisplay != null) speedDisplay.text = "Speed: " + Mathf.RoundToInt(new Vector2(playerRB.linearVelocity.x, playerRB.linearVelocity.z).magnitude) + "u/s";
-        float windAsPercent = CurrentWind / 100.0f;
+        float windAsPercent = GetWindAsPercent();
         if (windWraps.gameObject.activeSelf)
         {
             wrapsEmission.rateOverTime = Mathf.Lerp(0, maxWindWraps, windAsPercent);
@@ -144,6 +144,7 @@ public class WindManager : MonoBehaviour
     public void RestoreWindOnKill()
     {
         currentWind = 100.0f;
+        UpdateWindDisplays();
     }
 
 

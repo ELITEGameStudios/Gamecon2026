@@ -5,6 +5,12 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Collider))]
 public class Projectile : MonoBehaviour
 {
+
+    string[] unallowedObjectsToBounceOff = {
+        "SoftTerrain",
+        "Enemy"
+    };
+
     [SerializeField] WindManager windManager;
 
     [HideInInspector] public UnityEvent<KnifeCollisionInfo> enemyStruck = new();
@@ -285,11 +291,13 @@ public class Projectile : MonoBehaviour
         // Get curve-based speed multiplier
         float speedMultiplier = recallAnimationCurve.Evaluate(recallProgress);
 
-        // Calculate distance-based boost
-        float distanceBoost = CalculateDistanceBoost(currentDistance);
+        // Calculate wind-based boost
+        float windBoost = windToRecallSpeed.Evaluate(windManager.GetWindAsPercent());
+
+        Debug.Log("Applying wind multiplier of " + windBoost);
 
         // Combine both multipliers
-        float currentSpeed = (baseRecallSpeed * speedMultiplier) * distanceBoost;
+        float currentSpeed = (baseRecallSpeed * speedMultiplier) * windBoost;
     
         transform.position = Vector3.MoveTowards(transform.position, initProjectilePosition.position, currentSpeed * Time.deltaTime);
     
@@ -301,11 +309,6 @@ public class Projectile : MonoBehaviour
                 Time.timeScale = parryTutorialEvent.GetTimeScale(currentDistance);
                 return;
             }
-            // if(currentDistance <= pickUpRadius + 1f && parryTutorialEvent.active)
-            // {
-            //     Time.timeScale = 0;
-            //     return;
-            // }
         }
 
 
@@ -376,8 +379,10 @@ public class Projectile : MonoBehaviour
         transform.localScale = targetLocalScale;
         throwDirection = direction;
         SetState(ProjectileState.Flying);
-        
-        rb.linearVelocity = direction * speed;
+
+
+       
+        rb.linearVelocity = (direction * speed) + playerMovement.rigidbody.linearVelocity;
     }
 
     private void ReturnToIdle()
@@ -502,32 +507,27 @@ public class Projectile : MonoBehaviour
 
         SetState(ProjectileState.Embedded);
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="normal"></param>
-    /// <returns>Whether or not the bounce was successful.</returns>
-    bool AttemptEnemyAutoaimBounce(Vector3 normal)
+ 
+    bool AttemptPhysicsBounce(Vector3 normal, string objTag)
     {
-        if (BouncesRemaining <= 0 || currentState != ProjectileState.Flying || projectileAbilities.ParryActive) return false;
-        if (windManager.HasEnoughWindForRicochet())
+        if (BouncesRemaining <= 0 || currentState != ProjectileState.Flying) return false;
+
+        for (int i = 0; i < unallowedObjectsToBounceOff.Length; i++)
         {
-            var nearest = GameManager.Instance.entityManager.GetClosestEnemyToPosition(rb.position, enemiesToNotBounceTowards);
-            if (nearest != null)
-            {
-                if (Vector3.Distance(nearest.collider.bounds.center, rb.position) <= maxDistanceToEnableAutoaimBounce)
-                {
-                    var bounceDirection = (nearest.collider.bounds.center - rb.position).normalized;
-                    CastProjectile(bounceDirection);
-                    PostBounce();
-                    knifeRicocheted.Invoke(bounceDirection);
-                    RicochetActive = true;
-                    return true;
-                }
-            }
+            if (unallowedObjectsToBounceOff[i] == objTag) return false;
         }
-        return false;
+
+        Vector3 velNormalized = rb.linearVelocity.normalized;
+        Vector3 bounceDirection = Vector3.Reflect(velNormalized, normal).normalized;
+        CastProjectile(bounceDirection);
+        knifeRicocheted.Invoke(bounceDirection);
+        RicochetActive = true;
+        PostBounce();
+
+        return true;
     }
+
+
     /// <summary>
     /// 
     /// </summary>
@@ -551,7 +551,10 @@ public class Projectile : MonoBehaviour
         string objTag = collision.gameObject.tag;
         ReportCollision(false, normal, objTag);
 
-        EmbedKnife();
+        if (!AttemptPhysicsBounce(normal, objTag))
+        {
+            EmbedKnife();
+        }
     }
 }
 public struct KnifeCollisionInfo
