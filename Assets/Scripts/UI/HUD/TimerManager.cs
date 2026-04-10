@@ -30,7 +30,6 @@ public class TimerManager : MonoBehaviour
     private void Update()
     {
         if (!runTimer || !GameManager.Instance.Initialized) return;
-        Debug.Log("Timer Running");
      
         timerTracker += Time.deltaTime;
         timerTimespan = TimeSpan.FromSeconds(timerTracker);

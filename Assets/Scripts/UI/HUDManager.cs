@@ -30,6 +30,7 @@ public class HUDManager : MonoBehaviour
 
     IEntityManager entityManager;
 
+    TimerManager
     void Awake()
     {
         if(Instance == null){Instance = this;}
@@ -75,7 +76,7 @@ public class HUDManager : MonoBehaviour
     }
     void OnWaveChanged(int index)
     {
-        waveDisplay.text = index.ToString();
+        waveDisplay.text = (index + 1).ToString();
         enemiesRemainingDisplay.text = entityManager.GetEnemiesRemaining().ToString();
     }
 

@@ -175,7 +175,6 @@ public class DashState : PlayerMovementState
             movement.SetState(movement.airborneState);
         }
     }
-
     public void EndCooldown()
     {
         CooldownTracker = 0;

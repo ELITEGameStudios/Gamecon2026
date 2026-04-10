@@ -141,7 +141,6 @@ public class GameManager : MonoBehaviour
     {
         if(!Initialized) return;
 
-        Debug.Log("Initialized");
         OnTimerUpdated();
         if(entityManager is WaveManager){(entityManager as WaveManager).UpdateWaves();}
     }
