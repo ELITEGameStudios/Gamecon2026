@@ -22,22 +22,10 @@
             "m_Id": "9e0ce194179841dc82af2e6dabb69ab7"
         },
         {
-            "m_Id": "ef9b4d01eded47f28960615934c9959a"
-        },
-        {
             "m_Id": "c8157705d7fb46d3942fb91dd3db51c1"
         },
         {
             "m_Id": "12664ebf050c49d28a5a9c4e76f27086"
-        },
-        {
-            "m_Id": "0c530e7a25254d8cafd04d5aa136db7e"
-        },
-        {
-            "m_Id": "3dce0bb0a9d14b24a5da352a57fc0893"
-        },
-        {
-            "m_Id": "1b781faf2d974c72bb671044c922a2b0"
         },
         {
             "m_Id": "dffe3d3738cd4e51bc075946b5deacba"
@@ -61,11 +49,7 @@
             "m_Id": "2126ed3b43b94631800ac64b17ff5662"
         }
     ],
-    "m_Keywords": [
-        {
-            "m_Id": "bb816eafc57d4efe938f94bac02c8dac"
-        }
-    ],
+    "m_Keywords": [],
     "m_Dropdowns": [],
     "m_CategoryData": [
         {
@@ -76,9 +60,6 @@
         },
         {
             "m_Id": "de6360068c7144cd8f25f7e9836f7065"
-        },
-        {
-            "m_Id": "0818e827821d4a53902d53d730f9046c"
         },
         {
             "m_Id": "a6e7b58e05f84c66ad47288d46fbd247"
@@ -1812,30 +1793,6 @@
 
 {
     "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
-    "m_ObjectId": "0818e827821d4a53902d53d730f9046c",
-    "m_Name": "TerrainCam",
-    "m_ChildObjectList": [
-        {
-            "m_Id": "bb816eafc57d4efe938f94bac02c8dac"
-        },
-        {
-            "m_Id": "0c530e7a25254d8cafd04d5aa136db7e"
-        },
-        {
-            "m_Id": "3dce0bb0a9d14b24a5da352a57fc0893"
-        },
-        {
-            "m_Id": "1b781faf2d974c72bb671044c922a2b0"
-        },
-        {
-            "m_Id": "ef9b4d01eded47f28960615934c9959a"
-        }
-    ]
-}
-
-{
-    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "087cbac3f6564876bcd40dd25f2bd34e",
     "m_Id": 0,
@@ -1946,36 +1903,6 @@
     "m_Property": {
         "m_Id": "f5f79cec3edc4221beabbd0fe4fc961f"
     }
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Internal.Texture2DShaderProperty",
-    "m_ObjectId": "0c530e7a25254d8cafd04d5aa136db7e",
-    "m_Guid": {
-        "m_GuidSerialized": "17afb599-6a10-4bdb-bb52-e0bb9da79473"
-    },
-    "m_Name": "TerrainColorTex",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "TerrainColorTex",
-    "m_DefaultReferenceName": "_TerrainColorTex",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_Precision": 0,
-    "overrideHLSLDeclaration": false,
-    "hlslDeclarationOverride": 0,
-    "m_Hidden": false,
-    "m_Value": {
-        "m_SerializedTexture": "{\"texture\":{\"fileID\":8400000,\"guid\":\"9bea68b888c3f479cb52eff43fa540bb\",\"type\":2}}",
-        "m_Guid": ""
-    },
-    "isMainTexture": false,
-    "useTilingAndOffset": false,
-    "m_Modifiable": true,
-    "m_DefaultType": 0
 }
 
 {
@@ -2718,7 +2645,7 @@
     "m_Title": "DepthColor",
     "m_Position": {
         "x": -3092.5,
-        "y": -372.0001220703125
+        "y": -372.0
     }
 }
 
@@ -2795,34 +2722,6 @@
 }
 
 {
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
-    "m_ObjectId": "1b781faf2d974c72bb671044c922a2b0",
-    "m_Guid": {
-        "m_GuidSerialized": "504b5fcb-e80e-401a-9304-43f201719d69"
-    },
-    "m_Name": "TerrainOffset",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "TerrainOffset",
-    "m_DefaultReferenceName": "_TerrainOffset",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_Precision": 0,
-    "overrideHLSLDeclaration": false,
-    "hlslDeclarationOverride": 0,
-    "m_Hidden": false,
-    "m_Value": 0.0,
-    "m_FloatType": 0,
-    "m_RangeValues": {
-        "x": 0.0,
-        "y": 1.0
-    }
-}
-
-{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
     "m_ObjectId": "20787df73b7049c9b33606d7893f286c",
@@ -2852,7 +2751,7 @@
     "m_ObjectId": "20f16f3e1e50443ca2139aa4f6530b58",
     "m_Title": "GrassSway",
     "m_Position": {
-        "x": -3429.500244140625,
+        "x": -3429.5,
         "y": -1970.0
     }
 }
@@ -3757,34 +3656,6 @@
         "y": 0.0
     },
     "m_Labels": []
-}
-
-{
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
-    "m_ObjectId": "3dce0bb0a9d14b24a5da352a57fc0893",
-    "m_Guid": {
-        "m_GuidSerialized": "0979351e-9fb4-4206-a206-588192d4d1f3"
-    },
-    "m_Name": "TerrainSize",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "TerrainSize",
-    "m_DefaultReferenceName": "_TerrainSize",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_Precision": 0,
-    "overrideHLSLDeclaration": false,
-    "hlslDeclarationOverride": 0,
-    "m_Hidden": false,
-    "m_Value": 25.0,
-    "m_FloatType": 0,
-    "m_RangeValues": {
-        "x": 0.0,
-        "y": 1.0
-    }
 }
 
 {
@@ -7817,31 +7688,6 @@
 }
 
 {
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
-    "m_ObjectId": "bb816eafc57d4efe938f94bac02c8dac",
-    "m_Guid": {
-        "m_GuidSerialized": "ed909faf-8cdf-43c5-885d-bb56d5c88f71"
-    },
-    "m_Name": "UseTerrainColor",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "UseTerrainColor",
-    "m_DefaultReferenceName": "_USETERRAINCOLOR",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_KeywordType": 0,
-    "m_KeywordDefinition": 0,
-    "m_KeywordScope": 0,
-    "m_KeywordStages": 63,
-    "m_Entries": [],
-    "m_Value": 0,
-    "m_IsEditable": true
-}
-
-{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
     "m_ObjectId": "bb9189413eb14e9e8664972e9123468e",
@@ -9546,36 +9392,6 @@
     "m_Value": 0.5,
     "m_DefaultValue": 0.5,
     "m_Labels": []
-}
-
-{
-    "m_SGVersion": 3,
-    "m_Type": "UnityEditor.ShaderGraph.Internal.ColorShaderProperty",
-    "m_ObjectId": "ef9b4d01eded47f28960615934c9959a",
-    "m_Guid": {
-        "m_GuidSerialized": "495b32a5-147d-41b1-89ef-5ffc62e066d4"
-    },
-    "m_Name": "ShadowColor",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "ShadowColor",
-    "m_DefaultReferenceName": "_ShadowColor",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_Precision": 0,
-    "overrideHLSLDeclaration": false,
-    "hlslDeclarationOverride": 0,
-    "m_Hidden": false,
-    "m_Value": {
-        "r": 0.6415094137191773,
-        "g": 0.5257506966590881,
-        "b": 0.14222142100334168,
-        "a": 0.0
-    },
-    "isMainColor": false,
-    "m_ColorMode": 0
 }
 
 {
