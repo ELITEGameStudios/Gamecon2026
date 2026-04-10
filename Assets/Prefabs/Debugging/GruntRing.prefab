@@ -150,9 +150,6 @@ MonoBehaviour:
   meshObjects: {fileID: 1290246612653947368}
   rb: {fileID: 3657084110959660343}
   enemy: {fileID: 0}
-  lifetime: 5
-  currentLifetime: 0
-  projectileSpeed: {x: 0, y: 0, z: 0}
 --- !u!65 &2746665368929302230
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -214,6 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   priority: 300
+  rotationOffset: {x: 0, y: 0, z: 0}
   projectileSpeed: 40
 --- !u!114 &3193529535189615693
 MonoBehaviour:
