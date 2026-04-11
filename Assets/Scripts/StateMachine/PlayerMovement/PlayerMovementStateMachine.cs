@@ -9,19 +9,20 @@ public class PlayerMovementStateMachine : StateMachine
 {
     public static PlayerMovementStateMachine instance {get; private set;}
 
-
     [Header("Base Properties")]
     public float baseSpeed = 5f;
     public float clampedRotationY = 85;
     public float movingConsiderationDeadzone = 0.1f;
     public float minWallTangentSlope = 80;
     public float wallRunLinearVelocityMaxAngleDif = 60;
-    public float maxWallCheckDist = 5;
+    public float maxWallCheckDist = 5, blinkWallCheckDistance = 2;
     public float groundedCheckDist = 0.15f;
     public float speedMultiplier = 1f;
     public float bodyRadius = 0.5f;
+    public float blinkMinOutVelocity;
     public Vector3 blinkBoxSize;
     public LayerMask blinkBoxLayerMask;
+    public PhysicsMaterial frictionMat, slipMat;
     public float liveMaxSpeed {get { return baseSpeed * speedMultiplier; }}
     public float currentVelocity {get { return rigidbody.linearVelocity.magnitude; }}
     public float previousCurrentVelocity;
@@ -33,6 +34,8 @@ public class PlayerMovementStateMachine : StateMachine
             ).magnitude; 
         }
     }
+
+    public Vector3 lastGroundedPos;
     
     public PlayerMovementState currentState => base.currentState as PlayerMovementState;
     
@@ -49,43 +52,51 @@ public class PlayerMovementStateMachine : StateMachine
 
 
     [Header("Movement Input")]
-    public Vector2 movementInput;
-    public Vector2 lookInput;
     public Vector2 rotSensitivity;
 
-    public bool hasMovementInput => movementInput.magnitude > movingConsiderationDeadzone;
-    public bool hadMovementInputLastFrame;
+    //public bool hasMovementInput => movementInput.magnitude > movingConsiderationDeadzone;
     public bool hasDash;
 
-    public bool isConsideredMoving => hasMovementInput && rigidbody.linearVelocity.magnitude > movingConsiderationDeadzone;
-    public bool canDash => currentState != dashState && hasDash && currentState != wallRunState;
-    public bool wasMovingLastFrame;
+    public bool isConsideredMoving => inputManager.GetMovementDirection() != Vector2.zero && rigidbody.linearVelocity.magnitude > movingConsiderationDeadzone;
+    //    public bool isConsideredMoving => hasMovementInput && rigidbody.linearVelocity.magnitude > movingConsiderationDeadzone;
 
-    public InputActionReference move, jump, look, dash;
+    public bool canDash => currentState != dashState && hasDash && currentState != wallRunState && dashState.CooldownTracker <= 0.0f;
+    public bool wasMovingLastFrame;
+    public bool soarDashEnabled = true;
+
+
+    public ParryTutorialEvent parryTutorialEvent;
     
 
     [Header("FMOD events")]
     public string FMODJumpEvent = "";
     public string FMODLandEvent = "";
-    public FMOD.Studio.EventInstance playerJump, playerLand;
+    public string FMODDashEvent = "";
+    public FMOD.Studio.EventInstance playerJump, playerLand, playerDash;
 
     [Header("External References")]
+    public Collider mainCol;
     public Projectile featherKnife;
+    public GroundedHelper groundedHelper;
+    public Animator armAnimator;
+   [SerializeField]  InputManager inputManager;
 
     void Awake(){ 
 
         if(instance == null) {instance = this;}
         else if(instance != this){Destroy(this);}
         
-        defaultState = airborneState; 
-
+        defaultState = airborneState;
+        dashState.Initialize();
         airborneState.OnReset();
         groundedState.OnReset();
         wallRunState.OnReset();
         dashState.OnReset();
+        lastGroundedPos = transform.position;
 
         playerJump = FMODUnity.RuntimeManager.CreateInstance(FMODJumpEvent);
         playerLand = FMODUnity.RuntimeManager.CreateInstance(FMODLandEvent);
+        playerDash = FMODUnity.RuntimeManager.CreateInstance(FMODDashEvent);
     }
 
     protected override void OnStart()
@@ -93,50 +104,53 @@ public class PlayerMovementStateMachine : StateMachine
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    protected override void OnUnityEnable()
-    {
-        jump.action.started += Jump;
-        dash.action.performed += OnDashInput;
-    }
-
-    protected override void OnUnityDisable()
-    {
-        jump.action.started -= Jump;
-        dash.action.performed -= OnDashInput;
-    }
-
     protected override void OnUpdate()
     {
-
+        HUDManager.Instance.dashElement.SetReady(canDash);
+        armAnimator.SetBool("isMoving", isConsideredMoving);
+        armAnimator.SetBool("IsGrounded", CheckGrounded());
+        // HUDManager.Instance.dashElement.SetFillFactor();
 
         FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerJump, transform);
         FMODUnity.RuntimeManager.AttachInstanceToGameObject(playerLand, transform);
-    }
 
+        InputLogic();
+    }
+    void InputLogic()
+    {
+        wasMovingLastFrame = isConsideredMoving;
+        if (inputManager.IsDashBuffered() && canDash)
+        {
+            Dash();
+        }
+        if (inputManager.IsJumpBuffered())
+        {
+            currentState.Jump();
+        }
+    }
     protected override void OnFixedUpdate()
     {
-        movementInput = move.action.ReadValue<Vector2>();
 
         if(!wasMovingLastFrame && isConsideredMoving) { OnStartWalking(); }
         if(wasMovingLastFrame && !isConsideredMoving) { OnStopWalking(); }
 
+        //mainCol.material = hasMovementInput ? slipMat : frictionMat;
+        mainCol.material = inputManager.MovementInputLastFrame ? slipMat : frictionMat;
         if(currentState != groundedState){
             if (CheckGrounded() && currentState != dashState)
             {
+                if(rigidbody.linearVelocity.y < groundedState.bigFallThreshold){armAnimator.SetTrigger("BigFall");}
                 SetState(groundedState);
+
                 playerLand.start();
             } 
         }
-
-        wasMovingLastFrame = isConsideredMoving;
-        hadMovementInputLastFrame = hasMovementInput; 
     }
 
     protected override void PostStateFixedUpdate()
     {
         previousCurrentVelocity = currentVelocity;
     }
-
     public void OnStartWalking()
     {
         currentState.OnStartWalking();
@@ -154,49 +168,86 @@ public class PlayerMovementStateMachine : StateMachine
         }
     }
 
+    public void EnableSoarDash()
+    {
+        soarDashEnabled = true;
+    }
+    
     protected override void OnSetState()
     {
         stateName = currentState.name;
     }
 
-    public void Jump(InputAction.CallbackContext ctx){
-        currentState.Jump();
-    }
 
     public void OnDashInput(InputAction.CallbackContext ctx){
         if (canDash)
         {
-            Debug.Log("adfggre");
             Dash();       
         }
     }
 
     public void Dash(){
         SetState(dashState);
+        featherKnife.projectileAbilities.dashPerformed.Invoke();
     }
 
     public void Blink(){
+        
         SetState(airborneState);
-        Vector3 targetPos = featherKnife.transform.position;
-        Quaternion rot = featherKnife.transform.rotation;
-        for (float i = 0; i < 0.5f; i += 0.1f)
+        Vector3 targetPos = featherKnife.GetBlinkPosition();
+        Vector3 blinkVector = targetPos - transform.position;
+        KnifeRetrievalInfo info = new()
         {
-            targetPos = featherKnife.transform.position - featherKnife.throwDirection * i;
-            if(Physics.OverlapBox(targetPos, blinkBoxSize, Quaternion.identity, blinkBoxLayerMask).Length > 0){
-                continue;
-            }
-            break;
-        }
+            pickupType = KnifeRetrievalType.Blink,
+            blinkDistance = blinkVector.magnitude
+        };
+        featherKnife.knifeRetrieved.Invoke(info);
+        Quaternion rot = featherKnife.transform.rotation;
+        
+        // for (float i = 0; i < 0.5f; i += 0.1f)
+        // {
+        //     targetPos = featherKnife.transform.position - featherKnife.throwDirection * i;
+        //     if(Physics.OverlapBox(targetPos, blinkBoxSize, Quaternion.identity, blinkBoxLayerMask).Length > 0){
+        //         continue;
+        //     }
+        //     break;
+        // }
 
         transform.position = targetPos;
-        CheckWallViaRay(ignoreWallRunTimer: true);
+        if(featherKnife.currentState != Projectile.ProjectileState.Embedded)
+        {
+            rigidbody.linearVelocity = Mathf.Clamp(rigidbody.linearVelocity.magnitude, blinkMinOutVelocity, Mathf.Infinity) * blinkVector.normalized;
+        }
+        
+        CheckWallViaRay(ignoreWallRunTimer: true, fromBlink: true);
+        inputManager.OnBlinkPerformed();
     }
 
     public void CalculateLookRotation()
     {
         Quaternion rotation = headTf.rotation;
         
-        lookInput = look.action.ReadValue<Vector2>();
+        if(parryTutorialEvent != null && parryTutorialEvent.active)
+        {
+            Vector3 rotationTargetDir = (parryTutorialEvent.GetTargetTransform().position - transform.position).normalized;
+            
+            headTf.rotation = Quaternion.Slerp(
+                headTf.rotation, 
+                Quaternion.LookRotation( rotationTargetDir, Vector3.Cross(rotationTargetDir, transform.right) ), 
+                parryTutorialEvent.Kp);
+                
+            transform.rotation = 
+                Quaternion.LookRotation(
+                    new Vector3( headTf.forward.x, 0, headTf.forward.z ).normalized,
+                    Vector3.up
+                );
+
+            return;
+                
+        }
+
+
+        var lookInput = inputManager.GetLookDirection();
         headTf.Rotate(new Vector3(-lookInput.y * rotSensitivity.y, 0, 0));
 
         if(Mathf.Abs(Vector3.SignedAngle(headTf.forward, transform.forward, transform.right)) > 85){
@@ -214,6 +265,9 @@ public class PlayerMovementStateMachine : StateMachine
 
     public bool CheckGrounded()
     {
+        return groundedHelper.isGrounded;
+
+        Debug.DrawLine(feetTf.position, feetTf.position + Vector3.down * groundedCheckDist);
         if (Physics.Raycast(feetTf.position, Vector3.down, out RaycastHit hit, groundedCheckDist))
         {
             return true;
@@ -230,15 +284,15 @@ public class PlayerMovementStateMachine : StateMachine
         return null;
     }
 
-    void CheckWallViaRay(Collision collision = null, bool ignoreWallRunTimer = false)
+    void CheckWallViaRay(Collision collision = null, bool ignoreWallRunTimer = false, bool fromBlink = false)
     {
         if(!wallRunState.canWallRun && !ignoreWallRunTimer ){return;}
 
         RaycastHit hit;
 
         // Checks if there is a potential wall to run on and the general direction it is relative to the player
-        if(Physics.Raycast(transform.position, transform.right * -1, out hit, maxWallCheckDist)){ wallRunState.isRight = false;  }
-        else if(Physics.Raycast(transform.position, transform.right, out hit, maxWallCheckDist)){ wallRunState.isRight = true;  }
+        if(Physics.Raycast(transform.position, transform.right * -1, out hit, fromBlink ? blinkWallCheckDistance : maxWallCheckDist)){ wallRunState.isRight = false;  }
+        else if(Physics.Raycast(transform.position, transform.right, out hit, fromBlink ? blinkWallCheckDistance : maxWallCheckDist)){ wallRunState.isRight = true;  }
         else{return;}
         
         // Checks if the wall running collider is the same as the grounding collider for the player
@@ -253,13 +307,23 @@ public class PlayerMovementStateMachine : StateMachine
         // Wall run direction
         Vector3 testWallRunDir = Vector3.Cross(Vector3.up, hit.normal);
         if(Vector3.Angle(testWallRunDir, transform.forward) > 90) { testWallRunDir *= -1; }
-        if(Vector3.Angle(testWallRunDir, rigidbody.linearVelocity) > wallRunLinearVelocityMaxAngleDif){return;}
+        //if(Vector3.Angle(testWallRunDir, rigidbody.linearVelocity) > wallRunLinearVelocityMaxAngleDif){return;}
 
         // Testing look difference between player and wall direction
         float currentLookAngleDifference = Vector3.Angle(transform.forward, testWallRunDir);
         if(currentLookAngleDifference < wallRunState.lookAngleDifferenceRange.x || currentLookAngleDifference > wallRunState.lookAngleDifferenceRange.y)
         {
             return;
+        }
+        Vector3 movementInput = inputManager.GetMovementDirection();
+        Vector3 movementRelativeInput = (transform.forward * movementInput.y) + (transform.right * movementInput.x);
+
+        if(currentState != dashState && !fromBlink){
+            if (
+                Vector3.Angle(movementRelativeInput, testWallRunDir) > wallRunState.maxMovementInputAngleDifference && currentState != dashState
+                || !inputManager.MovementInputLastFrame
+            )
+            {return;}
         }
 
         // if(collision == null || hit.collider == collision.collider){ 
@@ -290,7 +354,10 @@ public class PlayerMovementStateMachine : StateMachine
     }
     
     void OnCollisionStay(Collision collision){
-        currentState.OnCollisionStay(collision);
+        if(currentState != null)
+        {        
+            currentState.OnCollisionStay(collision);
+        }
 
         if(currentState != wallRunState && currentState != groundedState){
             CheckWallViaRay(collision);

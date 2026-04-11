@@ -6,16 +6,18 @@ using FMOD;
 [System.Serializable]
 public class GroundedState : PlayerMovementState
 {
-    public bool walking => movement.movementInput.magnitude > 0.1f && rigidbody.linearVelocity.magnitude > 0.1f;
+//    public bool walking => movement.movementInput.magnitude > 0.1f && rigidbody.linearVelocity.magnitude > 0.1f;
     public float overshootKp;
     public float rampupKp;
     public float desiredSpeed;
     public float turnThresholdAngle;
+    public float bigFallThreshold;
     public Vector3 desiredVelocity;
     
     // [FMODUnity.EventRef(MigrateTo ="EventReference")]
     public string FMODWalkEvent = "";
     EventInstance playerWalkState;
+    [SerializeField] InGameMusicManager musicManager;
 
 
     public GroundedState(PlayerMovementStateMachine stateMachine) : base(stateMachine)
@@ -26,10 +28,15 @@ public class GroundedState : PlayerMovementState
     public override void Start()
     {
         movement.hasDash = true;
+        movement.lastGroundedPos = transform.position;
+        if(movement.isConsideredMoving){OnStartWalking();}
+    
+        if(movement.currentState != movement.dashState) { movement.dashState.EndCooldown(); }
     }
 
     public override void Update()
     {
+    //    UnityEngine.Debug.Log(rigidbody.linearVelocity.y);
         RuntimeManager.AttachInstanceToGameObject(playerWalkState, movement.gameObject);
     }
 
@@ -38,14 +45,15 @@ public class GroundedState : PlayerMovementState
         if (!movement.CheckGrounded()){ movement.SetState(movement.airborneState); }
         
         movement.CalculateLookRotation();
-        if(movement.movementInput.magnitude > 1){movement.movementInput.Normalize();}
+
+        var movementInput = inputManager.GetMovementDirection();
 
 
-        desiredSpeed = Mathf.Lerp(movement.current2DVelocity, movement.liveMaxSpeed * Time.fixedDeltaTime, movement.currentVelocity > movement.liveMaxSpeed ? overshootKp : rampupKp);
+        desiredSpeed = Mathf.Lerp(movement.current2DVelocity, movement.liveMaxSpeed , movement.currentVelocity > movement.liveMaxSpeed  ? overshootKp : rampupKp);
         desiredVelocity =             
             (
-                (transform.right * movement.movementInput.x) +
-                (transform.forward * movement.movementInput.y)
+                (transform.right * movementInput.x) +
+                (transform.forward * movementInput.y)
             ) * desiredSpeed;
 
         if(Vector3.Angle(desiredVelocity, rigidbody.linearVelocity) > turnThresholdAngle)
@@ -60,8 +68,18 @@ public class GroundedState : PlayerMovementState
 
     public override void OnStartWalking()
     {
+
+        PLAYBACK_STATE playback;
+        RESULT result = playerWalkState.getPlaybackState(out playback);
+        if(result == RESULT.OK){
+            if(playback != PLAYBACK_STATE.STOPPED){return;}
+        }
+                
         playerWalkState = RuntimeManager.CreateInstance(FMODWalkEvent);
+       if (musicManager != null) musicManager.SetFootstepEmitter(playerWalkState);
         playerWalkState.start();
+
+
     }
     public override void OnStopWalking()
     {
@@ -73,6 +91,11 @@ public class GroundedState : PlayerMovementState
         
     // }
 
+
+    public override void OnCollisionEnter(Collision collision)
+    {
+
+    }
 
     public override void OnCollisionExit(Collision collision)
     {
@@ -87,6 +110,7 @@ public class GroundedState : PlayerMovementState
 
     public override void End(bool interrupted = false)
     {
+        playerWalkState.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         base.End(interrupted);
     }
 }

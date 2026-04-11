@@ -1,0 +1,200 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerTracker : MonoBehaviour
+{
+    const int WIND_SAMPLE_RATE = 5;
+
+    [SerializeField] Player player;
+    [SerializeField] Projectile knife;
+    [SerializeField] GameManager gameManager;
+    [HideInInspector] public TrackerData trackerData;
+    Rigidbody playerRb;
+
+    SaveSystem saveSystem = new();
+
+    List<Vector3> velocitiesWhileShooting = new();
+    List<float> elapsedUntilKnifeRetrieved = new();
+
+    List<float> windSamples = new();
+
+    float elapsedMissingKnifeTime = 0;
+
+    float totalBlinkDistance = 0;
+
+    public void Start()
+    {
+
+        trackerData = new();
+        playerRb = player.GetComponent<Rigidbody>();
+        knife.enemyStruck.AddListener((data) => OnKnifeCollision(true));
+        knife.terrainStruck.AddListener((data) => OnKnifeCollision(false));
+        knife.projectileAbilities.attemptedParry.AddListener(OnKnifeParryAttempt);
+        knife.knifeRetrieved.AddListener(OnKnifeRetrieved);
+        knife.projectileAbilities.dashPerformed.AddListener(OnDashPerformed);
+        player.entityKilled.AddListener((entity) => OnPlayerKilled());
+
+        gameManager.gameEnding += OnGameOver;
+    }
+
+    void OnPlayerKilled()
+    {
+        trackerData.numberOfDeaths++;
+    }
+
+    void OnDashPerformed()
+    {
+        trackerData.dashTracker++;
+    }
+
+    void OnKnifeRetrieved(KnifeRetrievalInfo info)
+    {
+        switch (info.pickupType)
+        {
+            case KnifeRetrievalType.Recall:
+                trackerData.recallTracker++;
+                break;
+            case KnifeRetrievalType.Pickup:
+                trackerData.pickupTracker++;
+                break;
+            case KnifeRetrievalType.Blink:
+                trackerData.blinksTracker++; 
+                totalBlinkDistance += info.blinkDistance;
+                trackerData.avgBlinkDistance = totalBlinkDistance / trackerData.blinksTracker;
+                break;
+        }
+        elapsedUntilKnifeRetrieved.Add(elapsedMissingKnifeTime);
+        elapsedMissingKnifeTime = 0;
+
+    }
+
+
+    public void OnKnifeParryAttempt(bool parry)
+    {
+        trackerData.parryAttempts++;
+        if (parry)
+        {
+            trackerData.successfulParries++;
+        }
+    }
+
+    public void OnKnifeCollision(bool hitEnemy)
+    {
+        trackerData.knifeCollisionCounts++;
+        if (hitEnemy)
+        {
+            trackerData.knifeHitCount++;
+            velocitiesWhileShooting.Add(playerRb.linearVelocity);
+        }
+    }
+
+    private void Update()
+    {
+        if (trackerData.beatGame) return;
+        float delta = Time.deltaTime;
+        trackerData.timeElapsed += delta;
+        elapsedMissingKnifeTime += delta;
+    }
+
+
+    public float GetAverageSpeedWhileFiring()
+    {
+        Vector3 sum = Vector3.zero;
+        foreach (var velocity in velocitiesWhileShooting)
+        {
+            sum += velocity;
+        }
+        var avg = (sum / velocitiesWhileShooting.Count).magnitude;
+        if (float.IsNaN(avg)) return 0;
+        return avg;
+    }
+
+    public float GetAverageWind()
+    {
+        float sum = 0;
+        foreach (var windAmount in windSamples)
+        {
+            sum += windAmount;
+        }
+        var avg = (sum / windSamples.Count);
+        if (float.IsNaN(avg)) return 0;
+        return avg;
+    }
+
+    public float GetHitAccuracy()
+    {
+        var accuracy = (float)trackerData.knifeHitCount / trackerData.knifeCollisionCounts;
+        if (float.IsNaN(accuracy)) accuracy = 0;
+        return accuracy * 100;
+    }
+
+    public float GetParryAccuracy()
+    {
+        var accuracy = (float)trackerData.successfulParries / trackerData.parryAttempts;
+        if (float.IsNaN (accuracy)) accuracy = 0;
+        return accuracy * 100;
+    }
+
+    public float GetAverageKnifeReclaimTime()
+    {
+        float sum = 0;
+        foreach (var time in elapsedUntilKnifeRetrieved)
+        {
+            sum += time;
+        }
+        var avg = sum / elapsedUntilKnifeRetrieved.Count;
+        if (float.IsNaN(avg)) return 0;
+        return avg;
+    }
+
+    public float GetAverageBlinkDistance()
+    {
+        if (float.IsNaN(trackerData.avgBlinkDistance)) return 0;
+        return trackerData.avgBlinkDistance;
+    }
+    public TrackerData GetTrackerData()
+    {
+        return trackerData;
+    }
+    private void OnApplicationQuit()
+    {
+        OnGameOver(-1);
+    }
+
+    void OnGameOver(float gameDuration)
+    {
+        trackerData.beatGame = gameDuration > 0.0f;
+        trackerData.avgBlinkDistance = GetAverageBlinkDistance();
+       
+        int numberOfSaves = saveSystem.GetNumberOfFilesInDirectory(TrackerService.GetDataFolderPathForLevel(gameManager.CurrentLevel));
+        //number of files returns -1 as a fallback in case there's no directory present
+        //but that's fine because we're not accessing data in the directory, we're just adding some
+        //if there's no directory we'll make one
+        //this helps to make sure that the file names start at one
+        if (numberOfSaves < 0) numberOfSaves = 0;
+        saveSystem.EnsureSave(TrackerService.GetDataFolderPathForLevel(gameManager.CurrentLevel), (numberOfSaves + 1).ToString(), trackerData);
+    }
+}
+
+public struct TrackerData
+{
+    //Pick-up
+    public int recallTracker;
+    public int blinksTracker;
+    public int pickupTracker;
+    //Movement
+    public int dashTracker;
+    public float avgBlinkDistance;
+    //Accuracy 
+    public int knifeCollisionCounts;
+    public int knifeHitCount;
+    //Parrying
+    public int parryAttempts;
+    public int successfulParries;
+    //Misc
+    public float timeElapsed;
+    public int numberOfDeaths;
+    public bool beatGame;
+}
+
+

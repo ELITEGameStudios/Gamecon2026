@@ -51,7 +51,7 @@ public class ScreenDimmer : MonoBehaviour
     {
         if(alpha != currentOperation.target)
         {
-            timer -= Time.deltaTime;
+            timer -= Time.unscaledDeltaTime;
             alpha = Mathf.Lerp(currentOperation.target, currentOperation.startDim, timer/currentOperation.time);
         }
 

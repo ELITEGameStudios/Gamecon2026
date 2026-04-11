@@ -2,22 +2,24 @@ using System;
 using System.Collections;
 using System.Globalization;
 using TMPro;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
 {
-    [SerializeField] GameObject settingsDisplay;
+    [SerializeField] GameObject pauseDisplay, settingsMenu;
     [SerializeField] PageManager pageManager;
-    [SerializeField] InputActionReference pauseInput;
+    [SerializeField] InputActionReference pauseInput, backInput, restartInput;
     [SerializeField] Button saveButton;
-
+    [SerializeField] GameObject fpsDisplay;
+    [SerializeField] CrosshairManager crosshairManager;
     [Header("Video")]
     [SerializeField] TMP_Dropdown resolutionOptions;
     [SerializeField] Toggle fullscreenToggle;
+    [SerializeField] Toggle FPSToggle;
+    [SerializeField] Toggle crosshairToggle;
 
     [Header("Volume")]
     [SerializeField] Slider BGMSlider;
@@ -30,6 +32,7 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] TMP_InputField horizSensInputField;
     [SerializeField] TMP_InputField vertSensInputField;
 
+    bool settingsIsOpen = false;
     bool paused = false;
     bool pausable = true;
     bool changesMade = false;
@@ -43,6 +46,7 @@ public class SettingsMenu : MonoBehaviour
     private void Awake()
     {
         pauseInput.action.performed += OnPausePressed;
+        backInput.action.performed += OnBackPressed;
         paused = false;
         saveButton.gameObject.SetActive(false);
         InitSettings();
@@ -60,18 +64,19 @@ public class SettingsMenu : MonoBehaviour
     {
         if (saveSystem == null) saveSystem = new SaveSystem();
         var settingsAsString = saveSystem.Read( PlayerSettings.GetPlayerSettingsFilePath() );
-        if (settingsAsString != string.Empty)
+        if (settingsAsString != string.Empty )
         {
             currentSettings = saveSystem.ParseFromJson<PlayerSettings>(settingsAsString);
         }
-        else
+        if (currentSettings == null || settingsAsString == string.Empty)
         {
             Debug.LogWarning("Could not find settings files at location " + PlayerSettings.GetPlayerSettingsDirectory());
+            saveSystem.EnsureSave(PlayerSettings.GetPlayerSettingsDirectory(), "playerSettings", currentSettings);
         }
         InitVideoSettings();
         InitAudioSettings();
         InitInputSettings();
-        settingsDisplay.SetActive(false);
+        pauseDisplay.SetActive(false);
         ApplyNewSettings();
     }
 
@@ -81,6 +86,10 @@ public class SettingsMenu : MonoBehaviour
         requestedResolution = currentSettings.resolution;
 
         fullscreenToggle.isOn = currentSettings.fullscreen;
+
+        FPSToggle.isOn = currentSettings.showFPS;
+
+        fpsDisplay.SetActive(currentSettings.showFPS);
 
         for (int i = 0; i < resolutionOptions.options.Count; i++) 
         {
@@ -97,12 +106,15 @@ public class SettingsMenu : MonoBehaviour
             }
         }
 
+        crosshairManager.ToggleCrosshair(currentSettings.crosshairEnabled);
+
     }
 
     void InitAudioSettings()
     {
         SFXSlider.value = currentSettings.sfxVolume;
         BGMSlider.value = currentSettings.bgmVolume;
+
 
     }
     void InitInputSettings()
@@ -125,6 +137,8 @@ public class SettingsMenu : MonoBehaviour
     void ApplyVideoSettings()
     {
         Screen.SetResolution(requestedResolution.x, requestedResolution.y, currentSettings.fullscreen);
+        fpsDisplay.SetActive(currentSettings.showFPS);
+        if (crosshairManager != null) crosshairManager.ToggleCrosshair(currentSettings.crosshairEnabled);
     }
 
     IEnumerator ApplyInputSettings()
@@ -141,20 +155,65 @@ public class SettingsMenu : MonoBehaviour
         //need to sit up audio mixers
     }
 
+    private void Update()
+    {
+        if (restartInput.action.WasPerformedThisFrame() && paused)
+        {
+            Time.timeScale = 1.0f;
+            SceneManager.LoadScene("0MainMenu Updated");
+        }
+    }
+
+    public void SetPaused(bool pause)
+    {
+        if (!pausable) return;
+        paused = pause;
+        pauseDisplay.SetActive(paused);
+        if (paused)
+        {
+            Time.timeScale = 0.0f;
+        }
+        else
+        {
+            SetSettings(false);
+            Time.timeScale = RespawnManager.PlayerDead ? 0.0f : 1.0f;
+        }
+        Cursor.lockState = paused ? CursorLockMode.None : CursorLockMode.Locked;
+    }
+
+
+    public void OnBackPressed(InputAction.CallbackContext ctx)
+    {
+        if(settingsIsOpen){SetSettings(false);}
+        else if(paused) {SetPaused(!paused);}
+    }
+
+    public void SetSettings(bool settings)
+    {
+        settingsIsOpen = settings;
+        settingsMenu.SetActive(settings);
+    }
 
     public void OnPausePressed(InputAction.CallbackContext ctx)
     {
-        if (!pausable) return;
-        paused = !paused;
-        settingsDisplay.SetActive(paused);
-        Time.timeScale = paused ? 0.0f : 1.0f;
-        Cursor.lockState = paused ? CursorLockMode.None : CursorLockMode.Locked;
+        SetPaused(!paused);
     }
 
     public void OnFullscreenToggled(bool isOn)
     {
-        fullscreenToggle.isOn = isOn;
         newSettings.fullscreen = isOn;
+        OnChangeMade();
+    }
+
+    public void OnFPSToggled(bool isOn)
+    {
+        newSettings.showFPS = isOn;
+        OnChangeMade();
+    }
+
+    public void OnCrosshairToggled(bool isOn)
+    {
+        newSettings.crosshairEnabled = isOn;
         OnChangeMade();
     }
 

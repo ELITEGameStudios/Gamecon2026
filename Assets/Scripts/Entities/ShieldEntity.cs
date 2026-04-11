@@ -9,22 +9,12 @@ public class ShieldEntity : EntityBase
     [SerializeField] LayerMask knifeMask;
     public override void Damage(int damage = 1)
     {
-        Debug.Log("Shield hit but not parried");
+        //can't be damaged by normal attacks
     }
 
-    private void FixedUpdate()
+    public void Damage(bool parryDamage)
     {
-        var overlap = Physics.OverlapBox(shieldCollider.bounds.center, shieldCollider.bounds.extents, shieldCollider.transform.rotation, knifeMask);
-        foreach (var col in overlap)
-        {
-            if (col.TryGetComponent(out Projectile knife))
-            {
-                if (knife.projectileAbilities.ProjectileInParryState())
-                {
-                    OnDeath();
-                }
-            }
-        }
-
+        if (parryDamage) OnDeath();
     }
+
 }

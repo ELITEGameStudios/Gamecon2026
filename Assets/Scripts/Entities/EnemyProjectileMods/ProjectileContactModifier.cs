@@ -26,7 +26,6 @@ public class ProjectileContactModifier : ProjectileModifier
 
 
     bool overrideCollisionLogic = false;// Other mods can set this to true to override the default collision logic and just use the raycast check for contact
-
     bool HasLimitedHits() => hasLimitedHits;
     public override void InitModifier(EnemyProjectile projectile)
     {
@@ -40,13 +39,17 @@ public class ProjectileContactModifier : ProjectileModifier
     }
     public void OnProjectileFired(EnemyProjectile projectile)
     {
-        ResetIgnoredColliders();
+        ResetContactModifiers();
+        previousProjectilePosition = projectile.rb.position;
+        projectile.projectileCollider.enabled = true;
     }
 
-    public void ResetIgnoredColliders()
+    public void ResetContactModifiers()
     {
         ignoredColliders.Clear();
-        ignoredColliders.Add(projectile.enemy.GetComponent<Collider>());
+        ignoredColliders.Add(projectile.projectileCollider);
+        hitsRemaining = numberOfHits;
+        previousProjectilePosition = projectile.rb.position;
     }
     public void CheckForContact()
     {
@@ -54,26 +57,24 @@ public class ProjectileContactModifier : ProjectileModifier
         if (terrainCheck.collider != null)
         {
             var hit = terrainCheck.collider;
-            if (hit.TryGetComponent(out Player player))
+            if (hit.gameObject.CompareTag("Player"))
             {
-                OnPlayerCollision(player, hit);
+                OnPlayerCollision(hit);
             }
-            OnContact(projectile);
+            OnContact(terrainCheck);
         }
-
     }
-
-    public void OnPlayerCollision(Player player, Collider hit)
+    public void OnPlayerCollision(Collider hit)
     {
-        player.Damage(damage);
+        Player.instance.Damage(damage);
         ignoredColliders.Add(hit);
-        contactEvent.Invoke(projectile, player);
+        contactEvent.Invoke(projectile, Player.instance);
     }
-    public virtual void OnContact(EnemyProjectile projectile)
+    public virtual void OnContact(RaycastHit hit)
     {
-        if (!hasLimitedHits) return;
+        if (!hasLimitedHits || hitsRemaining <= 0) return;
         hitsRemaining -= 1;
-        if (hitsRemaining == 0 && !overrideCollisionLogic)
+        if (hitsRemaining <= 0 && !overrideCollisionLogic)
         {
             projectile.DestroyProjectile();
         }
@@ -90,7 +91,7 @@ public class ProjectileContactModifier : ProjectileModifier
         foreach (var hit in hits)
         {
             if (!ignoredColliders.Contains(hit.collider))
-            {
+            {               
                 return hit;
             }
         }
@@ -102,5 +103,6 @@ public class ProjectileContactModifier : ProjectileModifier
         {
             CheckForContact();
         }
+        previousProjectilePosition = projectile.rb.position;
     }
 }

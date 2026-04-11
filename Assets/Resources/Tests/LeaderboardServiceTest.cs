@@ -1,4 +1,6 @@
+#if UNITY_EDITOR
 using NUnit.Framework;
+
 using System.Collections.Generic;
 
 [TestFixture]
@@ -26,3 +28,4 @@ public class TestIfValidNameIsFlagged
         attempts = null;
     }
 }
+#endif

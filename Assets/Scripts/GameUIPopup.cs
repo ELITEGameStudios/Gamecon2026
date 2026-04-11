@@ -13,7 +13,9 @@ public class GameUIPopup : MonoBehaviour
     
     public bool sendTimeCommandOnActive;
     public float targetTimescale = 0;
+    public float toTimescaleKp = 1;
 
+    public bool locked;
 
 
 
@@ -28,8 +30,28 @@ public class GameUIPopup : MonoBehaviour
         Toggle();
     }
 
+    void Update()
+    {
+        if(active && sendTimeCommandOnActive)
+        {
+            if(Time.timeScale != targetTimescale && toTimescaleKp < 1)
+            {
+                PerformTimescaleIteration();
+            }
+        }
+    }
+
+    void PerformTimescaleIteration()
+    {
+        Time.timeScale = Mathf.Lerp(Time.timeScale, targetTimescale, toTimescaleKp);
+    }
+
     public void Toggle()
     {
+        if(!GameManager.Instance.GetSettingsMenu().currentSettings.showTutorialPrompts && !active) return;
+        if(locked) return;
+
+
         // Main operation
         if(!dontDisable) gameObject.SetActive(!active);  
         if(animator != null){animator.SetBool(activePropertyName, !active);}
@@ -39,11 +61,16 @@ public class GameUIPopup : MonoBehaviour
 
         // Additional operations
         if (sendAlphaCommandOnActive){
-            HUDManager.Instance.screenDimmer.DimScreen(active ? targetAlpha : 0, dimPriority: dimPriority);
+            if(HUDManager.Instance.screenDimmer != null) HUDManager.Instance.screenDimmer.DimScreen(active ? targetAlpha : 0, dimPriority: dimPriority);
         }
 
         if (sendTimeCommandOnActive){
-            Time.timeScale = active ? targetTimescale : 1;
+            if(toTimescaleKp <= 0 || !active)
+            {
+                Time.timeScale = active ? targetTimescale : 1;
+                return;
+            }
+            PerformTimescaleIteration();
         }
     }
     

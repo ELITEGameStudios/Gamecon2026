@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -8,19 +9,32 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance {get; private set;}
     public IVictoryCondition victoryCondition;
     public IEntityManager entityManager;
-    public bool initialized;
+    public bool Initialized { get; private set;}
 
-    event Action<float> gameEnding;
+    public event Action<float> gameEnding;
+
+    [SerializeField] EntityDetectionSystem feds;
     [Header("Managers")]
     [SerializeField] TimerManager timerManager;
     [SerializeField] HUDManager hudManager;
     [SerializeField] LeaderboardManager leaderboardManager;
     [SerializeField] SettingsMenu settingsScreen;
+    [SerializeField] RespawnManager respawnManager;
 
     [Header("Temporary Level Picker")]
     [SerializeField] LevelDatabase.LevelNames currentLevel;
 
+    public LevelDatabase.LevelNames CurrentLevel { get; private set; }
+
+    public SettingsMenu GetSettingsMenu(){return settingsScreen;}
     bool gameOver = false;
+
+    [Header("Wave System Directors")]
+    public bool autoStartWaves;
+    public Transform customLevelOrigin;
+    public WaveCounter waveCounter;
+    public WinScreen victoryScreen;
+
     private async Task InitializeManager()
     {
         var handle = Addressables.LoadAssetAsync<LevelData>(currentLevel.ToString());
@@ -30,22 +44,27 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Couldn't find current level " + currentLevel.ToString() + ": " + handle.OperationException);
             return;
         }
-
-        if (hudManager == null)
-        {
-            hudManager = FindFirstObjectByType<HUDManager>();
-        }
         switch (levelObject.levelType)
         {
             case LevelData.LevelType.KillTargets:
                 victoryCondition = new KillTargets(levelObject.levelDuration);
-                
                 entityManager = new WaveManager(levelObject);
-                entityManager.Initialize();
-                if(hudManager != null) hudManager.InitManager(entityManager, victoryCondition);
+                entityManager.Initialize(null);
+                entityManager.allEnemiesDefeated += victoryCondition.OnEnemiesDefeated;
+                break;
+            case LevelData.LevelType.Survive:
+                var enemies = FindObjectsByType<EnemyBase>(FindObjectsSortMode.InstanceID).ToList();
+                victoryCondition = new KillTargets(levelObject.levelDuration);
+                entityManager = new ArenaManager();
+                entityManager.Initialize(enemies);
                 entityManager.allEnemiesDefeated += victoryCondition.OnEnemiesDefeated;
                 break;
         }
+        if (hudManager != null) hudManager.InitManager(entityManager, victoryCondition);
+
+        if (respawnManager != null) respawnManager.InitManager(victoryCondition, entityManager);
+        if (feds != null) feds.InitDetectionSystem(entityManager);
+        
         victoryCondition?.Initialize();
         victoryCondition.victoryAchieved += OnVictory;
         victoryCondition.defeatAchieved += OnDefeat;
@@ -58,7 +77,6 @@ public class GameManager : MonoBehaviour
         {
             gameEnding += settingsScreen.OnGameOver;
         }
-
     }
 
     private void Awake()
@@ -66,22 +84,43 @@ public class GameManager : MonoBehaviour
         if(Instance == null){Instance = this;}
         else if(Instance != this){Destroy(this);}
 
-        _ = InitializeManager();
-        initialized = true;
+        try
+        {
+            _ = InitializeManager();
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
 
     }
 
-    public void Initialize()
+    public void RestartGame()
     {
-        _ = InitializeManager();
+        SceneSystem.Instance.GameInitializationFunction();
+    }
+    public void ToMenu()
+    {
+        SceneSystem.Instance.MenusInitializationFunction();
     }
 
+    public void SetInitialized(bool initialized) // wave system calls this
+    {
+        Initialized = true;
+    }
+
+    public void ManualStartWaveSystem()
+    {
+        if(entityManager is WaveManager){(entityManager as WaveManager).StartSystem();}
+        SetInitialized(true);
+    }
 
     void OnVictory()
     {   
         if (gameOver) return;
         gameOver = true;
-        gameEnding.Invoke(timerManager.GetCurrentLevelTime());
+        if(victoryScreen != null){victoryScreen.OpenWinScreen(timerManager.GetDisplayText());}
+        gameEnding?.Invoke(timerManager.GetCurrentLevelTime());
     }
     void OnDefeat()
     {
@@ -91,17 +130,16 @@ public class GameManager : MonoBehaviour
     }
     private void OnDestroy()
     {
-        victoryCondition.OnDisable();
+        victoryCondition?.OnDisable();
     }
     public void OnTimerUpdated()
     {
         var time = timerManager.GetCurrentLevelTime();
         victoryCondition?.TimerLogic(time);
-        entityManager?.TimerLogic(time);
     }
     private void Update()
     {
-        if(!initialized) return;
+        if(!Initialized) return;
 
         OnTimerUpdated();
         if(entityManager is WaveManager){(entityManager as WaveManager).UpdateWaves();}

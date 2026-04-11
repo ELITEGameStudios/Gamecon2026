@@ -17,7 +17,8 @@ public class ProjectileFreezeMod : ProjectileModifier
     /// </summary>
     [SerializeField, ShowIf(nameof(FreezesWhilePlayerDead))] int freezeDurationWhenPlayerDies = 300;
 
-   [SerializeField] FreezeType freezeType;
+    [SerializeField] FreezeType freezeType;
+    [SerializeField] bool fireOnUnfreeze = true;
 
     bool FreezesWhilePlayerDead() => freezeType == FreezeType.FreezeWhenPlayerDead;
 
@@ -27,7 +28,7 @@ public class ProjectileFreezeMod : ProjectileModifier
 
     RespawnManager respawnManager;
 
-    Vector3 previousVelocity;
+    float previousVelocity;
 
     bool playerDead = false;
     public override void InitModifier(EnemyProjectile projectile)
@@ -39,34 +40,34 @@ public class ProjectileFreezeMod : ProjectileModifier
                 contactModifier = projectile.GetComponent<ProjectileContactModifier>();
                 if (contactModifier != null)
                 {
-                    contactModifier.contactEvent.AddListener(OnPlayerStruck);
+                    Player.instance.entityKilled.AddListener(OnPlayerStruck);
                 }
                 else
                 {
                     Debug.LogWarning("Could not find contact mod but using on player struck which has a dependacy on it");
                 }
-                    respawnManager = FindFirstObjectByType<RespawnManager>();
+                respawnManager = FindFirstObjectByType<RespawnManager>();
                 break;
                 
         }
+        duration = 0;
     }
 
-    void OnPlayerStruck(EnemyProjectile projectile, Player player)
+    void OnPlayerStruck(EntityBase player)
     {
         if (player == null || freezeType != FreezeType.FreezeWhenPlayerDead) return;
         playerDead = true;
-        previousVelocity = projectile.projectileSpeed;
+        previousVelocity = projectile.projectileVelocity.Speed;
         duration = freezeDurationWhenPlayerDies;
-        Debug.Log("Killed player " + player + " with projectile " + projectile.name);
         if (respawnManager != null)
         {
             respawnManager.respawn.action.performed += OnPlayerRespawned;
         }
+        Debug.Log("Player struck, freezing projectile for " + duration + " frames");
     }
 
     public override void UpdateModifier()
     {
-        Debug.Log("Updating freeze mod for projectile " + projectile.name + " with duration " + duration);
         base.UpdateModifier();
         if (duration > 0)
         {
@@ -86,16 +87,21 @@ public class ProjectileFreezeMod : ProjectileModifier
             Debug.LogWarning("Could not find respawn manager");
             return;
         }
-        if (!playerDead) duration--;
-        if (duration == 0) projectile.projectileSpeed = previousVelocity;
-        else projectile.projectileSpeed = Vector3.zero;
-        Debug.Log("Freezing projectile " + projectile.name + " for duration " + duration + " because player is dead");
+        if (!playerDead)
+        {
+            duration--;
+        }
+        if (duration <= 0)
+        {
+            if (!fireOnUnfreeze) projectile.projectileVelocity.Speed = previousVelocity;
+            else projectile.Activate(projectile.enemy, projectile.rb.position);
+        }
+        else projectile.projectileVelocity.Speed = 0.0f;
     }
 
     void OnPlayerRespawned(UnityEngine.InputSystem.InputAction.CallbackContext ctx)
     {
         playerDead = false;
         respawnManager.respawn.action.performed -= OnPlayerRespawned;
-        Debug.Log("Player respawned");
     }
 }

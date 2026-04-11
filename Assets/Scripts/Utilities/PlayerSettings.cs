@@ -2,10 +2,16 @@ using UnityEngine;
 
 public class PlayerSettings 
 {
+
+    const float DEFAULT_MOVEMENT_DEADZONE = 0.1f;
+
+ 
     //Video
     public Vector2Int resolution = new Vector2Int(1920, 1080);
     public bool fullscreen = true;
-
+    public bool showTutorialPrompts = true;
+    public bool showFPS = false;
+    public bool crosshairEnabled = true;
     //Audio
     public float bgmVolume = 1.0f;
     public float sfxVolume = 1.0f;
@@ -13,6 +19,7 @@ public class PlayerSettings
     //Input
     public float horizontalSensitivity = 0.5f;
     public float verticalSensitivity = 0.5f;
+    public float movementDeadzone = DEFAULT_MOVEMENT_DEADZONE;
 
     public bool IsEqual(PlayerSettings other)
     {
@@ -29,6 +36,8 @@ public class PlayerSettings
         this.sfxVolume = other.sfxVolume;
         this.horizontalSensitivity = other.horizontalSensitivity;
         this.verticalSensitivity = other.verticalSensitivity;
+        this.showTutorialPrompts = other.showTutorialPrompts;
+        this.showFPS = other.showFPS;
     }
 
     public static string GetPlayerSettingsDirectory()

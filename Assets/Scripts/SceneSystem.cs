@@ -105,19 +105,19 @@ public class SceneSystem : MonoBehaviour
 
         // Load and unload scenes
         yield return new WaitForSecondsRealtime(flexibleTransitionTime);
-        LoadingScreen.Instance.ToggleKnife(true);
+        // LoadingScreen.Instance.ToggleKnife(true);
         yield return StartCoroutine(LoadAdditiveCoroutine(gameSceneName)); 
         
         Scene gameScene = SceneManager.GetSceneByName(gameSceneName);
         SceneManager.SetActiveScene(gameScene);
 
-        yield return new WaitForSecondsRealtime(flexibleTransitionTime);
+        // yield return new WaitForSecondsRealtime(flexibleTransitionTime);
         yield return StartCoroutine(UnloadSceneCoroutine(menusScene)); 
         
         // Fade out of loading scene
-        LoadingScreen.Instance.ToggleKnife(false);
-        yield return new WaitForSecondsRealtime(flexibleTransitionTime);
-        LoadingScreen.Instance.TriggerScreen(false, flexibleTransitionTime);
+        // LoadingScreen.Instance.ToggleKnife(false);
+        // yield return new WaitForSecondsRealtime(flexibleTransitionTime);
+        LoadingScreen.Instance.TriggerScreen(false, 0);
 
         
         yield return null;

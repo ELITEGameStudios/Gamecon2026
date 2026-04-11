@@ -4,9 +4,10 @@ using UnityEngine;
 public abstract class WaveBase : ScriptableObject
 {
     public SpawnProfileData[] profilesData;
-    public bool finishedProcesses;
-    public bool startedProcesses;
-    public float timeBeforeFirstGate, prewaveTime;
+   [HideInInspector] public bool finishedProcesses;
+   [HideInInspector] public bool startedProcesses;
+    public float timeBeforeFirstGate;
+    protected float prewaveTime;
 
     public abstract void Start();
     public abstract void WaveUpdate();
@@ -97,7 +98,7 @@ public abstract class WaveBase : ScriptableObject
 
 public abstract class SequentialWave : WaveBase
 {
-    public int currentProfileIndex;
+   [HideInInspector] public int currentProfileIndex;
 
     public override void Start(){
         currentProfileIndex = 0;

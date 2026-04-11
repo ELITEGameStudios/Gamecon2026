@@ -5,7 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "IntervalWave", menuName = "Wave System/Wave Types/Sequential Interval")]
 public class IntervalBasedSequentialWave : SequentialWave
 {
-    public float minTimeBetweenSpawns, time;
+    [SerializeField] float minTimeBetweenSpawns;
+    protected float time;
     public bool minTimeCondition => time <= 0;
     
     public override void WaveUpdate()

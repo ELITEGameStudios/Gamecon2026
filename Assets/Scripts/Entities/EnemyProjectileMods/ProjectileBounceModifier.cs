@@ -20,7 +20,6 @@ public class ProjectileBounceModifier : ProjectileModifier
             {
                 ReflectProjectileVelocity(terrainCheck);
                 cooldownTracker = bounceCooldown;
-                Debug.Log("Bouncing");
             }
         }
         previousProjectilePosition = projectile.rb.position;
@@ -33,10 +32,9 @@ public class ProjectileBounceModifier : ProjectileModifier
 
     void ReflectProjectileVelocity(RaycastHit hit)
     {
-        Vector3 reflectedSpeed = projectile.rb.linearVelocity;
+        Vector3 reflectedSpeed = projectile.projectileVelocity.Direction;
         reflectedSpeed = Vector3.Reflect(reflectedSpeed, hit.normal);
-        Debug.Log("Reflecting projectile speed from " + projectile.rb.linearVelocity + " to " + reflectedSpeed);
-        projectile.projectileSpeed = reflectedSpeed;
+        projectile.projectileVelocity.Direction = reflectedSpeed;
     }
     RaycastHit PerformRaycastCheck(Vector3 previous, Vector3 current)
     {
