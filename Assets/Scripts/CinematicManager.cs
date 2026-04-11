@@ -15,6 +15,7 @@ public class CinematicManager : MonoBehaviour
     [SerializeField] PlayableDirector bansheeCutscene;
     [SerializeField] Collider cutsceneTrigger;
     [SerializeField] Camera cinemaCamera;
+    [SerializeField] PlayableDirector director;
     public bool inCinematic { get; private set; } = false;
 
     bool startedBansheeCutscene = false;
@@ -23,6 +24,9 @@ public class CinematicManager : MonoBehaviour
     {
         player.gameObject.SetActive(false);
         inCinematic = true;
+        // director.Stop();
+        // director.time = 0;
+        // director.Play();
     }
     public void PostCutscene()
     {
