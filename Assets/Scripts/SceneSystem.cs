@@ -24,6 +24,11 @@ public class SceneSystem : MonoBehaviour
     void Start(){
     }
 
+    public string GetGameSceneName()
+    {
+        return gameSceneName;
+    }
+
     public void GameInitializationFunction(){
         StartCoroutine(GameInitializationCoroutine());
     }

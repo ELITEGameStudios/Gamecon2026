@@ -181,6 +181,25 @@ public class SettingsMenu : MonoBehaviour
         Cursor.lockState = paused ? CursorLockMode.None : CursorLockMode.Locked;
     }
 
+    public void Reset()
+    {
+        SetPaused(false);
+        // if(SceneSystem.Instance != null)
+        // {
+        //     if(SceneManager.GetActiveScene().name == SceneSystem.Instance.GetGameSceneName()){
+        //         SceneSystem.Instance.GameInitializationFunction();
+        //     }
+        //     else
+        //     {
+        //         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //     }
+        // }
+        // else
+        // {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        // }
+    }
+
 
     public void OnBackPressed(InputAction.CallbackContext ctx)
     {

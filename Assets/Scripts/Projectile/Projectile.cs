@@ -183,7 +183,7 @@ public class Projectile : MonoBehaviour
         SpaceSample spaceSample;
         
         spaceSample.position = transform.position;
-        spaceSample.direction = transform.forward;
+        spaceSample.direction = transform.up;
         spaceSample.velocity= rb.linearVelocity;
 
         // debugObj.transform.position = transform.position;
@@ -198,8 +198,9 @@ public class Projectile : MonoBehaviour
 
             Vector3 rayOrigin = spaceRecordingData.Count > 1 ? spaceRecordingData[spaceRecordingData.Count - 2].position : throwBegin;
 
-            Ray ray = new Ray(rayOrigin, transform.forward);
-            if(Physics.Raycast(ray, out RaycastHit hit, Vector3.Distance(transform.position, rayOrigin) * 2, layerMask, QueryTriggerInteraction.Ignore))
+            Ray ray = new Ray(rayOrigin, transform.up);
+            Debug.DrawRay(rayOrigin, transform.up, Color.red);
+            if(Physics.Raycast(ray, out RaycastHit hit, Vector3.Distance(transform.position, rayOrigin) * 2f, layerMask, QueryTriggerInteraction.Ignore))
             {
                 Debug.Log("Caught");
                 transform.position = hit.point;

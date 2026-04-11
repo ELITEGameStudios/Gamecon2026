@@ -140,7 +140,13 @@ public class RangedEnemy : EnemyBase
             yield return null;
             foreach (var projectile in pool.Value)
             {
-                Destroy(projectile.gameObject);
+                try
+                {
+                    Destroy(projectile.gameObject);
+                }
+                catch {
+                    continue; // MissingReferenceExeption
+                }
             }
         }
         base.OnDeath();
