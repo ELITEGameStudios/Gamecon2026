@@ -184,20 +184,20 @@ public class SettingsMenu : MonoBehaviour
     public void Reset()
     {
         SetPaused(false);
-        if(SceneSystem.Instance != null)
-        {
-            if(SceneManager.GetActiveScene().name == SceneSystem.Instance.GetGameSceneName()){
-                SceneSystem.Instance.GameInitializationFunction();
-            }
-            else
-            {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            }
-        }
-        else
-        {
+        // if(SceneSystem.Instance != null)
+        // {
+        //     if(SceneManager.GetActiveScene().name == SceneSystem.Instance.GetGameSceneName()){
+        //         SceneSystem.Instance.GameInitializationFunction();
+        //     }
+        //     else
+        //     {
+        //         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //     }
+        // }
+        // else
+        // {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
+        // }
     }
 
 

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.AddressableAssets;
 
 public class GameManager : MonoBehaviour
@@ -97,11 +98,14 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        SceneSystem.Instance.GameInitializationFunction();
+
+        SceneManager.LoadScene(2);
+        // SceneSystem.Instance.GameInitializationFunction();
     }
     public void ToMenu()
     {
-        SceneSystem.Instance.MenusInitializationFunction();
+        SceneManager.LoadScene(1);
+        // SceneSystem.Instance.MenusInitializationFunction();
     }
 
     public void SetInitialized(bool initialized) // wave system calls this
