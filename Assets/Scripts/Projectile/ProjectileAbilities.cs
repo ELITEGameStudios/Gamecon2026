@@ -314,6 +314,7 @@ public class ProjectileAbilities : MonoBehaviour
         featherKnife.transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(-90, 180, 0);
 
         featherKnife.CastProjectile(direction);
+        featherKnife.BouncesRemaining = featherKnife.MaxBounces;
     
         if (parry)
         {

@@ -295,8 +295,6 @@ public class Projectile : MonoBehaviour
         // Calculate wind-based boost
         float windBoost = windToRecallSpeed.Evaluate(windManager.GetWindAsPercent());
 
-        Debug.Log("Applying wind multiplier of " + windBoost);
-
         // Combine both multipliers
         float currentSpeed = (baseRecallSpeed * speedMultiplier) * windBoost;
     
@@ -487,6 +485,8 @@ public class Projectile : MonoBehaviour
         {
             return;
         }
+
+        Debug.Log("Embedding Knife");
         Vector3 travelDirection = rb.linearVelocity.normalized;
 
         transform.position += travelDirection * (embedDepth * 0.1f);
@@ -496,11 +496,24 @@ public class Projectile : MonoBehaviour
  
     bool AttemptPhysicsBounce(Vector3 normal, string objTag)
     {
-        if (BouncesRemaining <= 0 || currentState != ProjectileState.Flying) return false;
+        if (BouncesRemaining <= 0) 
+        {
+            Debug.Log("No bounces remaining, returning");
+            return false;
+        }
+        if (currentState != ProjectileState.Flying)
+        {
+            Debug.Log("Not flying, returning");
+            return false;
+        }
 
         for (int i = 0; i < unallowedObjectsToBounceOff.Length; i++)
         {
-            if (unallowedObjectsToBounceOff[i] == objTag) return false;
+            if (unallowedObjectsToBounceOff[i] == objTag)
+            {
+                Debug.Log("Invalid bounce tag, returning");
+                return false;
+            }
         }
 
         Vector3 velNormalized = rb.linearVelocity.normalized;

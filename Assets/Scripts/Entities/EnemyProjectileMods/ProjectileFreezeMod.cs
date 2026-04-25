@@ -43,7 +43,8 @@ public class ProjectileFreezeMod : ProjectileModifier
                 }
                 else
                 {
-                    Debug.LogWarning("Could not find contact mod but using on player struck which has a dependacy on it");
+                    Debug.LogWarning("Could not find contact mod but using on player struck which has a dependency on it");
+                    return;
                 }
                 respawnManager = FindFirstObjectByType<RespawnManager>();
                 break;
@@ -92,6 +93,11 @@ public class ProjectileFreezeMod : ProjectileModifier
     void OnPlayerRespawned(UnityEngine.InputSystem.InputAction.CallbackContext ctx)
     {
         playerDead = false;
+        respawnManager.respawn.action.performed -= OnPlayerRespawned;
+    }
+
+    private void OnDisable()
+    {
         respawnManager.respawn.action.performed -= OnPlayerRespawned;
     }
 }

@@ -9,6 +9,7 @@ public class KnifeHitbox : MonoBehaviour
     [SerializeField] List<Projectile.ProjectileState> statesWithHitboxes;
     [SerializeField] BoxCollider hitbox;
     [SerializeField] bool parryOnlyHitbox = false;
+    [SerializeField] bool ricochetOnlyHitbox = false;
     [SerializeField] int damage = 1;
 
     List<EnemyBase> struckEnemies = new();
@@ -32,7 +33,10 @@ public class KnifeHitbox : MonoBehaviour
         bool parryStateValid;
         if (!parryOnlyHitbox) parryStateValid = true;
         else parryStateValid = knife.projectileAbilities.ParryActive;
-        hitbox.enabled = inValidState && parryStateValid;
+        bool ricochetStateValid;
+        if (!ricochetOnlyHitbox) ricochetStateValid = true;
+        else ricochetStateValid = knife.RicochetActive;
+        hitbox.enabled = inValidState && parryStateValid && ricochetStateValid;
 
         if (state == Projectile.ProjectileState.Flying)
         {

@@ -103,6 +103,7 @@ MonoBehaviour:
   statesWithHitboxes: 0100000003000000
   hitbox: {fileID: 7213132704581501372}
   parryOnlyHitbox: 0
+  ricochetOnlyHitbox: 0
   damage: 1
 --- !u!1 &2099644040497004097
 GameObject:
@@ -174,6 +175,7 @@ MonoBehaviour:
   statesWithHitboxes: 01000000
   hitbox: {fileID: 1876273515514977572}
   parryOnlyHitbox: 1
+  ricochetOnlyHitbox: 0
   damage: 1
 --- !u!1 &2287347467293118206
 GameObject:
@@ -293,6 +295,78 @@ MonoBehaviour:
   decalSpriteCount: 8
   impactExtrusion: 0
   impactMaterial: {fileID: 2100000, guid: 6b430cd67109d194cb96121bda5233dc, type: 2}
+--- !u!1 &8923262071844399622
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1370098347390732320}
+  - component: {fileID: 4814295304275935767}
+  - component: {fileID: 6969132204734186222}
+  m_Layer: 8
+  m_Name: RicochetHitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1370098347390732320
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8923262071844399622}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 2961036286376670713}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4814295304275935767
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8923262071844399622}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7.5, y: 7, z: 2}
+  m_Center: {x: 0, y: 2.5, z: 0}
+--- !u!114 &6969132204734186222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8923262071844399622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5d9b48cbc037e945a7af00ede1f6e59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  knife: {fileID: 9093975886187365857}
+  statesWithHitboxes: 0100000003000000
+  hitbox: {fileID: 4814295304275935767}
+  parryOnlyHitbox: 0
+  ricochetOnlyHitbox: 1
+  damage: 1
 --- !u!1001 &235173832660087008
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -553,6 +627,9 @@ PrefabInstance:
       addedObject: {fileID: 4730215687919818709}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1c84657f13f2ec8458b2ba16fcf9ddbc, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1370098347390732320}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1c84657f13f2ec8458b2ba16fcf9ddbc, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 5719858547023798798}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1c84657f13f2ec8458b2ba16fcf9ddbc, type: 3}
       insertIndex: -1
@@ -642,6 +719,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b79602ba93482347ac43ec1f96ed3e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  windManager: {fileID: 0}
   enemyStruck:
     m_PersistentCalls:
       m_Calls: []
@@ -778,7 +856,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  windManager: {fileID: 0}
 --- !u!96 &3002411986993690705
 TrailRenderer:
   serializedVersion: 3
