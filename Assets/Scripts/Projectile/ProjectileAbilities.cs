@@ -33,7 +33,7 @@ public class ProjectileAbilities : MonoBehaviour
     public float currentRecallCooldown;
     [SerializeField] private float parryForce = 500f;
     [SerializeField] private float hitStopTime = 0.1f;
-    [SerializeField] private float minParryWindow = 80.0f;
+    [SerializeField] private float minDistanceToTravelBeforeParryAvailable = 80.0f;
     [SerializeField] private float upwardsBiasForParry = 0.65f;
     [SerializeField] private HUDManager hudManager;
     public ApplyShake.CamShakeProfile parryCamShakeProfile;
@@ -91,6 +91,7 @@ public class ProjectileAbilities : MonoBehaviour
         public float elapsedTime;
     }
 
+    public bool ParryAvailable { get; set; } = true;
     void Start()
     {
         if (postProcessVolume != null)
@@ -158,35 +159,40 @@ public class ProjectileAbilities : MonoBehaviour
 
     public void SetParryWindow(float totalDistance)
     {
-        parryWindow = totalDistance * parryTiming;
-        if (parryWindow < minParryWindow)
+
+        if (totalDistance < minDistanceToTravelBeforeParryAvailable)
         {
-            parryWindow = minParryWindow;
+            parryWindow = 0;
+        }
+        else
+        {
+            parryWindow = totalDistance * parryTiming;
         }
     }
     public bool IsParryable()
     {
-        if (featherKnife.currentState != Projectile.ProjectileState.Recalling) return false;
+        if (featherKnife.currentState != Projectile.ProjectileState.Recalling || !ParryAvailable) return false;
         float currentDistance = Vector3.Distance(featherKnife.transform.position, transform.position);
 
         return currentDistance <= parryWindow;
     }
     private void OnFirePressed(InputAction.CallbackContext ctx)
     {
-        if (featherKnife.currentState == Projectile.ProjectileState.Flying || featherKnife.currentState == Projectile.ProjectileState.Embedded) return;
+        if (featherKnife.currentState == Projectile.ProjectileState.Flying || featherKnife.currentState == Projectile.ProjectileState.Embedded || !ParryAvailable) return;
 
         bool parryable = IsParryable();
         if (featherKnife.currentState == Projectile.ProjectileState.Recalling)
         {
             attemptedParry.Invoke(parryable);
             if (!parryable) parryFailSFX.start();
+            ParryAvailable = parryable;
         }
         TryShoot(parryable);
     }
 
     private void OnRecallPressed(InputAction.CallbackContext ctx)
     {
-       if (featherKnife.currentState == Projectile.ProjectileState.Idle || currentRecallCooldown > 0.0f){return;}
+       if (featherKnife.currentState == Projectile.ProjectileState.Idle || featherKnife.currentState == Projectile.ProjectileState.Recalling){return;}
         else
         {
             ParryActive = false;

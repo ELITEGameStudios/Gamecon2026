@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 
 public class SceneSystem : MonoBehaviour
@@ -11,6 +13,7 @@ public class SceneSystem : MonoBehaviour
     [SerializeField] private string gameSceneName, menusSceneName; 
     [SerializeField] private float flexibleTransitionTime = 1.5f; 
     [SerializeField] private AsyncOperation sceneLoadOperation;
+    [SerializeField] InputActionReference devRoomButton;
     public static SceneSystem Instance { get; private set; }
     
     void Awake(){
@@ -57,6 +60,15 @@ public class SceneSystem : MonoBehaviour
     public void LoadMainMenu(){
         SceneManager.LoadScene(2);
         UpdateSceneData();
+    }
+
+    void Update()
+    {
+        if (devRoomButton.action.WasPerformedThisFrame())
+        {
+            SceneManager.LoadScene(LevelDatabase.LevelNames.DevRoom_Temi.ToString());
+            SceneManager.UnloadSceneAsync("0MainMenu");
+        }
     }
 
     IEnumerator LoadAdditiveCoroutine(string sceneName, bool newActive = false){

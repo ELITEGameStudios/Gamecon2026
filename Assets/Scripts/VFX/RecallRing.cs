@@ -6,8 +6,7 @@ public class RecallRing : MonoBehaviour
     [SerializeField] float maxExpansion = 2.5f;
     [SerializeField] Player player;
     [SerializeField] Projectile knife;
-    [SerializeField] Color baseColor;
-    [SerializeField] Color parryableColor;
+    [SerializeField, ColorUsage(true, true)] Color baseColor, parryableColor;
 
     Vector3 startingScale = Vector3.zero;
     Vector3 maxScale = Vector3.zero;
@@ -35,10 +34,7 @@ public class RecallRing : MonoBehaviour
         recallVFX.gameObject.SetActive(false);
     }
 
-    void OnKnifeParried(bool success)
-    {
-        if (!success) return;
-    }
+   
 
     private void Update()
     {

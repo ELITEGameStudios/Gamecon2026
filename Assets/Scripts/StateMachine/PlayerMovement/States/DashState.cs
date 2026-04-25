@@ -4,7 +4,6 @@ using UnityEngine.InputSystem;
 [System.Serializable]
 public class DashState : PlayerMovementState
 {
-    [SerializeField] float empoweredDashDrainRate = 120.0f;
     [SerializeField] float FOVIncrease = 10;
     [SerializeField] float FOVTweenDuration = 0.1f;
     [SerializeField] Camera FPSCamera;
@@ -150,7 +149,7 @@ public class DashState : PlayerMovementState
     void EmpowerLogic()
     {
         if (!empowered) return;
-        windManager.CurrentWind -= (empoweredDashDrainRate * Time.fixedDeltaTime);
+        windManager.CurrentWind -= (windManager.EmpoweredDashDrainRate * Time.fixedDeltaTime);
         if (windManager.CurrentWind <= 0.001f || !dashButton.action.IsPressed())
         {
             End();

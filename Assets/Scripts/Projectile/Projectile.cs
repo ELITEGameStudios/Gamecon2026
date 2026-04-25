@@ -227,6 +227,7 @@ public class Projectile : MonoBehaviour
 
                 armRendererCam.cullingMask = armIdleCull;
                 mainCam.cullingMask = mainIdleCull;
+                projectileAbilities.ParryAvailable = true;
                 break;
             case ProjectileState.Flying:
                 timeElaspedWithoutKnife = 0.0f;
@@ -337,36 +338,20 @@ public class Projectile : MonoBehaviour
         float estimatedTime = 0f;
         int samples = 10;
 
+        float windMultiplier = windToRecallSpeed.Evaluate(windManager.GetWindAsPercent());
+
         for (int i = 0; i < samples; i++)
         {
             float progress = (float)i / samples;
             float speedMultiplier = recallAnimationCurve.Evaluate(progress);
-        
-            // Calculate distance boost for this segment too!
-            float segmentDistance = distance * (1f - progress);
-            float distanceBoost = CalculateDistanceBoost(segmentDistance);
-        
-            float segmentTime = (distance / samples) / (baseRecallSpeed * speedMultiplier * distanceBoost);
+            
+
+            float segmentTime = (distance / samples) / (baseRecallSpeed * speedMultiplier) * windMultiplier;
             estimatedTime += segmentTime;
         }
 
         return estimatedTime;
     }
-
-    private float CalculateDistanceBoost(float currentDistance)
-    {
-        if (currentDistance > maxBoostDistance)
-        {
-            return maxSpeedBoost;
-        }
-        else if (currentDistance > maxBoostDistance * 0.7f)
-        {
-            float boostProgress = (currentDistance - (maxBoostDistance * 0.7f)) / (maxBoostDistance * 0.3f);
-            return Mathf.Lerp(1f, maxSpeedBoost, boostProgress);
-        }
-        return 1f;
-    }
-
     public void SetEmbeddedPos(){
         embeddedPos = transform.position;
        // blinkSample = spaceRecordingData[spaceRecordingData.Count - 1];
@@ -427,6 +412,7 @@ public class Projectile : MonoBehaviour
         gameObject.SetActive(true);
         SetState(ProjectileState.Idle);
         if(HUDManager.Instance != null) HUDManager.Instance.recallElement.Deactivate();
+
     }
 
     void OnTriggerEnter(Collider other)
@@ -542,6 +528,18 @@ public class Projectile : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
     }
 
+    public RaycastHit PerformRaycastCheck(Vector3 previous, Vector3 current, LayerMask collisionMask)
+    {
+        Vector3 travelVector = current - previous;
+        float checkerDistance = travelVector.magnitude;
+        if (checkerDistance < 0.001f) return new RaycastHit();
+
+        Ray ray = new(previous, travelVector.normalized);
+
+        var hits = Physics.RaycastAll(ray, checkerDistance, collisionMask, QueryTriggerInteraction.Collide);
+        if (hits.Length > 0) return hits[0];
+        return new RaycastHit();
+    }
     void OnCollisionEnter(Collision collision) //needs fixing. embedding doesn't work properly
     {
         if (currentState != ProjectileState.Flying || currentState == ProjectileState.Recalling)

@@ -48,7 +48,6 @@ public class RespawnManager : MonoBehaviour
         respawn.action.performed += OnRespawnRequest;
         Time.timeScale = 0.0f;
     }
-
     void OnRespawnRequest(InputAction.CallbackContext ctx)
     {
         if (!PlayerDead || SettingsMenu.Paused) return;
@@ -56,7 +55,6 @@ public class RespawnManager : MonoBehaviour
         var respawnPoint = GetRespawnLocation(PlayerMovementStateMachine.instance.lastGroundedPos);
         Player.instance.SpawnAtPosition(respawnPoint.position);
         var rotateTowardsRespawn = Quaternion.LookRotation (respawnPoint.transform.forward).eulerAngles;
-       // rotateTowardsRespawn.y = 0;
         player.transform.eulerAngles = rotateTowardsRespawn;
 
         deathNotifier.SetActive(false);

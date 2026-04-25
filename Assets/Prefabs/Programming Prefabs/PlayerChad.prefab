@@ -3204,8 +3204,8 @@ MonoBehaviour:
   tattooMaterial: {fileID: 2100000, guid: df43ef19029af974f9d711b4d4a941e5, type: 2}
   windWraps: {fileID: 727402662580572196}
   maxWindWraps: 20
-  baseWindColor: {r: 0.36366722, g: 0.48558807, b: 0.43722647, a: 1}
-  maxWindColor: {r: 0.3254902, g: 0.7137255, b: 0.7490196, a: 1}
+  baseWindColor: {r: 1.9914502, g: 2.1315918, b: 2.24091, a: 1}
+  maxWindColor: {r: 3.40494, g: 8.012683, b: 14.671698, a: 1}
   minWindTattooColor: {r: 0.01132071, g: 0.01132071, b: 0.01132071, a: 1}
   maxWindTattooColor: {r: 47.93727, g: 47.93727, b: 47.93727, a: 1}
   leftArm: {fileID: 6358512309231767231}
@@ -4171,7 +4171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3641decfe5b1dd8418f05a98b42bb1b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  windManager: {fileID: 0}
+  windManager: {fileID: 8509023973921303564}
   knifeThrown:
     m_PersistentCalls:
       m_Calls: []
@@ -4194,7 +4194,7 @@ MonoBehaviour:
   currentRecallCooldown: 0
   parryForce: 15
   hitStopTime: 0.1
-  minParryWindow: 30
+  minDistanceToTravelBeforeParryAvailable: 15
   upwardsBiasForParry: 0.6
   hudManager: {fileID: 0}
   parryCamShakeProfile:

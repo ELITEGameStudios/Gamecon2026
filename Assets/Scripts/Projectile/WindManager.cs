@@ -14,14 +14,15 @@ public class WindManager : MonoBehaviour
     [SerializeField] float minSpeedForWind;
     [SerializeField] float maxSpeedForWind;
     [SerializeField] float speedToWindRatio = 4.0f;
+    [SerializeField] float empoweredDashDrainRate = 120.0f;
 
     [Header("VFX")]
     [SerializeField] Material tattooMaterial;
     [SerializeField] ParticleSystem windWraps;
     [SerializeField] float maxWindWraps = 20.0f;
-    [SerializeField] Color baseWindColor = Color.white;
-    [SerializeField] Color maxWindColor = Color.blue;
-    [SerializeField, ColorUsage (true, true)] Color minWindTattooColor = Color.white;
+    [SerializeField, ColorUsage(true, true)] Color baseWindColor = Color.white;
+    [SerializeField, ColorUsage(true, true)] Color maxWindColor = Color.blue;
+    [SerializeField, ColorUsage(true, true)] Color minWindTattooColor = Color.white;
     [SerializeField, ColorUsage(true, true)] Color maxWindTattooColor = Color.blue;
     [SerializeField] SkinnedMeshRenderer leftArm;
     [SerializeField] AnimationCurve colorTransitionCurve;
@@ -29,7 +30,7 @@ public class WindManager : MonoBehaviour
     public float CurrentWind
     {
         get => currentWind;
-        set => currentWind = Mathf.Clamp (value, 0, 100);
+        set => currentWind = Mathf.Clamp(value, 0, 100);
     }
 
     public float MaxSpeed
@@ -44,6 +45,12 @@ public class WindManager : MonoBehaviour
         private set => minSpeedForWind = value;
     }
 
+    public float EmpoweredDashDrainRate
+    {
+        get => empoweredDashDrainRate;
+        private set => empoweredDashDrainRate = value;
+    }
+
     [HideInInspector] public bool pauseWindGeneration = false;
 
 
@@ -51,7 +58,6 @@ public class WindManager : MonoBehaviour
     //we're looking for relative values (i.e. 40% max speed) instead of absolute (i.e. moving at 40 m/s)
     float minSpeedSquared;
     float maxSpeedSquared;
-
 
     ParticleSystem.EmissionModule wrapsEmission;
     ParticleSystem.MainModule wrapsMainModule;
@@ -146,6 +152,4 @@ public class WindManager : MonoBehaviour
         currentWind = 100.0f;
         UpdateWindDisplays();
     }
-
-
 }

@@ -102,10 +102,7 @@ public class EnemyProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // if(other.attachedRigidbody == Player.instance.mainRb)
-        // {
-            Player.instance.Die();
-        // }
+
     }
 }
 [System.Serializable]
